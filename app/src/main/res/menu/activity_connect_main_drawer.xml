@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_cliente"
+            android:icon="@drawable/ic_people_black"
+            android:title="Cliente" />
+        <item
+            android:id="@+id/nav_pedido"
+            android:icon="@drawable/ic_shopping"
+            android:title="Pedidos" />
+    </group>
+
+    <item android:title="Sincronizar">
+        <menu>
+            <item
+                android:id="@+id/nav_sync"
+                android:icon="@drawable/ic_sync_black"
+                android:title="Sincronizar" />
+
+        </menu>
+    </item>
+
+</menu>
