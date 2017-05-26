@@ -79,6 +79,18 @@ public class Banco extends SQLiteOpenHelper {
                 "deletadoAndroid boolean," +
                 "alteradoAndroid boolean);";
         db.execSQL(sql);
+
+        sql = "CREATE TABLE cidade (" +
+                "codCidade long primary key,"+
+                "nomeCidade text,"+
+                "uf text,"+
+                "codNacionalUf text,"+
+                "codNacionalCidade text,"+
+                "pais text,"+
+                "codNacionalPais text,"+
+                "cep text);";
+        db.execSQL(sql);
+
     }
 
     @Override

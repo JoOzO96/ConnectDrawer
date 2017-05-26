@@ -545,7 +545,9 @@ public class Cliente {
         valores.put("codigo", codigo);
         valores.put("nomeCliente", nomeCliente);
         valores.put("cpf", cpf);
-        valores.put("dataNasc", dataNasc.getTime());
+        if (dataNasc != null) {
+            valores.put("dataNasc", dataNasc.getTime());
+        }
         valores.put("endereco", endereco);
         valores.put("posicao", posicao);
         valores.put("pai", pai);
@@ -587,8 +589,12 @@ public class Cliente {
         valores.put("recibo", recibo);
         valores.put("codigoPgto", codigoPgto);
         valores.put("codRepresentante", codRepresentante);
-        valores.put("dataCadastro", dataCadastro.getTime());
-        valores.put("dataAlteracao", dataAlteracao.getTime());
+        if (dataCadastro != null) {
+            valores.put("dataCadastro", dataCadastro.getTime());
+        }
+        if (dataAlteracao != null) {
+            valores.put("dataAlteracao", dataAlteracao.getTime());
+        }
         valores.put("liberaLimite", liberaLimite);
         valores.put("fantasia", fantasia);
         valores.put("contatoCobranca", contatoCobranca);

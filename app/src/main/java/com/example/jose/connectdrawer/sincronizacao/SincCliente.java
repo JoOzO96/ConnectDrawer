@@ -32,10 +32,10 @@ public class SincCliente extends Activity {
     public void iniciaSinc(Context context) {
         final Context context1;
         context1 = context;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.110:8080/ConnectServices/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        RetRetrofit retRetrofit = new RetRetrofit();
+        //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
+        Retrofit retrofit = retRetrofit.retornaRetrofit();
+
         ClienteService clienteService = retrofit.create(ClienteService.class);
         Call<List<Cliente>> requestCliente = clienteService.listCliente();
         requestCliente.enqueue(new Callback<List<Cliente>>() {

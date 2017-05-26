@@ -13,8 +13,10 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.cliente.ClienteFragment;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
+import com.example.jose.connectdrawer.sincronizacao.Sincroniza;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,9 +96,14 @@ public class ConnectMain extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, clienteFragment, clienteFragment.getTag()).commit();
 
+        } else if (id == R.id.nav_cidade) {
+            CidadeFragment cidadeFragment = new CidadeFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, cidadeFragment, cidadeFragment.getTag()).commit();
+
         } else if (id == R.id.nav_sync) {
-            SincCliente sincCliente = new SincCliente();
-            sincCliente.iniciaSinc(getBaseContext());
+            Sincroniza sincroniza = new Sincroniza();
+            sincroniza.iniciaSincronizacao(getBaseContext());
 //        } else if (id == R.id.nav_slideshow) {
 //
 //        } else if (id == R.id.nav_manage) {
