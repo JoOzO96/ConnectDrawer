@@ -22,6 +22,9 @@ public class Cidade {
     private String pais;
     private String codNacionalPais;
     private String cep;
+    private Boolean cadastroAndroid;
+    private Boolean deletadoAndroid;
+    private Boolean alteradoAndroid;
     private Context context;
 
 
@@ -89,6 +92,38 @@ public class Cidade {
         this.cep = cep;
     }
 
+    public Boolean getCadastroAndroid() {
+        return cadastroAndroid;
+    }
+
+    public void setCadastroAndroid(Boolean cadastroAndroid) {
+        this.cadastroAndroid = cadastroAndroid;
+    }
+
+    public Boolean getDeletadoAndroid() {
+        return deletadoAndroid;
+    }
+
+    public void setDeletadoAndroid(Boolean deletadoAndroid) {
+        this.deletadoAndroid = deletadoAndroid;
+    }
+
+    public Boolean getAlteradoAndroid() {
+        return alteradoAndroid;
+    }
+
+    public void setAlteradoAndroid(Boolean alteradoAndroid) {
+        this.alteradoAndroid = alteradoAndroid;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     @Override
     public String toString() {
         return codCidade + ", " + nomeCidade + ", " + UF;
@@ -152,6 +187,52 @@ public class Cidade {
             return false;
         } else {
             return true;
+        }
+    }
+
+    public boolean atualizaDados(Context context, Cidade cidade) {
+        Banco myDb = new Banco(context);
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        valores.put("codCidade", cidade.getCodCidade());
+        valores.put("nomeCidade", cidade.getNomeCidade());
+        valores.put("UF", cidade.getUF());
+        valores.put("codNacionalUf", cidade.getCodNacionalUf());
+        valores.put("codNacionalCidade", cidade.getCodNacionalCidade());
+        valores.put("pais", cidade.getPais());
+        valores.put("codNacionalPais", cidade.getCodNacionalPais());
+        valores.put("cep", cidade.getCep());
+
+        long result = db.update("cidade", valores, "codCidade = " + cidade.getCodCidade(), null);
+        db.close();
+        valores.clear();
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public Long retornaMaiorCodCidade(Context context) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,max(codCidade) from cidade", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return cursor.getLong(1);
+        } else {
+            return 0L;
+        }
+    }
+
+    public boolean remover(Context context, Cidade cidade) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        int retorno = db.delete("cidade", "codCidade = " + cidade.getCodCidade(), null);
+        if (retorno > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

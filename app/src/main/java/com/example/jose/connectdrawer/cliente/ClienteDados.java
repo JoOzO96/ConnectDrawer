@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.jose.connectdrawer.R;
-import com.example.jose.connectdrawer.mascara.Mascara;
+import com.example.jose.connectdrawer.uteis.Mascara;
 
 import java.text.SimpleDateFormat;
 
