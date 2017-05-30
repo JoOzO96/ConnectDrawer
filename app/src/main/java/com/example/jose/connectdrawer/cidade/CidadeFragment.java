@@ -51,7 +51,7 @@ public class CidadeFragment extends Fragment {
 
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            for (Long cont = 1L; cursor.getCount() != cont; cont++) {
+            for (Long cont = 0L; cursor.getCount() != cont; cont++) {
                 Cidade cidade1 = new Cidade();
                 cidade1.setCodCidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
                 cidade1.setNomeCidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));

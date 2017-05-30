@@ -1,5 +1,6 @@
 package com.example.jose.connectdrawer.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -104,6 +105,9 @@ public class ConnectMain extends AppCompatActivity
         } else if (id == R.id.nav_sync) {
             Sincroniza sincroniza = new Sincroniza();
             sincroniza.iniciaSincronizacao(getBaseContext());
+        } else if (id == R.id.nav_deleta) {
+            Context context = this;
+            context.deleteDatabase("connect.db");
 //        } else if (id == R.id.nav_slideshow) {
 //
 //        } else if (id == R.id.nav_manage) {

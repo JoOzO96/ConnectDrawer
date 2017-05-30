@@ -25,7 +25,7 @@ public class ClienteActivity extends AppCompatActivity {
 
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            for (Long cont = 1L; cursor.getCount() != cont; cont++) {
+            for (Long cont = 0L; cursor.getCount() != cont; cont++) {
                 Cliente clienteListar = new Cliente();
                 clienteListar.setCodigo(cursor.getLong(cursor.getColumnIndex("codigo")));
                 clienteListar.setNomeCliente(cursor.getString(cursor.getColumnIndex("nomeCliente")));

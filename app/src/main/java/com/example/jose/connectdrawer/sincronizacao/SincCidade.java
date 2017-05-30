@@ -6,7 +6,10 @@ import android.util.Log;
 
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeService;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -76,5 +79,30 @@ public class SincCidade {
                 Log.e("DEU ERRO Sinc", t.toString());
             }
         });
+    }
+
+    public void iniciaEnvio(Context context) throws IOException {
+        Cidade cidade = new Cidade();
+        List<Cidade> cidadeList = new ArrayList<>();
+        Cursor cursor = cidade.retornaCidadeAlteradaAndroid(context, "cadastroAndroid");
+        if (cursor.getCount() > 0){
+            for (long i = 1L ; cursor.getCount() == i; i++){
+                Cidade cidade1 = new Cidade();
+                cidade1.setCodCidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
+                cidade1.setNomeCidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
+                cidade1.setUF(cursor.getString(cursor.getColumnIndex("uf")));
+                cidade1.setCodNacionalUf(cursor.getString(cursor.getColumnIndex("codNacionalUf")));
+                cidade1.setCodNacionalCidade(cursor.getString(cursor.getColumnIndex("codNacionalCidade")));
+                cidade1.setPais(cursor.getString(cursor.getColumnIndex("pais")));
+                cidade1.setCodNacionalPais(cursor.getString(cursor.getColumnIndex("codNacionalPais")));
+                cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")));
+                cidadeList.add(cidade1);
+                cursor.moveToNext();
+            }
+            Gson gson = new Gson();
+            String gsonRetorno = gson.toJson(cidadeList);
+            EnviaJson enviaJson = new EnviaJson();
+            enviaJson.execute(gsonRetorno);
+        }
     }
 }

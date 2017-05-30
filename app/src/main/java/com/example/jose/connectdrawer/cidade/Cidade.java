@@ -166,6 +166,17 @@ public class Cidade {
         return cursor;
     }
 
+    public Cursor retornaCidadeAlteradaAndroid(Context context, String tipo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM cidade where " + tipo + " = 1", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
 
     public boolean insereDados(Context context, Cidade cidade) {
         Banco myDb = new Banco(context);
@@ -179,6 +190,7 @@ public class Cidade {
         valores.put("pais", cidade.getPais());
         valores.put("codNacionalPais", cidade.getCodNacionalPais());
         valores.put("cep", cidade.getCep());
+        valores.put("cadastroAndroid", cidade.getCadastroAndroid());
 
         long result = db.insert("cidade", null, valores);
         db.close();

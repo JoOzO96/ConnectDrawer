@@ -88,7 +88,7 @@ public class Banco extends SQLiteOpenHelper {
                 "codNacionalCidade text,"+
                 "pais text,"+
                 "codNacionalPais text,"+
-                "cep text" +
+                "cep text," +
                 "cadastroAndroid boolean," +
                 "deletadoAndroid boolean," +
                 "alteradoAndroid boolean);";

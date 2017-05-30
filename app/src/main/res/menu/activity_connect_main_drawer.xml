@@ -22,6 +22,10 @@
                 android:id="@+id/nav_sync"
                 android:icon="@drawable/ic_sync_black"
                 android:title="Sincronizar" />
+            <item
+                android:id="@+id/nav_deleta"
+                android:icon="@drawable/ic_sync_black"
+                android:title="Deletar Banco" />
 
         </menu>
     </item>
