@@ -41,7 +41,7 @@ public class SincCidade {
                 List<Cidade> cidadeList = response.body();
 
                 Cidade cidade = new Cidade();
-                for (int cli = 0; cidadeList.size() != cli + 1; cli++) {
+                for (int cli = 0; cidadeList.size() != cli; cli++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
                     Cursor cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cli).getCodCidade());
@@ -86,7 +86,7 @@ public class SincCidade {
         List<Cidade> cidadeList = new ArrayList<>();
         Cursor cursor = cidade.retornaCidadeAlteradaAndroid(context, "cadastroAndroid");
         if (cursor.getCount() > 0){
-            for (long i = 1L ; cursor.getCount() == i; i++){
+            for (long i = 0L ; cursor.getCount() != i; i++){
                 Cidade cidade1 = new Cidade();
                 cidade1.setCodCidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
                 cidade1.setNomeCidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
@@ -95,7 +95,7 @@ public class SincCidade {
                 cidade1.setCodNacionalCidade(cursor.getString(cursor.getColumnIndex("codNacionalCidade")));
                 cidade1.setPais(cursor.getString(cursor.getColumnIndex("pais")));
                 cidade1.setCodNacionalPais(cursor.getString(cursor.getColumnIndex("codNacionalPais")));
-                cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")));
+                cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")).replace("-",""));
                 cidadeList.add(cidade1);
                 cursor.moveToNext();
             }

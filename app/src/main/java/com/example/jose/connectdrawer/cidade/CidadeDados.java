@@ -168,7 +168,7 @@ public class CidadeDados extends Fragment {
                         cidade.setNomeCidade(txNomeCidade.getText().toString().toUpperCase());
                         cidade.setUF(txUf.getText().toString().toUpperCase());
                         cidade.setCodNacionalCidade(txCodNacionalCidade.getText().toString());
-                        cidade.setCodNacionalUf(txCodNacionalCidade.getText().toString().substring(0, 1));
+                        cidade.setCodNacionalUf(txCodNacionalCidade.getText().toString().substring(0, 2));
                         cidade.setCodNacionalPais(txCodNacionalPais.getText().toString());
                         cidade.setPais(txPais.getText().toString().toUpperCase());
                         cidade.setCep(txCep.getText().toString());
