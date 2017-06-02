@@ -97,6 +97,7 @@ public class SincCidade {
                 cidade1.setCodNacionalPais(cursor.getString(cursor.getColumnIndex("codNacionalPais")));
                 cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")).replace("-",""));
                 cidadeList.add(cidade1);
+
                 cursor.moveToNext();
             }
             Gson gson = new Gson();
@@ -105,4 +106,6 @@ public class SincCidade {
             enviaJson.execute(gsonRetorno);
         }
     }
+
+
 }
