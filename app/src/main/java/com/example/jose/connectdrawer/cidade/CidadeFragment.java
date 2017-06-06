@@ -18,9 +18,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,18 +47,32 @@ public class CidadeFragment extends Fragment {
         listCidade = (ListView) view.findViewById(R.id.listCidade);
         this.setHasOptionsMenu(true);
 
-        final Cidade[] cidade = {new Cidade()};
-
-        Cursor cursor = cidade[0].retornaCidade(getContext());
+        Cidade cidade = new Cidade();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        Cursor cursor = cidade.retornaCidade(getContext());
         List<Cidade> cidadeList = new ArrayList<>();
 
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             for (Long cont = 0L; cursor.getCount() != cont; cont++) {
                 Cidade cidade1 = new Cidade();
-                cidade1.setCodCidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
-                cidade1.setNomeCidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
-                cidade1.setUF(cursor.getString(cursor.getColumnIndex("uf")));
+//                cidade1.setCodcidade(cursor.getLong(cursor.getColumnIndex("codcidade")));
+//                cidade1.setNomecidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
+//                cidade1.setUf(cursor.getString(cursor.getColumnIndex("uf")));
+
+                List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
+
+                for (int f = 0; fieldList.size() != f; f++) {
+
+                    String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                    String nomeCampo = fieldList.get(f).getName().toLowerCase();
+                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                    if (retorno != null){
+                        Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, retorno);
+                        cidade1 = (Cidade) teste;
+                    }
+
+                }
 
                 cidadeList.add(cidade1);
                 cursor.moveToNext();
@@ -70,7 +87,7 @@ public class CidadeFragment extends Fragment {
                             Cidade cidade1 = (Cidade) listCidade.getItemAtPosition(position);
                             CidadeDados cidadeDados = new CidadeDados();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("codigo", cidade1.getCodCidade());
+                            bundle.putLong("codigo", cidade1.getCodcidade());
                             cidadeDados.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                             fragmentTransaction.replace(R.id.fragment_container, cidadeDados, cidadeDados.getTag()).commit();
@@ -84,7 +101,7 @@ public class CidadeFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                     builder.setTitle("Confirm");
-                    builder.setMessage("Confirma a exclusao da cidade " + cidadeDel.getNomeCidade() + "?");
+                    builder.setMessage("Confirma a exclusao da cidade " + cidadeDel.getNomecidade() + "?");
 
                     builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 

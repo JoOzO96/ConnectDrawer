@@ -19,7 +19,7 @@
             android:layout_alignParentTop="true">
 
             <EditText
-                android:id="@+id/txCodCidade"
+                android:id="@+id/txCodcidade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
@@ -39,7 +39,7 @@
             android:layout_below="@+id/inputCodigo">
 
             <EditText
-                android:id="@+id/txNomeCidade"
+                android:id="@+id/txNomecidade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nome"
@@ -91,7 +91,7 @@
             android:layout_below="@+id/inputUf">
 
             <EditText
-                android:id="@+id/txCodNacionalCidade"
+                android:id="@+id/txCodnacionalcidade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="7"
@@ -125,7 +125,7 @@
             android:layout_below="@+id/inputPais">
 
             <EditText
-                android:id="@+id/txCodNacionalPais"
+                android:id="@+id/txCodnacionalpais"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="4"

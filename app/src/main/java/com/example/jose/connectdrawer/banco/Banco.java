@@ -22,10 +22,10 @@ public class Banco extends SQLiteOpenHelper {
         //db.delete("cliente",null,null);
         String sql = "CREATE TABLE cliente (" +
                 "codigo long primary key,"+
-                "nomeCliente text,"+
+                "nomecliente text,"+
                 "cpf text,"+
                 "cgc text,"+
-                "dataNasc real,"+
+                "datanasc real,"+
                 "endereco text,"+
                 "posicao text,"+
                 "pai text,"+
@@ -35,63 +35,63 @@ public class Banco extends SQLiteOpenHelper {
                 "identidade text,"+
                 "trabalho text,"+
                 "enderecotrab text,"+
-                "codProfissao long,"+
-                "codCidade long,"+
+                "codprofissao long,"+
+                "codcidade long,"+
                 "responsavel text,"+
                 "fone text,"+
                 "obs text,"+
                 "nume text,"+
                 "email text,"+
-                "pessoaAuto text,"+
-                "limiteCredito real,"+
-                "pessoaAuto1 text,"+
-                "limiteCredito1 real,"+
-                "pessoaAuto2 text,"+
-                "limiteCredito2 real,"+
-                "limitePessoal real,"+
-                "tipoCliente long,"+
-                "codVendedor text,"+
+                "pessoaauto text,"+
+                "limitecredito real,"+
+                "pessoaauto1 text,"+
+                "limitecredito1 real,"+
+                "pessoaauto2 text,"+
+                "limitecredito2 real,"+
+                "limitepessoal real,"+
+                "tipocliente long,"+
+                "codvendedor text,"+
                 "simples boolean,"+
                 "celular text,"+
                 "incest text,"+
-                "fisJu text,"+
+                "fisju text,"+
                 "fonetrab text,"+
                 "telefone text,"+
                 "conjuge text,"+
-                "freteCli text,"+
+                "fretecli text,"+
                 "antecipacao long,"+
                 "etiquetas boolean,"+
                 "sistema boolean,"+
                 "recibo booelan,"+
                 "vmanu real,"+
-                "codigoPgto long,"+
-                "codRepresentante text,"+
-                "dataCadastro real,"+
-                "dataAlteracao real,"+
-                "liberaLimite boolean,"+
+                "codigopgto long,"+
+                "codrepresentante text,"+
+                "datacadastro real,"+
+                "dataalteracao real,"+
+                "liberalimite boolean,"+
                 "fantasia text,"+
-                "contatoCobranca text,"+
+                "contatocobranca text,"+
                 "inativo boolean,"+
-                "clienteTipo long,"+
-                "diaCobranca long,"+
-                "diaParaVencimento long," +
-                "cadastroAndroid boolean," +
-                "deletadoAndroid boolean," +
-                "alteradoAndroid boolean);";
+                "clientetipo long,"+
+                "diacobranca long,"+
+                "diaparavencimento long," +
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
         db.execSQL(sql);
 
         sql = "CREATE TABLE cidade (" +
-                "codCidade long primary key,"+
-                "nomeCidade text,"+
+                "codcidade long primary key,"+
+                "nomecidade text,"+
                 "uf text,"+
-                "codNacionalUf text,"+
-                "codNacionalCidade text,"+
+                "codnacionaluf text,"+
+                "codnacionalcidade text,"+
                 "pais text,"+
-                "codNacionalPais text,"+
+                "codnacionalpais text,"+
                 "cep text," +
-                "cadastroAndroid boolean," +
-                "deletadoAndroid boolean," +
-                "alteradoAndroid boolean);";
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
         db.execSQL(sql);
 
     }

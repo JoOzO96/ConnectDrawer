@@ -54,9 +54,9 @@ public class SincCliente extends Activity {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
                         Cliente cliente = new Cliente();
                         cliente.setCodigo(loginList.get(cli).getCodigo());
-                        cliente.setNomeCliente(loginList.get(cli).getNomeCliente());
+                        cliente.setNomecliente(loginList.get(cli).getNomecliente());
                         cliente.setCpf(loginList.get(cli).getCpf());
-                        cliente.setDataNasc(loginList.get(cli).getDataNasc());
+                        cliente.setDatanasc(loginList.get(cli).getDatanasc());
                         cliente.setEndereco(loginList.get(cli).getEndereco());
                         cliente.setPosicao(loginList.get(cli).getPosicao());
                         cliente.setPai(loginList.get(cli).getPai());
@@ -70,43 +70,43 @@ public class SincCliente extends Activity {
                         cliente.setCgc(loginList.get(cli).getCgc());
                         cliente.setIncest(loginList.get(cli).getIncest());
                         cliente.setEnderecotrab(loginList.get(cli).getEnderecotrab());
-                        cliente.setCodProfissao(loginList.get(cli).getCodProfissao());
-                        cliente.setCodCidade(loginList.get(cli).getCodCidade());
+                        cliente.setCodprofissao(loginList.get(cli).getCodprofissao());
+                        cliente.setCodcidade(loginList.get(cli).getCodcidade());
                         cliente.setResponsavel(loginList.get(cli).getResponsavel());
                         cliente.setFone(loginList.get(cli).getFone());
                         cliente.setObs(loginList.get(cli).getObs());
                         cliente.setNume(loginList.get(cli).getNume());
                         cliente.setEmail(loginList.get(cli).getEmail());
-                        cliente.setPessoaAuto(loginList.get(cli).getPessoaAuto());
-                        cliente.setLimiteCredito(loginList.get(cli).getLimiteCredito());
-                        cliente.setPessoaAuto1(loginList.get(cli).getPessoaAuto1());
-                        cliente.setLimiteCredito1(loginList.get(cli).getLimiteCredito1());
-                        cliente.setPessoaAuto2(loginList.get(cli).getPessoaAuto2());
-                        cliente.setLimiteCredito2(loginList.get(cli).getLimiteCredito2());
-                        cliente.setLimitePessoal(loginList.get(cli).getLimitePessoal());
-                        cliente.setTipoCliente(loginList.get(cli).getTipoCliente());
-                        cliente.setCodVendedor(loginList.get(cli).getCodVendedor());
+                        cliente.setPessoaauto(loginList.get(cli).getPessoaauto());
+                        cliente.setLimitecredito(loginList.get(cli).getLimitecredito());
+                        cliente.setPessoaauto1(loginList.get(cli).getPessoaauto1());
+                        cliente.setLimitecredito1(loginList.get(cli).getLimitecredito1());
+                        cliente.setPessoaauto2(loginList.get(cli).getPessoaauto2());
+                        cliente.setLimitecredito2(loginList.get(cli).getLimitecredito2());
+                        cliente.setLimitepessoal(loginList.get(cli).getLimitepessoal());
+                        cliente.setTipocliente(loginList.get(cli).getTipocliente());
+                        cliente.setCodvendedor(loginList.get(cli).getCodvendedor());
                         cliente.setSimples(loginList.get(cli).getSimples());
                         cliente.setCelular(loginList.get(cli).getCelular());
-                        cliente.setFisJu(loginList.get(cli).getFisJu());
+                        cliente.setFisju(loginList.get(cli).getFisju());
                         cliente.setConjuge(loginList.get(cli).getConjuge());
-                        cliente.setFreteCli(loginList.get(cli).getFreteCli());
+                        cliente.setFretecli(loginList.get(cli).getFretecli());
                         cliente.setAntecipacao(loginList.get(cli).getAntecipacao());
                         cliente.setEtiquetas(loginList.get(cli).getEtiquetas());
                         cliente.setSistema(loginList.get(cli).getSistema());
                         cliente.setVmanu(loginList.get(cli).getVmanu());
                         cliente.setRecibo(loginList.get(cli).getRecibo());
-                        cliente.setCodigoPgto(loginList.get(cli).getCodigoPgto());
-                        cliente.setCodRepresentante(loginList.get(cli).getCodRepresentante());
-                        cliente.setDataCadastro(loginList.get(cli).getDataCadastro());
-                        cliente.setDataAlteracao(loginList.get(cli).getDataAlteracao());
-                        cliente.setLiberaLimite(loginList.get(cli).getLiberaLimite());
+                        cliente.setCodigopgto(loginList.get(cli).getCodigopgto());
+                        cliente.setCodrepresentante(loginList.get(cli).getCodrepresentante());
+                        cliente.setDatacadastro(loginList.get(cli).getDatacadastro());
+                        cliente.setDataalteracao(loginList.get(cli).getDataalteracao());
+                        cliente.setLiberalimite(loginList.get(cli).getLiberalimite());
                         cliente.setFantasia(loginList.get(cli).getFantasia());
-                        cliente.setContatoCobranca(loginList.get(cli).getContatoCobranca());
+                        cliente.setContatocobranca(loginList.get(cli).getContatocobranca());
                         cliente.setInativo(loginList.get(cli).getInativo());
-                        cliente.setClienteTipo(loginList.get(cli).getClienteTipo());
-                        cliente.setDiaCobranca(loginList.get(cli).getDiaCobranca());
-                        cliente.setDiaParaVencimento(loginList.get(cli).getDiaParaVencimento());
+                        cliente.setClientetipo(loginList.get(cli).getClientetipo());
+                        cliente.setDiacobranca(loginList.get(cli).getDiacobranca());
+                        cliente.setDiaparavencimento(loginList.get(cli).getDiaparavencimento());
 
 
                         ///
@@ -117,61 +117,7 @@ public class SincCliente extends Activity {
                         //
 
                         boolean status = cliInsere.insereDados(
-                                context1,
-                                cliente.getCodigo(),
-                                cliente.getNomeCliente(),
-                                cliente.getCpf(),
-                                cliente.getDataNasc(),
-                                cliente.getEndereco(),
-                                cliente.getPosicao(),
-                                cliente.getPai(),
-                                cliente.getMae(),
-                                cliente.getBairro(),
-                                cliente.getCep(),
-                                cliente.getIdentidade(),
-                                cliente.getTrabalho(),
-                                cliente.getFonetrab(),
-                                cliente.getFonetrab(),
-                                cliente.getCgc(),
-                                cliente.getIncest(),
-                                cliente.getEnderecotrab(),
-                                cliente.getCodProfissao(),
-                                cliente.getCodCidade(),
-                                cliente.getResponsavel(),
-                                cliente.getFone(),
-                                cliente.getObs(),
-                                cliente.getNume(),
-                                cliente.getEmail(),
-                                cliente.getPessoaAuto(),
-                                cliente.getLimiteCredito(),
-                                cliente.getPessoaAuto1(),
-                                cliente.getLimiteCredito1(),
-                                cliente.getPessoaAuto2(),
-                                cliente.getLimiteCredito2(),
-                                cliente.getLimitePessoal(),
-                                cliente.getClienteTipo(),
-                                cliente.getCodVendedor(),
-                                cliente.getSimples(),
-                                cliente.getCelular(),
-                                cliente.getFisJu(),
-                                cliente.getConjuge(),
-                                cliente.getFreteCli(),
-                                cliente.getAntecipacao(),
-                                cliente.getEtiquetas(),
-                                cliente.getSistema(),
-                                cliente.getVmanu(),
-                                cliente.getRecibo(),
-                                cliente.getCodigoPgto(),
-                                cliente.getCodRepresentante(),
-                                cliente.getDataCadastro(),
-                                cliente.getDataAlteracao(),
-                                cliente.getLiberaLimite(),
-                                cliente.getFantasia(),
-                                cliente.getContatoCobranca(),
-                                cliente.getInativo(),
-                                cliente.getClienteTipo(),
-                                cliente.getDiaCobranca(),
-                                cliente.getDiaParaVencimento()
+                                context1, cliente
                         );
                         cursor.close();
                     }

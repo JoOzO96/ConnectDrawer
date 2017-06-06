@@ -8,8 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jose on 18/05/2017.
@@ -18,9 +23,9 @@ import java.util.Date;
 public class Cliente {
 
     private Long codigo;
-    private String nomeCliente;
+    private String nomecliente;
     private String cpf;
-    private Date dataNasc;
+    private Date datanasc;
     private String endereco;
     private String posicao;
     private String pai;
@@ -34,46 +39,46 @@ public class Cliente {
     private String cgc;
     private String incest;
     private String enderecotrab;
-    private Long codProfissao;
-    private Long codCidade;
+    private Long codprofissao;
+    private Long codcidade;
     private String responsavel;
     private String fone;
     private String obs;
     private String nume;
     private String email;
-    private String pessoaAuto;
-    private Double limiteCredito;
-    private String pessoaAuto1;
-    private Double limiteCredito1;
-    private String pessoaAuto2;
-    private Double limiteCredito2;
-    private Double limitePessoal;
-    private Long tipoCliente;
-    private String codVendedor;
+    private String pessoaauto;
+    private Double limitecredito;
+    private String pessoaauto1;
+    private Double limitecredito1;
+    private String pessoaauto2;
+    private Double limitecredito2;
+    private Double limitepessoal;
+    private Long tipocliente;
+    private String codvendedor;
     private Boolean simples;
     private String celular;
-    private String fisJu;
+    private String fisju;
     private String conjuge;
-    private String freteCli;
+    private String fretecli;
     private Long antecipacao;
     private Boolean etiquetas;
     private Boolean sistema;
     private Double vmanu;
     private Boolean recibo;
-    private Long codigoPgto;
-    private String codRepresentante;
-    private Date dataCadastro;
-    private Date dataAlteracao;
-    private Boolean liberaLimite;
+    private Long codigopgto;
+    private String codrepresentante;
+    private Date datacadastro;
+    private Date dataalteracao;
+    private Boolean liberalimite;
     private String fantasia;
-    private String contatoCobranca;
+    private String contatocobranca;
     private Boolean inativo;
-    private Long clienteTipo;
-    private Long diaCobranca;
-    private Long diaParaVencimento;
-    private Boolean cadastroAndroid;
-    private Boolean deletadoAndroid;
-    private Boolean alteradoAndroid;
+    private Long clientetipo;
+    private Long diacobranca;
+    private Long diaparavencimento;
+    private Boolean cadastroandroid;
+    private Boolean deletadoandroid;
+    private Boolean alteradoandroid;
 
 
     public Long getCodigo() {
@@ -84,12 +89,12 @@ public class Cliente {
         this.codigo = codigo;
     }
 
-    public String getNomeCliente() {
-        return nomeCliente;
+    public String getNomecliente() {
+        return nomecliente;
     }
 
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
+    public void setNomecliente(String nomecliente) {
+        this.nomecliente = nomecliente;
     }
 
     public String getCpf() {
@@ -98,6 +103,14 @@ public class Cliente {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Date getDatanasc() {
+        return datanasc;
+    }
+
+    public void setDatanasc(Date datanasc) {
+        this.datanasc = datanasc;
     }
 
     public String getEndereco() {
@@ -204,20 +217,20 @@ public class Cliente {
         this.enderecotrab = enderecotrab;
     }
 
-    public Long getCodProfissao() {
-        return codProfissao;
+    public Long getCodprofissao() {
+        return codprofissao;
     }
 
-    public void setCodProfissao(Long codProfissao) {
-        this.codProfissao = codProfissao;
+    public void setCodprofissao(Long codprofissao) {
+        this.codprofissao = codprofissao;
     }
 
-    public Long getCodCidade() {
-        return codCidade;
+    public Long getCodcidade() {
+        return codcidade;
     }
 
-    public void setCodCidade(Long codCidade) {
-        this.codCidade = codCidade;
+    public void setCodcidade(Long codcidade) {
+        this.codcidade = codcidade;
     }
 
     public String getResponsavel() {
@@ -260,76 +273,76 @@ public class Cliente {
         this.email = email;
     }
 
-    public String getPessoaAuto() {
-        return pessoaAuto;
+    public String getPessoaauto() {
+        return pessoaauto;
     }
 
-    public void setPessoaAuto(String pessoaAuto) {
-        this.pessoaAuto = pessoaAuto;
+    public void setPessoaauto(String pessoaauto) {
+        this.pessoaauto = pessoaauto;
     }
 
-    public Double getLimiteCredito() {
-        return limiteCredito;
+    public Double getLimitecredito() {
+        return limitecredito;
     }
 
-    public void setLimiteCredito(Double limiteCredito) {
-        this.limiteCredito = limiteCredito;
+    public void setLimitecredito(Double limitecredito) {
+        this.limitecredito = limitecredito;
     }
 
-    public String getPessoaAuto1() {
-        return pessoaAuto1;
+    public String getPessoaauto1() {
+        return pessoaauto1;
     }
 
-    public void setPessoaAuto1(String pessoaAuto1) {
-        this.pessoaAuto1 = pessoaAuto1;
+    public void setPessoaauto1(String pessoaauto1) {
+        this.pessoaauto1 = pessoaauto1;
     }
 
-    public Double getLimiteCredito1() {
-        return limiteCredito1;
+    public Double getLimitecredito1() {
+        return limitecredito1;
     }
 
-    public void setLimiteCredito1(Double limiteCredito1) {
-        this.limiteCredito1 = limiteCredito1;
+    public void setLimitecredito1(Double limitecredito1) {
+        this.limitecredito1 = limitecredito1;
     }
 
-    public String getPessoaAuto2() {
-        return pessoaAuto2;
+    public String getPessoaauto2() {
+        return pessoaauto2;
     }
 
-    public void setPessoaAuto2(String pessoaAuto2) {
-        this.pessoaAuto2 = pessoaAuto2;
+    public void setPessoaauto2(String pessoaauto2) {
+        this.pessoaauto2 = pessoaauto2;
     }
 
-    public Double getLimiteCredito2() {
-        return limiteCredito2;
+    public Double getLimitecredito2() {
+        return limitecredito2;
     }
 
-    public void setLimiteCredito2(Double limiteCredito2) {
-        this.limiteCredito2 = limiteCredito2;
+    public void setLimitecredito2(Double limitecredito2) {
+        this.limitecredito2 = limitecredito2;
     }
 
-    public Double getLimitePessoal() {
-        return limitePessoal;
+    public Double getLimitepessoal() {
+        return limitepessoal;
     }
 
-    public void setLimitePessoal(Double limitePessoal) {
-        this.limitePessoal = limitePessoal;
+    public void setLimitepessoal(Double limitepessoal) {
+        this.limitepessoal = limitepessoal;
     }
 
-    public Long getTipoCliente() {
-        return tipoCliente;
+    public Long getTipocliente() {
+        return tipocliente;
     }
 
-    public void setTipoCliente(Long tipoCliente) {
-        this.tipoCliente = tipoCliente;
+    public void setTipocliente(Long tipocliente) {
+        this.tipocliente = tipocliente;
     }
 
-    public String getCodVendedor() {
-        return codVendedor;
+    public String getCodvendedor() {
+        return codvendedor;
     }
 
-    public void setCodVendedor(String codVendedor) {
-        this.codVendedor = codVendedor;
+    public void setCodvendedor(String codvendedor) {
+        this.codvendedor = codvendedor;
     }
 
     public Boolean getSimples() {
@@ -348,12 +361,12 @@ public class Cliente {
         this.celular = celular;
     }
 
-    public String getFisJu() {
-        return fisJu;
+    public String getFisju() {
+        return fisju;
     }
 
-    public void setFisJu(String fisJu) {
-        this.fisJu = fisJu;
+    public void setFisju(String fisju) {
+        this.fisju = fisju;
     }
 
     public String getConjuge() {
@@ -364,12 +377,12 @@ public class Cliente {
         this.conjuge = conjuge;
     }
 
-    public String getFreteCli() {
-        return freteCli;
+    public String getFretecli() {
+        return fretecli;
     }
 
-    public void setFreteCli(String freteCli) {
-        this.freteCli = freteCli;
+    public void setFretecli(String fretecli) {
+        this.fretecli = fretecli;
     }
 
     public Long getAntecipacao() {
@@ -412,32 +425,44 @@ public class Cliente {
         this.recibo = recibo;
     }
 
-    public Long getCodigoPgto() {
-        return codigoPgto;
+    public Long getCodigopgto() {
+        return codigopgto;
     }
 
-    public void setCodigoPgto(Long codigoPgto) {
-        this.codigoPgto = codigoPgto;
+    public void setCodigopgto(Long codigopgto) {
+        this.codigopgto = codigopgto;
     }
 
-    public String getCodRepresentante() {
-        return codRepresentante;
+    public String getCodrepresentante() {
+        return codrepresentante;
     }
 
-    public void setCodRepresentante(String codRepresentante) {
-        this.codRepresentante = codRepresentante;
+    public void setCodrepresentante(String codrepresentante) {
+        this.codrepresentante = codrepresentante;
     }
 
-    public void setDataNasc(Date dataNasc) {
-        this.dataNasc = dataNasc;
+    public Date getDatacadastro() {
+        return datacadastro;
     }
 
-    public Boolean getLiberaLimite() {
-        return liberaLimite;
+    public void setDatacadastro(Date datacadastro) {
+        this.datacadastro = datacadastro;
     }
 
-    public void setLiberaLimite(Boolean liberaLimite) {
-        this.liberaLimite = liberaLimite;
+    public Date getDataalteracao() {
+        return dataalteracao;
+    }
+
+    public void setDataalteracao(Date dataalteracao) {
+        this.dataalteracao = dataalteracao;
+    }
+
+    public Boolean getLiberalimite() {
+        return liberalimite;
+    }
+
+    public void setLiberalimite(Boolean liberalimite) {
+        this.liberalimite = liberalimite;
     }
 
     public String getFantasia() {
@@ -448,12 +473,12 @@ public class Cliente {
         this.fantasia = fantasia;
     }
 
-    public String getContatoCobranca() {
-        return contatoCobranca;
+    public String getContatocobranca() {
+        return contatocobranca;
     }
 
-    public void setContatoCobranca(String contatoCobranca) {
-        this.contatoCobranca = contatoCobranca;
+    public void setContatocobranca(String contatocobranca) {
+        this.contatocobranca = contatocobranca;
     }
 
     public Boolean getInativo() {
@@ -464,144 +489,124 @@ public class Cliente {
         this.inativo = inativo;
     }
 
-    public Long getClienteTipo() {
-        return clienteTipo;
+    public Long getClientetipo() {
+        return clientetipo;
     }
 
-    public void setClienteTipo(Long clienteTipo) {
-        this.clienteTipo = clienteTipo;
+    public void setClientetipo(Long clientetipo) {
+        this.clientetipo = clientetipo;
     }
 
-    public Long getDiaCobranca() {
-        return diaCobranca;
+    public Long getDiacobranca() {
+        return diacobranca;
     }
 
-    public void setDiaCobranca(Long diaCobranca) {
-        this.diaCobranca = diaCobranca;
+    public void setDiacobranca(Long diacobranca) {
+        this.diacobranca = diacobranca;
     }
 
-    public Long getDiaParaVencimento() {
-        return diaParaVencimento;
+    public Long getDiaparavencimento() {
+        return diaparavencimento;
     }
 
-    public void setDiaParaVencimento(Long diaParaVencimento) {
-        this.diaParaVencimento = diaParaVencimento;
+    public void setDiaparavencimento(Long diaparavencimento) {
+        this.diaparavencimento = diaparavencimento;
     }
 
-    public Boolean getCadastroAndroid() {
-        return cadastroAndroid;
+    public Boolean getCadastroandroid() {
+        return cadastroandroid;
     }
 
-    public void setCadastroAndroid(Boolean cadastroAndroid) {
-        this.cadastroAndroid = cadastroAndroid;
+    public void setCadastroandroid(Boolean cadastroandroid) {
+        this.cadastroandroid = cadastroandroid;
     }
 
-    public Boolean getDeletadoAndroid() {
-        return deletadoAndroid;
+    public Boolean getDeletadoandroid() {
+        return deletadoandroid;
     }
 
-    public void setDeletadoAndroid(Boolean deletadoAndroid) {
-        this.deletadoAndroid = deletadoAndroid;
+    public void setDeletadoandroid(Boolean deletadoandroid) {
+        this.deletadoandroid = deletadoandroid;
     }
 
-    public Boolean getAlteradoAndroid() {
-        return alteradoAndroid;
+    public Boolean getAlteradoandroid() {
+        return alteradoandroid;
     }
 
-    public void setAlteradoAndroid(Boolean alteradoAndroid) {
-        this.alteradoAndroid = alteradoAndroid;
-    }
-
-    public Date getDataNasc() {
-        return dataNasc;
-    }
-
-    public Date getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(Date dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public Date getDataAlteracao() {
-        return dataAlteracao;
-    }
-
-    public void setDataAlteracao(Date dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
+    public void setAlteradoandroid(Boolean alteradoandroid) {
+        this.alteradoandroid = alteradoandroid;
     }
 
     @Override
     public String toString() {
-        return codigo + " - " + nomeCliente;
+        return codigo + " - " + nomecliente;
     }
 
 
-    public boolean insereDados(Context context, Long codigo, String nomeCliente, String cpf, Date dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Date dataCadastro, Date dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento) {
+    public boolean insereDados(Context context, Cliente cliente) {
         Banco myDb = new Banco(context);
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codigo", codigo);
-        valores.put("nomeCliente", nomeCliente);
-        valores.put("cpf", cpf);
-        if (dataNasc != null) {
-            valores.put("dataNasc", dataNasc.getTime());
+        valores.put("codigo", cliente.getCodigo());
+        valores.put("nomecliente", cliente.getNomecliente());
+        valores.put("cpf", cliente.getCpf());
+        if (cliente.getDatanasc() != null) {
+            valores.put("datanasc", cliente.getDatanasc().getTime());
         }
-        valores.put("endereco", endereco);
-        valores.put("posicao", posicao);
-        valores.put("pai", pai);
-        valores.put("mae", mae);
-        valores.put("bairro", bairro);
-        valores.put("cep", cep);
-        valores.put("identidade", identidade);
-        valores.put("trabalho", trabalho);
-        valores.put("telefone", telefone);
-        valores.put("fonetrab", fonetrab);
-        valores.put("cgc", cgc);
-        valores.put("incest", incest);
-        valores.put("enderecotrab", enderecotrab);
-        valores.put("codProfissao", codProfissao);
-        valores.put("codCidade", codCidade);
-        valores.put("responsavel", responsavel);
-        valores.put("fone", fone);
-        valores.put("obs", obs);
-        valores.put("nume", nume);
-        valores.put("email", email);
-        valores.put("pessoaAuto", pessoaAuto);
-        valores.put("limiteCredito", limiteCredito);
-        valores.put("pessoaAuto1", pessoaAuto1);
-        valores.put("limiteCredito1", limiteCredito1);
-        valores.put("pessoaAuto2", pessoaAuto2);
-        valores.put("limiteCredito2", limiteCredito2);
-        valores.put("limitePessoal", limitePessoal);
-        valores.put("tipoCliente", tipoCliente);
-        valores.put("codVendedor", codVendedor);
-        valores.put("simples", simples);
-        valores.put("celular", celular);
-        valores.put("fisJu", fisJu);
-        valores.put("conjuge", conjuge);
-        valores.put("freteCli", freteCli);
-        valores.put("antecipacao", antecipacao);
-        valores.put("etiquetas", etiquetas);
-        valores.put("sistema", sistema);
-        valores.put("vmanu", vmanu);
-        valores.put("recibo", recibo);
-        valores.put("codigoPgto", codigoPgto);
-        valores.put("codRepresentante", codRepresentante);
-        if (dataCadastro != null) {
-            valores.put("dataCadastro", dataCadastro.getTime());
+        valores.put("endereco", cliente.getEndereco());
+        valores.put("posicao", cliente.getPosicao());
+        valores.put("pai", cliente.getPai());
+        valores.put("mae", cliente.getMae());
+        valores.put("bairro", cliente.getBairro());
+        valores.put("cep", cliente.getCep());
+        valores.put("identidade", cliente.getIdentidade());
+        valores.put("trabalho", cliente.getTrabalho());
+        valores.put("telefone", cliente.getTelefone());
+        valores.put("fonetrab", cliente.getFonetrab());
+        valores.put("cgc", cliente.getCgc());
+        valores.put("incest", cliente.getIncest());
+        valores.put("enderecotrab", cliente.getEnderecotrab());
+        valores.put("codprofissao", cliente.getCodprofissao());
+        valores.put("codcidade", cliente.getCodcidade());
+        valores.put("responsavel", cliente.getResponsavel());
+        valores.put("fone", cliente.getFone());
+        valores.put("obs", cliente.getObs());
+        valores.put("nume", cliente.getNume());
+        valores.put("email", cliente.getEmail());
+        valores.put("pessoaauto", cliente.getPessoaauto());
+        valores.put("limitecredito", cliente.getLimitecredito());
+        valores.put("pessoaauto1", cliente.getPessoaauto1());
+        valores.put("limitecredito1", cliente.getLimitecredito1());
+        valores.put("pessoaauto2", cliente.getPessoaauto2());
+        valores.put("limitecredito2", cliente.getLimitecredito2());
+        valores.put("limitepessoal", cliente.getLimitepessoal());
+        valores.put("tipocliente", cliente.getTipocliente());
+        valores.put("codvendedor", cliente.getCodvendedor());
+        valores.put("simples", cliente.getSimples());
+        valores.put("celular", cliente.getCelular());
+        valores.put("fisju", cliente.getFisju());
+        valores.put("conjuge", cliente.getConjuge());
+        valores.put("fretecli", cliente.getFretecli());
+        valores.put("antecipacao", cliente.getAntecipacao());
+        valores.put("etiquetas", cliente.getEtiquetas());
+        valores.put("sistema", cliente.getSistema());
+        valores.put("vmanu", cliente.getVmanu());
+        valores.put("recibo", cliente.getRecibo());
+        valores.put("codigopgto", cliente.getCodigopgto());
+        valores.put("codrepresentante", cliente.getCodrepresentante());
+        if (cliente.getDatacadastro() != null) {
+            valores.put("datacadastro", cliente.getDatacadastro().getTime());
         }
-        if (dataAlteracao != null) {
-            valores.put("dataAlteracao", dataAlteracao.getTime());
+        if (cliente.getDataalteracao() != null) {
+            valores.put("dataalteracao", cliente.getDataalteracao().getTime());
         }
-        valores.put("liberaLimite", liberaLimite);
-        valores.put("fantasia", fantasia);
-        valores.put("contatoCobranca", contatoCobranca);
-        valores.put("inativo", inativo);
-        valores.put("clienteTipo", clienteTipo);
-        valores.put("diaCobranca", diaCobranca);
-        valores.put("diaParaVencimento", diaParaVencimento);
+        valores.put("liberalimite", cliente.getLiberalimite());
+        valores.put("fantasia",cliente.getFantasia());
+        valores.put("contatocobranca", cliente.getContatocobranca());
+        valores.put("inativo",cliente.getInativo());
+        valores.put("clientetipo", cliente.getClientetipo());
+        valores.put("diacobranca",cliente.getDiacobranca());
+        valores.put("diaparavencimento", cliente.getDiaparavencimento());
 
         long result = db.insert("cliente", null, valores);
         db.close();
@@ -613,77 +618,85 @@ public class Cliente {
         }
     }
 
-    public Cliente retornaClienteFiltrado(Context context, Long codigo) {
+    public Cursor retornaClienteFiltrado(Context context, Long codigo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM cliente where codigo = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where codigo = " + codigo, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
-
-        Cliente cliente = new Cliente();
-        cliente.setCodigo(cursor.getLong(cursor.getColumnIndex("codigo")));
-        cliente.setNomeCliente(cursor.getString(cursor.getColumnIndex("nomeCliente")));
-        cliente.setCpf(cursor.getString(cursor.getColumnIndex("cpf")));
-        cliente.setCgc(cursor.getString(cursor.getColumnIndex("cgc")));
-        cliente.setDataNasc(new Date(cursor.getLong(cursor.getColumnIndex("dataNasc"))));
-        cliente.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
-        cliente.setPosicao(cursor.getString(cursor.getColumnIndex("posicao")));
-        cliente.setPai(cursor.getString(cursor.getColumnIndex("pai")));
-        cliente.setMae(cursor.getString(cursor.getColumnIndex("mae")));
-        cliente.setBairro(cursor.getString(cursor.getColumnIndex("bairro")));
-        cliente.setCep(cursor.getString(cursor.getColumnIndex("cep")));
-        cliente.setBairro(cursor.getString(cursor.getColumnIndex("bairro")));
-        cliente.setCep(cursor.getString(cursor.getColumnIndex("cep")));
-        cliente.setIdentidade(cursor.getString(cursor.getColumnIndex("identidade")));
-        cliente.setTrabalho(cursor.getString(cursor.getColumnIndex("trabalho")));
-        cliente.setEnderecotrab(cursor.getString(cursor.getColumnIndex("enderecotrab")));
-        cliente.setCodProfissao(cursor.getLong(cursor.getColumnIndex("codProfissao")));
-        cliente.setCodCidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
-        cliente.setResponsavel(cursor.getString(cursor.getColumnIndex("responsavel")));
-        cliente.setFone(cursor.getString(cursor.getColumnIndex("fone")));
-        cliente.setObs(cursor.getString(cursor.getColumnIndex("obs")));
-        cliente.setNume(cursor.getString(cursor.getColumnIndex("nume")));
-        cliente.setEmail(cursor.getString(cursor.getColumnIndex("email")));
-        cliente.setPessoaAuto(cursor.getString(cursor.getColumnIndex("pessoaAuto")));
-        cliente.setLimiteCredito(cursor.getDouble(cursor.getColumnIndex("limiteCredito")));
-        cliente.setPessoaAuto1(cursor.getString(cursor.getColumnIndex("pessoaAuto1")));
-        cliente.setLimiteCredito1(cursor.getDouble(cursor.getColumnIndex("limiteCredito1")));
-        cliente.setPessoaAuto2(cursor.getString(cursor.getColumnIndex("pessoaAuto2")));
-        cliente.setLimiteCredito2(cursor.getDouble(cursor.getColumnIndex("limiteCredito2")));
-        cliente.setLimitePessoal(cursor.getDouble(cursor.getColumnIndex("limitePessoal")));
-        cliente.setLimitePessoal(cursor.getDouble(cursor.getColumnIndex("tipoCliente")));
-        cliente.setCodVendedor(cursor.getString(cursor.getColumnIndex("codVendedor")));
-        cliente.setSimples(cursor.getInt(cursor.getColumnIndex("simples")) == 1);
-        cliente.setCelular(cursor.getString(cursor.getColumnIndex("celular")));
-        cliente.setIncest(cursor.getString(cursor.getColumnIndex("incest")));
-        cliente.setFisJu(cursor.getString(cursor.getColumnIndex("fisJu")));
-        cliente.setFonetrab(cursor.getString(cursor.getColumnIndex("fonetrab")));
-        cliente.setTelefone(cursor.getString(cursor.getColumnIndex("telefone")));
-        cliente.setConjuge(cursor.getString(cursor.getColumnIndex("conjuge")));
-        cliente.setFreteCli(cursor.getString(cursor.getColumnIndex("freteCli")));
-        cliente.setAntecipacao(cursor.getLong(cursor.getColumnIndex("antecipacao")));
-        cliente.setEtiquetas(cursor.getInt(cursor.getColumnIndex("etiquetas")) == 1);
-        cliente.setSistema(cursor.getInt(cursor.getColumnIndex("sistema")) == 1);
-        cliente.setRecibo(cursor.getInt(cursor.getColumnIndex("recibo")) == 1);
-        cliente.setVmanu(cursor.getDouble(cursor.getColumnIndex("vmanu")));
-        cliente.setCodigoPgto(cursor.getLong(cursor.getColumnIndex("codigoPgto")));
-        cliente.setCodRepresentante(cursor.getString(cursor.getColumnIndex("codRepresentante")));
-        cliente.setDataCadastro(new Date(cursor.getLong(cursor.getColumnIndex("dataCadastro"))));
-        cliente.setDataAlteracao(new Date(cursor.getLong(cursor.getColumnIndex("dataAlteracao"))));
-        cliente.setLiberaLimite(cursor.getInt(cursor.getColumnIndex("liberaLimite")) == 1);
-        cliente.setFantasia(cursor.getString(cursor.getColumnIndex("fantasia")));
-        cliente.setContatoCobranca(cursor.getString(cursor.getColumnIndex("contatoCobranca")));
-        cliente.setInativo(cursor.getInt(cursor.getColumnIndex("inativo")) == 1);
-        cliente.setClienteTipo(cursor.getLong(cursor.getColumnIndex("clienteTipo")));
-        cliente.setDiaCobranca(cursor.getLong(cursor.getColumnIndex("diaCobranca")));
-        cliente.setDiaParaVencimento(cursor.getLong(cursor.getColumnIndex("diaParaVencimento")));
-        cliente.setCadastroAndroid(cursor.getInt(cursor.getColumnIndex("cadastroAndroid")) == 1);
-        cliente.setDeletadoAndroid(cursor.getInt(cursor.getColumnIndex("deletadoAndroid")) == 1);
-        cliente.setAlteradoAndroid(cursor.getInt(cursor.getColumnIndex("alteradoAndroid")) == 1);
         db.close();
+        return cursor;
+//        GetSetDinamico getSetDinamico = new GetSetDinamico();
+//        Cliente cliente = new Cliente();
+//        List<Field> fieldList = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+//
+//        for (int i = 0; fieldList.size() != i; i++) {
+//            Object ret = getSetDinamico.setValorObjetoCursor(fieldList.get(i), cliente, cursor);
+//            cliente = (Cliente) ret;
+//        }
+//        cliente.setCodigo(cursor.getLong(cursor.getColumnIndex("codigo")));
+//        cliente.setNomeCliente(cursor.getString(cursor.getColumnIndex("nomecliente")));
+//        cliente.setCpf(cursor.getString(cursor.getColumnIndex("cpf")));
+//        cliente.setCgc(cursor.getString(cursor.getColumnIndex("cgc")));
+//        cliente.setDataNasc(new Date(cursor.getLong(cursor.getColumnIndex("datanasc"))));
+//        cliente.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
+//        cliente.setPosicao(cursor.getString(cursor.getColumnIndex("posicao")));
+//        cliente.setPai(cursor.getString(cursor.getColumnIndex("pai")));
+//        cliente.setMae(cursor.getString(cursor.getColumnIndex("mae")));
+//        cliente.setBairro(cursor.getString(cursor.getColumnIndex("bairro")));
+//        cliente.setCep(cursor.getString(cursor.getColumnIndex("cep")));
+//        cliente.setBairro(cursor.getString(cursor.getColumnIndex("bairro")));
+//        cliente.setCep(cursor.getString(cursor.getColumnIndex("cep")));
+//        cliente.setIdentidade(cursor.getString(cursor.getColumnIndex("identidade")));
+//        cliente.setTrabalho(cursor.getString(cursor.getColumnIndex("trabalho")));
+//        cliente.setEnderecotrab(cursor.getString(cursor.getColumnIndex("enderecotrab")));
+//        cliente.setCodProfissao(cursor.getLong(cursor.getColumnIndex("codprofissao")));
+//        cliente.setCodCidade(cursor.getLong(cursor.getColumnIndex("codcidade")));
+//        cliente.setResponsavel(cursor.getString(cursor.getColumnIndex("responsavel")));
+//        cliente.setFone(cursor.getString(cursor.getColumnIndex("fone")));
+//        cliente.setObs(cursor.getString(cursor.getColumnIndex("obs")));
+//        cliente.setNume(cursor.getString(cursor.getColumnIndex("nume")));
+//        cliente.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+//        cliente.setPessoaAuto(cursor.getString(cursor.getColumnIndex("pessoaauto")));
+//        cliente.setLimiteCredito(cursor.getDouble(cursor.getColumnIndex("limitecredito")));
+//        cliente.setPessoaAuto1(cursor.getString(cursor.getColumnIndex("pessoaauto1")));
+//        cliente.setLimiteCredito1(cursor.getDouble(cursor.getColumnIndex("limitecredito1")));
+//        cliente.setPessoaAuto2(cursor.getString(cursor.getColumnIndex("pessoaauto2")));
+//        cliente.setLimiteCredito2(cursor.getDouble(cursor.getColumnIndex("limitecredito2")));
+//        cliente.setLimitePessoal(cursor.getDouble(cursor.getColumnIndex("limitepessoal")));
+//        cliente.setLimitePessoal(cursor.getDouble(cursor.getColumnIndex("tipocliente")));
+//        cliente.setCodVendedor(cursor.getString(cursor.getColumnIndex("codvendedor")));
+//        cliente.setSimples(cursor.getInt(cursor.getColumnIndex("simples")) == 1);
+//        cliente.setCelular(cursor.getString(cursor.getColumnIndex("celular")));
+//        cliente.setIncest(cursor.getString(cursor.getColumnIndex("incest")));
+//        cliente.setFisJu(cursor.getString(cursor.getColumnIndex("fisju")));
+//        cliente.setFonetrab(cursor.getString(cursor.getColumnIndex("fonetrab")));
+//        cliente.setTelefone(cursor.getString(cursor.getColumnIndex("telefone")));
+//        cliente.setConjuge(cursor.getString(cursor.getColumnIndex("conjuge")));
+//        cliente.setFreteCli(cursor.getString(cursor.getColumnIndex("fretecli")));
+//        cliente.setAntecipacao(cursor.getLong(cursor.getColumnIndex("antecipacao")));
+//        cliente.setEtiquetas(cursor.getInt(cursor.getColumnIndex("etiquetas")) == 1);
+//        cliente.setSistema(cursor.getInt(cursor.getColumnIndex("sistema")) == 1);
+//        cliente.setRecibo(cursor.getInt(cursor.getColumnIndex("recibo")) == 1);
+//        cliente.setVmanu(cursor.getDouble(cursor.getColumnIndex("vmanu")));
+//        cliente.setCodigoPgto(cursor.getLong(cursor.getColumnIndex("codigopgto")));
+//        cliente.setCodRepresentante(cursor.getString(cursor.getColumnIndex("codrepresentante")));
+//        cliente.setDataCadastro(new Date(cursor.getLong(cursor.getColumnIndex("datacadastro"))));
+//        cliente.setDataAlteracao(new Date(cursor.getLong(cursor.getColumnIndex("dataalteracao"))));
+//        cliente.setLiberaLimite(cursor.getInt(cursor.getColumnIndex("liberalimite")) == 1);
+//        cliente.setFantasia(cursor.getString(cursor.getColumnIndex("fantasia")));
+//        cliente.setContatoCobranca(cursor.getString(cursor.getColumnIndex("contatocobranca")));
+//        cliente.setInativo(cursor.getInt(cursor.getColumnIndex("inativo")) == 1);
+//        cliente.setClienteTipo(cursor.getLong(cursor.getColumnIndex("clientetipo")));
+//        cliente.setDiaCobranca(cursor.getLong(cursor.getColumnIndex("diacobranca")));
+//        cliente.setDiaParaVencimento(cursor.getLong(cursor.getColumnIndex("diaparavencimento")));
+//        cliente.setCadastroAndroid(cursor.getInt(cursor.getColumnIndex("cadastroandroid")) == 1);
+//        cliente.setDeletadoAndroid(cursor.getInt(cursor.getColumnIndex("deletadoandroid")) == 1);
+//        cliente.setAlteradoAndroid(cursor.getInt(cursor.getColumnIndex("alteradoandroid")) == 1);
+        //db.close();
 
-        return cliente;
+        //return cliente;
     }
 
     public Cursor retornaClienteFiltradoCursor(Context context, Long codigo) {
@@ -701,7 +714,6 @@ public class Cliente {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente", null);
-        Log.i("CURSOR", "" + cursor.getCount());
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -789,9 +801,9 @@ public class Cliente {
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
         valores.put("codigo", codigo);
-        valores.put("nomeCliente", nomeCliente);
+        valores.put("nomecliente", nomeCliente);
         valores.put("cpf", cpf);
-        valores.put("dataNasc", dataNasc.getTime());
+        valores.put("datanasc", dataNasc.getTime());
         valores.put("endereco", endereco);
         valores.put("posicao", posicao);
         valores.put("pai", pai);
@@ -805,25 +817,25 @@ public class Cliente {
         valores.put("cgc", cgc);
         valores.put("incest", incest);
         valores.put("enderecotrab", enderecotrab);
-        valores.put("codProfissao", codProfissao);
-        valores.put("codCidade", codCidade);
+        valores.put("codprofissao", codProfissao);
+        valores.put("codcidade", codCidade);
         valores.put("responsavel", responsavel);
         valores.put("fone", fone);
         valores.put("obs", obs);
         valores.put("nume", nume);
         valores.put("email", email);
-        valores.put("pessoaAuto", pessoaAuto);
-        valores.put("limiteCredito", limiteCredito);
-        valores.put("pessoaAuto1", pessoaAuto1);
-        valores.put("limiteCredito1", limiteCredito1);
-        valores.put("pessoaAuto2", pessoaAuto2);
-        valores.put("limiteCredito2", limiteCredito2);
-        valores.put("limitePessoal", limitePessoal);
-        valores.put("tipoCliente", tipoCliente);
-        valores.put("codVendedor", codVendedor);
+        valores.put("pessoaauto", pessoaAuto);
+        valores.put("limitecredito", limiteCredito);
+        valores.put("pessoaauto1", pessoaAuto1);
+        valores.put("limitecredito1", limiteCredito1);
+        valores.put("pessoaauto2", pessoaAuto2);
+        valores.put("limitecredito2", limiteCredito2);
+        valores.put("limitepessoal", limitePessoal);
+        valores.put("tipocliente", tipoCliente);
+        valores.put("codvendedor", codVendedor);
         valores.put("simples", simples);
         valores.put("celular", celular);
-        valores.put("fisJu", fisJu);
+        valores.put("fisju", fisJu);
         valores.put("conjuge", conjuge);
         valores.put("freteCli", freteCli);
         valores.put("antecipacao", antecipacao);
@@ -831,20 +843,20 @@ public class Cliente {
         valores.put("sistema", sistema);
         valores.put("vmanu", vmanu);
         valores.put("recibo", recibo);
-        valores.put("codigoPgto", codigoPgto);
-        valores.put("codRepresentante", codRepresentante);
-        valores.put("dataCadastro", dataCadastro.getTime());
-        valores.put("dataAlteracao", dataAlteracao.getTime());
-        valores.put("liberaLimite", liberaLimite);
+        valores.put("codigopgto", codigoPgto);
+        valores.put("codrepresentante", codRepresentante);
+        valores.put("datacadastro", dataCadastro.getTime());
+        valores.put("dataalteracao", dataAlteracao.getTime());
+        valores.put("liberalimite", liberaLimite);
         valores.put("fantasia", fantasia);
-        valores.put("contatoCobranca", contatoCobranca);
+        valores.put("contatocobranca", contatoCobranca);
         valores.put("inativo", inativo);
-        valores.put("clienteTipo", clienteTipo);
-        valores.put("diaCobranca", diaCobranca);
-        valores.put("diaParaVencimento", diaParaVencimento);
-        valores.put("cadastroAndroid", cadastroAndroid);
-        valores.put("deletadoAndroid", deletadoAndroid);
-        valores.put("alteradoAndroid", alteradoAndroid);
+        valores.put("clientetipo", clienteTipo);
+        valores.put("diacobranca", diaCobranca);
+        valores.put("diaparavencimento", diaParaVencimento);
+        valores.put("cadastroandroid", cadastroAndroid);
+        valores.put("deletadoandroid", deletadoAndroid);
+        valores.put("alteradoandroid", alteradoAndroid);
 
         long result = db.insert("cliente", null, valores);
         db.close();
@@ -866,65 +878,5 @@ public class Cliente {
         } else {
             return true;
         }
-    }
-
-    public Cliente(Long codigo, String nomeCliente, String cpf, Date dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Date dataCadastro, Date dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
-        this.codigo = codigo;
-        this.nomeCliente = nomeCliente;
-        this.cpf = cpf;
-        this.dataNasc = dataNasc;
-        this.endereco = endereco;
-        this.posicao = posicao;
-        this.pai = pai;
-        this.mae = mae;
-        this.bairro = bairro;
-        this.cep = cep;
-        this.identidade = identidade;
-        this.trabalho = trabalho;
-        this.telefone = telefone;
-        this.fonetrab = fonetrab;
-        this.cgc = cgc;
-        this.incest = incest;
-        this.enderecotrab = enderecotrab;
-        this.codProfissao = codProfissao;
-        this.codCidade = codCidade;
-        this.responsavel = responsavel;
-        this.fone = fone;
-        this.obs = obs;
-        this.nume = nume;
-        this.email = email;
-        this.pessoaAuto = pessoaAuto;
-        this.limiteCredito = limiteCredito;
-        this.pessoaAuto1 = pessoaAuto1;
-        this.limiteCredito1 = limiteCredito1;
-        this.pessoaAuto2 = pessoaAuto2;
-        this.limiteCredito2 = limiteCredito2;
-        this.limitePessoal = limitePessoal;
-        this.tipoCliente = tipoCliente;
-        this.codVendedor = codVendedor;
-        this.simples = simples;
-        this.celular = celular;
-        this.fisJu = fisJu;
-        this.conjuge = conjuge;
-        this.freteCli = freteCli;
-        this.antecipacao = antecipacao;
-        this.etiquetas = etiquetas;
-        this.sistema = sistema;
-        this.vmanu = vmanu;
-        this.recibo = recibo;
-        this.codigoPgto = codigoPgto;
-        this.codRepresentante = codRepresentante;
-        this.dataCadastro = dataCadastro;
-        this.dataAlteracao = dataAlteracao;
-        this.liberaLimite = liberaLimite;
-        this.fantasia = fantasia;
-        this.contatoCobranca = contatoCobranca;
-        this.inativo = inativo;
-        this.clienteTipo = clienteTipo;
-        this.diaCobranca = diaCobranca;
-        this.diaParaVencimento = diaParaVencimento;
-        this.cadastroAndroid = cadastroAndroid;
-        this.deletadoAndroid = deletadoAndroid;
-        this.alteradoAndroid = alteradoAndroid;
     }
 }

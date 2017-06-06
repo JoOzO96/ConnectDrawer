@@ -14,58 +14,57 @@ import java.util.Date;
  */
 
 public class Cidade {
-    private Long codCidade;
-    private String nomeCidade;
-    private String UF;
-    private String codNacionalUf;
-    private String codNacionalCidade;
+    private Long codcidade;
+    private String nomecidade;
+    private String uf;
+    private String codnacionaluf;
+    private String codnacionalcidade;
     private String pais;
-    private String codNacionalPais;
+    private String codnacionalpais;
     private String cep;
-    private Boolean cadastroAndroid;
-    private Boolean deletadoAndroid;
-    private Boolean alteradoAndroid;
+    private Boolean cadastroandroid;
+    private Boolean deletadoandroid;
+    private Boolean alteradoandroid;
     private Context context;
 
-
-    public Long getCodCidade() {
-        return codCidade;
+    public Long getCodcidade() {
+        return codcidade;
     }
 
-    public void setCodCidade(Long codCidade) {
-        this.codCidade = codCidade;
+    public void setCodcidade(Long codcidade) {
+        this.codcidade = codcidade;
     }
 
-    public String getNomeCidade() {
-        return nomeCidade;
+    public String getNomecidade() {
+        return nomecidade;
     }
 
-    public void setNomeCidade(String nomeCidade) {
-        this.nomeCidade = nomeCidade;
+    public void setNomecidade(String nomecidade) {
+        this.nomecidade = nomecidade;
     }
 
-    public String getUF() {
-        return UF;
+    public String getUf() {
+        return uf;
     }
 
-    public void setUF(String UF) {
-        this.UF = UF;
+    public void setUf(String uf) {
+        this.uf = uf;
     }
 
-    public String getCodNacionalUf() {
-        return codNacionalUf;
+    public String getCodnacionaluf() {
+        return codnacionaluf;
     }
 
-    public void setCodNacionalUf(String codNacionalUf) {
-        this.codNacionalUf = codNacionalUf;
+    public void setCodnacionaluf(String codnacionaluf) {
+        this.codnacionaluf = codnacionaluf;
     }
 
-    public String getCodNacionalCidade() {
-        return codNacionalCidade;
+    public String getCodnacionalcidade() {
+        return codnacionalcidade;
     }
 
-    public void setCodNacionalCidade(String codNacionalCidade) {
-        this.codNacionalCidade = codNacionalCidade;
+    public void setCodnacionalcidade(String codnacionalcidade) {
+        this.codnacionalcidade = codnacionalcidade;
     }
 
     public String getPais() {
@@ -76,12 +75,12 @@ public class Cidade {
         this.pais = pais;
     }
 
-    public String getCodNacionalPais() {
-        return codNacionalPais;
+    public String getCodnacionalpais() {
+        return codnacionalpais;
     }
 
-    public void setCodNacionalPais(String codNacionalPais) {
-        this.codNacionalPais = codNacionalPais;
+    public void setCodnacionalpais(String codnacionalpais) {
+        this.codnacionalpais = codnacionalpais;
     }
 
     public String getCep() {
@@ -92,28 +91,28 @@ public class Cidade {
         this.cep = cep;
     }
 
-    public Boolean getCadastroAndroid() {
-        return cadastroAndroid;
+    public Boolean getCadastroandroid() {
+        return cadastroandroid;
     }
 
-    public void setCadastroAndroid(Boolean cadastroAndroid) {
-        this.cadastroAndroid = cadastroAndroid;
+    public void setCadastroandroid(Boolean cadastroandroid) {
+        this.cadastroandroid = cadastroandroid;
     }
 
-    public Boolean getDeletadoAndroid() {
-        return deletadoAndroid;
+    public Boolean getDeletadoandroid() {
+        return deletadoandroid;
     }
 
-    public void setDeletadoAndroid(Boolean deletadoAndroid) {
-        this.deletadoAndroid = deletadoAndroid;
+    public void setDeletadoandroid(Boolean deletadoandroid) {
+        this.deletadoandroid = deletadoandroid;
     }
 
-    public Boolean getAlteradoAndroid() {
-        return alteradoAndroid;
+    public Boolean getAlteradoandroid() {
+        return alteradoandroid;
     }
 
-    public void setAlteradoAndroid(Boolean alteradoAndroid) {
-        this.alteradoAndroid = alteradoAndroid;
+    public void setAlteradoandroid(Boolean alteradoandroid) {
+        this.alteradoandroid = alteradoandroid;
     }
 
     public Context getContext() {
@@ -126,18 +125,7 @@ public class Cidade {
 
     @Override
     public String toString() {
-        return codCidade + ", " + nomeCidade + ", " + UF;
-    }
-
-    public Cidade(Long codCidade, String nomeCidade, String UF, String codNacionalUf, String codNacionalCidade, String pais, String codNacionalPais, String cep) {
-        this.codCidade = codCidade;
-        this.nomeCidade = nomeCidade;
-        this.UF = UF;
-        this.codNacionalUf = codNacionalUf;
-        this.codNacionalCidade = codNacionalCidade;
-        this.pais = pais;
-        this.codNacionalPais = codNacionalPais;
-        this.cep = cep;
+        return codcidade + " - " + nomecidade + " - " + uf;
     }
 
     public Cidade() {
@@ -182,15 +170,15 @@ public class Cidade {
         Banco myDb = new Banco(context);
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codCidade", cidade.getCodCidade());
-        valores.put("nomeCidade", cidade.getNomeCidade());
-        valores.put("UF", cidade.getUF());
-        valores.put("codNacionalUf", cidade.getCodNacionalUf());
-        valores.put("codNacionalCidade", cidade.getCodNacionalCidade());
+        valores.put("codcidade", cidade.getCodcidade());
+        valores.put("nomecidade", cidade.getNomecidade());
+        valores.put("uf", cidade.getUf());
+        valores.put("codnacionaluf", cidade.getCodnacionaluf());
+        valores.put("codnacionalcidade", cidade.getCodnacionalcidade());
         valores.put("pais", cidade.getPais());
-        valores.put("codNacionalPais", cidade.getCodNacionalPais());
+        valores.put("codnacionalpais", cidade.getCodnacionalpais());
         valores.put("cep", cidade.getCep());
-        valores.put("cadastroAndroid", cidade.getCadastroAndroid());
+        valores.put("cadastroandroid", cidade.getCadastroandroid());
 
         long result = db.insert("cidade", null, valores);
         db.close();
@@ -206,16 +194,17 @@ public class Cidade {
         Banco myDb = new Banco(context);
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codCidade", cidade.getCodCidade());
-        valores.put("nomeCidade", cidade.getNomeCidade());
-        valores.put("UF", cidade.getUF());
-        valores.put("codNacionalUf", cidade.getCodNacionalUf());
-        valores.put("codNacionalCidade", cidade.getCodNacionalCidade());
+        valores.put("codcidade", cidade.getCodcidade());
+        valores.put("nomecidade", cidade.getNomecidade());
+        valores.put("uf", cidade.getUf());
+        valores.put("codnacionaluf", cidade.getCodnacionaluf());
+        valores.put("codnacionalcidade", cidade.getCodnacionalcidade());
         valores.put("pais", cidade.getPais());
-        valores.put("codNacionalPais", cidade.getCodNacionalPais());
+        valores.put("codnacionalpais", cidade.getCodnacionalpais());
         valores.put("cep", cidade.getCep());
+        valores.put("cadastroandroid", cidade.getCadastroandroid());
 
-        long result = db.update("cidade", valores, "codCidade = " + cidade.getCodCidade(), null);
+        long result = db.update("cidade", valores, "codCidade = " + cidade.getCodcidade(), null);
         db.close();
         valores.clear();
         if (result == -1) {
@@ -240,7 +229,7 @@ public class Cidade {
     public boolean remover(Context context, Cidade cidade) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
-        int retorno = db.delete("cidade", "codCidade = " + cidade.getCodCidade(), null);
+        int retorno = db.delete("cidade", "codCidade = " + cidade.getCodcidade(), null);
         if (retorno > 0) {
             return true;
         } else {
