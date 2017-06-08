@@ -123,7 +123,7 @@
             android:layout_below="@+id/textInputLayout5">
 
             <EditText
-                android:id="@+id/txIe"
+                android:id="@+id/txIncest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -132,19 +132,80 @@
                 android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txCidade"
+            android:layout_below="@+id/textInputLayout6"
+            android:text="Cidade"/>
+
         <Spinner
             android:layout_width="match_parent"
             android:id="@+id/spCidade"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textInputLayout6">
+            android:layout_below="@id/txCidade">
 
         </Spinner>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/spCidade">
+
+            <EditText
+                android:id="@+id/txTelefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:hint="Telefone"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textInputLayout7">
+
+            <EditText
+                android:id="@+id/txCelular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:hint="Celular"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textInputLayout8">
+
+            <EditText
+                android:id="@+id/txFonetrab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:hint="Telefone Trabalho"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
 
             android:layout_height="match_parent"
-            android:layout_below="@id/spCidade">
+            android:layout_below="@id/textInputLayout9">
 
             <Button
                 android:id="@+id/btSalvar"

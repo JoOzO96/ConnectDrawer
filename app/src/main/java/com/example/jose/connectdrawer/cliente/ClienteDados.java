@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.cidade.Cidade;
+import com.example.jose.connectdrawer.cidade.CidadeDados;
+import com.example.jose.connectdrawer.uteis.CamposRequeridos;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.Mascara;
@@ -31,12 +34,18 @@ public class ClienteDados extends Fragment {
     private EditText txCodigo;
     private EditText txNomeCliente;
     private EditText txCpfCnpj;
-    private EditText txIe;
+    private EditText txIncest;
     private EditText txEndereco;
     private EditText txBairro;
     private EditText txCep;
     private EditText txDataNasc;
+    private EditText txTelefone;
+    private EditText txCelular;
+    private EditText txFonetrab;
     private Spinner spCidade;
+    private Button btSalvar;
+    private Button btCancelar;
+    private List<String> camposRequeridosMensagem;
 
     public ClienteDados() {
         // Required empty public constructor
@@ -47,43 +56,48 @@ public class ClienteDados extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Cidade cidade = new Cidade();
-        List<Cidade> cidadeList = new ArrayList<>();
-        Cursor cursor = cidade.retornaCidade(getContext());
+        camposRequeridosMensagem = new ArrayList<>();
+        camposRequeridosMensagem.add("txNomeCliente - O nome do cliente é obrigatorio");
+        camposRequeridosMensagem.add("txCpfCnpj - O CPF ou CNPJ é obrigatorio");
+        camposRequeridosMensagem.add("txEndereco - O endereço é obrigatorio");
+        camposRequeridosMensagem.add("txBairro - O bairro é obrigatorio");
+        camposRequeridosMensagem.add("txCep - O CEP é obrigatorio");
+        camposRequeridosMensagem.add("txTelefone - O telefone é obrigatorio");
+        List<String> cidadeList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            for (int i = 0; cursor.getCount() != i; i++) {
-                Cidade cidade1 = new Cidade();
-                List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
-
-                for (int f = 0; fieldList.size() != f; f++) {
-
-                    String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-                    String nomeCampo = fieldList.get(f).getName().toLowerCase();
-                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
-                    if (retorno != null) {
-                        Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, retorno);
-                        cidade1 = (Cidade) teste;
-                    }
-
-                }
-                cursor.moveToNext();
-                cidadeList.add(cidade1);
-            }
-        }
-        View view = inflater.inflate(R.layout.fragment_cliente_dados, container, false);
+        final View view = inflater.inflate(R.layout.fragment_cliente_dados, container, false);
+        btSalvar = (Button) view.findViewById(R.id.btSalvar);
+        btCancelar = (Button) view.findViewById(R.id.btCancelar);
         Cliente cliente = new Cliente();
         GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         ClienteDados clienteDados = new ClienteDados();
         //PEGA A LISTA DE CAMPOS DA CLASSE
         List<Field> fieldList = new ArrayList<>(Arrays.asList(clienteDados.getClass().getDeclaredFields()));
+
+        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
+        List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
+        List<Field> fieldListPassar = new ArrayList<>();
+
+        for (int i = 0; fieldListRid.size() != i; i++) {
+            for (int j = 0; fieldListClasse.size() != j; j++) {
+                if (fieldListRid.get(i).getName().toLowerCase().equals(fieldListClasse.get(j).getName().toLowerCase())) {
+                    fieldListPassar.add(fieldListRid.get(i));
+                    break;
+                } else {
+                }
+            }
+        }
+
+
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
         Bundle bundle = this.getArguments();
         Long codigoCliente = bundle.getLong("codigo");
         boolean cpfcnpj = false;
-        cursor = cliente.retornaClienteFiltrado(getContext(), codigoCliente);
+        Cursor cursor = cliente.retornaClienteFiltrado(getContext(), codigoCliente);
         if (cursor.getCount() > 0) {
             for (int i = 0; fieldList.size() != i; i++) {
+
+                String mascara = null;
                 if (fieldList.get(i).getName().toLowerCase().equals("$change") ||
                         fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
                 } else {
@@ -92,65 +106,114 @@ public class ClienteDados extends Fragment {
                         String nomecampo = "";
                         nomecampo = fieldList.get(i).getName().replace("tx", "").toLowerCase();
                         if (nomecampo.equals("cpfcnpj")) {
-                            if (cursor.getString(cursor.getColumnIndex("cpj")).length() > 0) {
+                            if (cursor.getString(cursor.getColumnIndex("cpf")) != null) {
                                 Object retorno = getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
                                 if (retorno != null) {
-                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, retorno.toString(), null);
+                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), "###.###.###-##");
                                 } else {
-                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, "", null);
+                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "###.###.###-##");
                                 }
-                            }else{
-                                Object retorno = getSetDinamico.retornaValorCursor(tipo, "cnpj", cursor);
-                                if (retorno != null) {
-                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, retorno.toString(), null);
-                                } else {
-                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, "", null);
+                            } else {
+                                if (cursor.getString(cursor.getColumnIndex("cgc")) != null) {
+                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, "cgc", cursor);
+                                    if (retorno != null) {
+                                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), "##.###.###/####-##");
+                                    } else {
+                                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "##.###.###/####-##");
+                                    }
                                 }
                             }
                         } else {
+                            if (fieldList.get(i).getName().equals("txCep")) {
+                                mascara = "#####-###";
+                            }
+                            if (fieldList.get(i).getName().equals("txTelefone")) {
+                                mascara = "(##)#####-####";
+                            }
+                            if (fieldList.get(i).getName().equals("txCelular")) {
+                                mascara = "(##)#####-####";
+                            }
+                            if (fieldList.get(i).getName().equals("txFonetrab")) {
+                                mascara = "(##)#####-####";
+                            }
                             Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
                             if (retorno != null) {
-                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, retorno.toString(), null);
+                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), mascara);
                             } else {
-                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, "", null);
+                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", mascara);
                             }
                         }
+
+//                        }
+                    } else if (fieldList.get(i).getName().substring(0, 2).equals("sp")) {
+                        Cursor cursorCidade = cidade.retornaCidade(getContext());
+
+                        int posicao = 0;
+                        if (cursorCidade.getCount() > 0) {
+                            cursor.moveToFirst();
+                            for (int j = 0; cursorCidade.getCount() != j; j++) {
+                                Cidade cidade1 = new Cidade();
+                                List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
+
+                                for (int f = 0; fieldListCidade.size() != f; f++) {
+
+                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(f));
+                                    String nomeCampo = fieldListCidade.get(f).getName().toLowerCase();
+                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCidade);
+                                    if (retorno != null) {
+                                        Object teste = getSetDinamico.insereField(fieldListCidade.get(f), cidade1, retorno);
+                                        cidade1 = (Cidade) teste;
+                                    }
+
+
+                                }
+                                cursorCidade.moveToNext();
+                                cidadeList.add(cidade1.toString());
+                                if (cursor.getString(cursor.getColumnIndex("codcidade")).equals(cidade1.getCodcidade().toString())) {
+                                    for (int k = 0; cidadeList.size() != k; k++) {
+                                        if (cidadeList.get(k).equals(cidade1.toString())) {
+                                            posicao = k;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        getSetDinamicoTelas.colocaValorSpinner(fieldList.get(i), view, cidadeList, getContext(), posicao);
                     }
                 }
             }
         }
 
+        //CLIQUE DO BOTAO SALVAR
+        btSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClienteDados clienteDados = new ClienteDados();
+                //PEGA A LISTA DE CAMPOS DA CLASSE
+                List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
+                List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
+                List<Field> fieldListPassar = new ArrayList<>();
 
-//        txCodigo = (EditText) view.findViewById(R.id.txCodigo);
-//        txNomeCliente = (EditText) view.findViewById(R.id.txNomeCliente);
-//        txCpfCnpj = (EditText) view.findViewById(R.id.txCpfCnpj);
-//        txEndereco = (EditText) view.findViewById(R.id.txEndereco);
-//        txIe = (EditText) view.findViewById(R.id.txIe);
-//        txBairro = (EditText) view.findViewById(R.id.txBairro);
-//        txCep = (EditText) view.findViewById(R.id.txCep);
-//        spCidade = (Spinner) view.findViewById(R.id.spCidade);
-//        Bundle bundle = this.getArguments();
-//        Long codigoCliente = bundle.getLong("codigo");
-//        Cliente cliente = new Cliente();
-//        Cliente clienteFiltrado = cliente.retornaClienteFiltrado(getContext(), codigoCliente);
-//        txCodigo.setText(clienteFiltrado.getCodigo().toString());
-//        txNomeCliente.setText(clienteFiltrado.getNomecliente());
-//        txEndereco.setText(clienteFiltrado.getEndereco());
-//        if (clienteFiltrado.getCpf() != null) {
-//            txCpfCnpj.addTextChangedListener(Mascara.insert("###.###.###-##", txCpfCnpj));
-//            txCpfCnpj.setText(clienteFiltrado.getCpf());
-//        } else {
-//            txCpfCnpj.addTextChangedListener(Mascara.insert("##.###.###/####-##", txCpfCnpj));
-//            txCpfCnpj.setText(clienteFiltrado.getCgc());
-//        }
-//        if (clienteFiltrado.getCodcidade() != null) {
-//
-//        }
-//        txBairro.setText(clienteFiltrado.getBairro());
-//        txCep.addTextChangedListener(Mascara.insert("##.###-###", txCep));
-//        txCep.setText(clienteFiltrado.getCep());
-//        txIe.setText(clienteFiltrado.getIncest());
+                for (int i = 0; fieldListRid.size() != i; i++) {
+                    for (int j = 0; fieldListClasse.size() != j; j++) {
+                        if (fieldListRid.get(i).getName().toLowerCase().equals(fieldListClasse.get(j).getName().toLowerCase())) {
+                            fieldListPassar.add(fieldListRid.get(i));
+                            break;
+                        } else {
+                        }
+                    }
+                }
+
+                CamposRequeridos camposRequeridos = new CamposRequeridos();
+                int retorno = camposRequeridos.retornaMensagemRequerido(camposRequeridosMensagem, fieldListPassar, view);
+
+
+            }
+        });
         return view;
+
+
     }
+
 
 }

@@ -63,6 +63,19 @@ public class CidadeDados extends Fragment {
         txCep.addTextChangedListener(Mascara.insert("#####-###", txCep));
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
+        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(CidadeDados.class.getDeclaredFields()));
+        List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
+        List<Field> fieldListPassar = new ArrayList<>();
+
+        for (int i = 0; fieldListRid.size() != i; i++) {
+            for (int j = 0; fieldListClasse.size() != j; j++) {
+                if (fieldListRid.get(i).getName().toLowerCase().equals(fieldListClasse.get(j).getName().toLowerCase())) {
+                    fieldListPassar.add(fieldListRid.get(i));
+                    break;
+                } else {
+                }
+            }
+        }
 
         Bundle bundle = this.getArguments();
         if (bundle == null) {
@@ -90,12 +103,12 @@ public class CidadeDados extends Fragment {
                         if (fieldList.get(i).getName().substring(0, 2).equals("tx")) {
                             String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(i));
                             String nomecampo = "";
-                            nomecampo = fieldList.get(i).getName().replace("tx","").toLowerCase();
+                            nomecampo = fieldList.get(i).getName().replace("tx", "").toLowerCase();
                             Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
-                            if (retorno != null){
-                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, retorno.toString(), null);
-                            }else{
-                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, "", null);
+                            if (retorno != null) {
+                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), null);
+                            } else {
+                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", null);
                             }
                         }
                     }
