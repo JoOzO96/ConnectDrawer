@@ -116,7 +116,7 @@ public class GetSetDinamico {
         try {
             String primeiro = field.getName().substring(0, 1);
             String nomeCampo = field.getName().substring(1, field.getName().length());
-            Object obj1 = Class.forName(obj.getClass().toString().replaceAll("class ", "")).newInstance();
+            Object obj1;
             obj1 = obj;
             Method method = obj.getClass().getMethod("get" + primeiro.toUpperCase() + nomeCampo, null);
             Object object = method.invoke(obj1, null);
@@ -135,12 +135,6 @@ public class GetSetDinamico {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

@@ -724,6 +724,17 @@ public class Cliente {
     public Cliente() {
     }
 
+    public Boolean cadastraCliente(Context context, Cliente cliente){
+        Banco myDb = new Banco(context);
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+
+
+
+
+        return true;
+    }
+
     public Boolean cadastraCliente(Context context, Long codigo, String nomeCliente, String cpf, Long dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Long dataCadastro, Long dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
         Banco myDb = new Banco(context);
         ContentValues valores = new ContentValues();

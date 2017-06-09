@@ -45,7 +45,9 @@ public class ClienteDados extends Fragment {
     private Spinner spCidade;
     private Button btSalvar;
     private Button btCancelar;
+    private List<String> camposRequeridos;
     private List<String> camposRequeridosMensagem;
+    private List<String> camposRequeridosTamanho;
 
     public ClienteDados() {
         // Required empty public constructor
@@ -56,19 +58,33 @@ public class ClienteDados extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Cidade cidade = new Cidade();
+        camposRequeridos = new ArrayList<>();
         camposRequeridosMensagem = new ArrayList<>();
-        camposRequeridosMensagem.add("txNomeCliente - O nome do cliente é obrigatorio");
-        camposRequeridosMensagem.add("txCpfCnpj - O CPF ou CNPJ é obrigatorio");
-        camposRequeridosMensagem.add("txEndereco - O endereço é obrigatorio");
-        camposRequeridosMensagem.add("txBairro - O bairro é obrigatorio");
-        camposRequeridosMensagem.add("txCep - O CEP é obrigatorio");
-        camposRequeridosMensagem.add("txTelefone - O telefone é obrigatorio");
+        camposRequeridosTamanho = new ArrayList<>();
+        camposRequeridos.add("txNomeCliente");
+        camposRequeridosMensagem.add("O nome do cliente é obrigatorio");
+        camposRequeridosTamanho.add("5");
+        camposRequeridos.add("txCpfCnpj");
+        camposRequeridosMensagem.add("O CPF ou CNPJ é obrigatorio");
+        camposRequeridosTamanho.add("0");
+        camposRequeridos.add("txEndereco");
+        camposRequeridosMensagem.add("O endereço é obrigatorio");
+        camposRequeridosTamanho.add("5");
+        camposRequeridos.add("txBairro");
+        camposRequeridosMensagem.add("O bairro é obrigatorio");
+        camposRequeridosTamanho.add("5");
+        camposRequeridos.add("txCep");
+        camposRequeridosMensagem.add("O CEP é obrigatorio");
+        camposRequeridosTamanho.add("9");
+        camposRequeridos.add("txTelefone");
+        camposRequeridosMensagem.add("O telefone é obrigatorio");
+        camposRequeridosTamanho.add("13");
         List<String> cidadeList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         final View view = inflater.inflate(R.layout.fragment_cliente_dados, container, false);
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
-        Cliente cliente = new Cliente();
+        final Cliente cliente = new Cliente();
         GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         ClienteDados clienteDados = new ClienteDados();
         //PEGA A LISTA DE CAMPOS DA CLASSE
@@ -199,14 +215,16 @@ public class ClienteDados extends Fragment {
                         if (fieldListRid.get(i).getName().toLowerCase().equals(fieldListClasse.get(j).getName().toLowerCase())) {
                             fieldListPassar.add(fieldListRid.get(i));
                             break;
-                        } else {
                         }
                     }
                 }
 
-                CamposRequeridos camposRequeridos = new CamposRequeridos();
-                int retorno = camposRequeridos.retornaMensagemRequerido(camposRequeridosMensagem, fieldListPassar, view);
+                CamposRequeridos camposRequeridosClass = new CamposRequeridos();
+                int retorno = camposRequeridosClass.retornaMensagemRequerido(camposRequeridos , camposRequeridosMensagem, camposRequeridosTamanho, fieldListPassar, view);
 
+                if (retorno == 0){
+                    //cliente.cadastraCliente()
+                }
 
             }
         });
