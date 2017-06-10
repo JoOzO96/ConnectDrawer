@@ -24,13 +24,6 @@ import java.util.List;
 
 public class GetSetDinamicoTelas extends Fragment {
 
-    public void teste(Object classe) {
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(classe.getClass().getDeclaredFields()));
-        for (int i = 0; fieldList.size() != i; i++) {
-            Log.e("VIEW", fieldList.get(i).getName());
-        }
-    }
-
     public void colocaValorEditText(Field field, View view, List<Field> fieldList, Object valor, @Nullable String mascara) {
         try {
 
@@ -114,5 +107,20 @@ public class GetSetDinamicoTelas extends Fragment {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public String retornaValorEditText(View view,String nomeCampo){
+        String primeiro = nomeCampo.substring(0, 1);
+        primeiro = "tx" + primeiro.toUpperCase();
+        String nomeCampo1 = nomeCampo.substring(1, nomeCampo.length());
+        primeiro += nomeCampo1;
+        EditText valorId = (EditText) retornaIDCampo(view, primeiro);
+        if (valorId != null){
+            if (valorId.getText() != null){
+                return valorId.getText().toString();
+            }
+        }
+        return "";
     }
 }

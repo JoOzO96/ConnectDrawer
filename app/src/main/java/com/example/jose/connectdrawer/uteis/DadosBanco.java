@@ -1,6 +1,7 @@
 package com.example.jose.connectdrawer.uteis;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 
@@ -13,6 +14,13 @@ public class DadosBanco {
         try {
             Class classe = Class.forName(object.getClass().toString().replace("class ", ""));
             GetSetDinamico getSetDinamico = new GetSetDinamico();
+            Object retorno = null;
+            String tipo = "";
+            retorno = getSetDinamico.retornaValorCampo(field, object);
+            tipo = getSetDinamico.retornaTipoCampo(field);
+
+            Log.i("Valor, Tipo", retorno + " - " + tipo);
+
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

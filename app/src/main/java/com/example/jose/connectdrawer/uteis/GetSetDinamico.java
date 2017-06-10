@@ -21,7 +21,7 @@ public class GetSetDinamico {
             objetoInstanciado = objetoRecebido;
             Class[] cArg = new Class[1];
             if (recebido != null) {
-                if (field.getType().getSimpleName().toUpperCase().equals("STRING")) {
+                if (field.getType().getSimpleName().toUpperCase().equals("STRING") || field.getType().getSimpleName().toUpperCase().equals("EDITTEXT")) {
                     cArg[0] = String.class;
                     Method method = objetoInstanciado.getClass().getMethod("set" + primeiro.toUpperCase() + nomeCampo,
                             field.getType());

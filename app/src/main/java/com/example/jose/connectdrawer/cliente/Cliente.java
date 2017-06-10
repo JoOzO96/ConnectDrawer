@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.DadosBanco;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
@@ -726,8 +727,14 @@ public class Cliente {
 
     public Boolean cadastraCliente(Context context, Cliente cliente){
         Banco myDb = new Banco(context);
+        DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(cliente.getClass().getDeclaredFields()));
+
+        for (int i = 0 ; fieldList.size() != i ; i++){
+            dadosBanco.insereValoresContent(fieldList.get(i), cliente);
+        }
 
 
 

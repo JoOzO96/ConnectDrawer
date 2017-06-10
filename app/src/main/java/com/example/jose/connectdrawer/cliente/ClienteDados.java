@@ -80,15 +80,15 @@ public class ClienteDados extends Fragment {
         camposRequeridosMensagem.add("O telefone é obrigatorio");
         camposRequeridosTamanho.add("13");
         List<String> cidadeList = new ArrayList<>();
-        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        final GetSetDinamico getSetDinamico = new GetSetDinamico();
         final View view = inflater.inflate(R.layout.fragment_cliente_dados, container, false);
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
         final Cliente cliente = new Cliente();
-        GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+        final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         ClienteDados clienteDados = new ClienteDados();
         //PEGA A LISTA DE CAMPOS DA CLASSE
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(clienteDados.getClass().getDeclaredFields()));
+        final List<Field> fieldList = new ArrayList<>(Arrays.asList(clienteDados.getClass().getDeclaredFields()));
 
         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
         List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
@@ -205,6 +205,7 @@ public class ClienteDados extends Fragment {
             @Override
             public void onClick(View v) {
                 ClienteDados clienteDados = new ClienteDados();
+
                 //PEGA A LISTA DE CAMPOS DA CLASSE
                 List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
                 List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
@@ -220,12 +221,32 @@ public class ClienteDados extends Fragment {
                 }
 
                 CamposRequeridos camposRequeridosClass = new CamposRequeridos();
-                int retorno = camposRequeridosClass.retornaMensagemRequerido(camposRequeridos , camposRequeridosMensagem, camposRequeridosTamanho, fieldListPassar, view);
+                int retorno = camposRequeridosClass.retornaMensagemRequerido(camposRequeridos, camposRequeridosMensagem, camposRequeridosTamanho, fieldListPassar, view);
+                List<Field> fieldListObjeto = new ArrayList<Field>(Arrays.asList(Cliente.class.getDeclaredFields()));
+                if (retorno == 0) {
+                    Cliente cliente1 = new Cliente();
+                    for (int i = 0; fieldListObjeto.size() != i; i++) {
+                            String valorCampo = getSetDinamicoTelas.retornaValorEditText(view, fieldListObjeto.get(i).getName());
+                            if (fieldListObjeto.get(i).getName().equals("cep")){
+                                valorCampo = Mascara.unmask(valorCampo);
+                            }
+                            if (fieldListObjeto.get(i).getName().equals("telefone")){
+                                valorCampo = Mascara.unmask(valorCampo);
+                            }
+                            if (fieldListObjeto.get(i).getName().equals("celular")){
+                                valorCampo = Mascara.unmask(valorCampo);
+                            }
+                            if (fieldListObjeto.get(i).getName().equals("fonetrab")){
+                                valorCampo = Mascara.unmask(valorCampo);
+                            }
+                            if (valorCampo != null) {
+                                Object teste = getSetDinamico.insereField(fieldListObjeto.get(i), cliente1, valorCampo);
+                                cliente1 = (Cliente) teste;
+                            }
 
-                if (retorno == 0){
-                    //cliente.cadastraCliente()
+                    }
+                    cliente.cadastraCliente(getContext(), cliente1);
                 }
-
             }
         });
         return view;
