@@ -6,10 +6,13 @@ import android.util.Log;
 
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeService;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,26 +42,44 @@ public class SincCidade {
             @Override
             public void onResponse(Call<List<Cidade>> call, Response<List<Cidade>> response) {
                 List<Cidade> cidadeList = response.body();
-
+                GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Cidade cidade = new Cidade();
                 for (int cli = 0; cidadeList.size() != cli; cli++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
-                    Cursor cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cli).getCodcidade());
+                    Cursor cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cli).getCodCidade());
                     if (cursor.getCount() > 0) {
                         cursor.close();
                     } else {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
 
                         Cidade cidade1 = new Cidade();
-                        cidade1.setCep(cidadeList.get(cli).getCep());
-                        cidade1.setCodnacionalcidade(cidadeList.get(cli).getCodnacionalcidade());
-                        cidade1.setPais(cidadeList.get(cli).getCodnacionalpais());
-                        cidade1.setCodnacionaluf(cidadeList.get(cli).getCodnacionaluf());
-                        cidade1.setNomecidade(cidadeList.get(cli).getNomecidade());
-                        cidade1.setPais(cidadeList.get(cli).getPais());
-                        cidade1.setUf(cidadeList.get(cli).getUf());
-                        cidade1.setCodcidade(cidadeList.get(cli).getCodcidade());
+                        List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
+
+                        for (int f = 0; fieldList.size() != f; f++) {
+
+                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                            String nomeCampo = fieldList.get(f).getName();
+                            if (nomeCampo.equals("$change") || nomeCampo.equals("serialVersionUID")) {
+
+                            } else {
+                                if (nomeCampo.equals("UF")) {
+                                    nomeCampo = "uf";
+                                }
+                                Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, retorno);
+                                cidade1 = (Cidade) teste;
+                            }
+                        }
+                        cursor.moveToNext();
+                        //aqui tenho a cidade completa;
+//                        cidade1.setCep(cidadeList.get(cli).getCep());
+//                        cidade1.setCodNacionalCidade(cidadeList.get(cli).getCodNacionalCidade());
+//                        cidade1.setPais(cidadeList.get(cli).getCodNacionalPais());
+//                        cidade1.setCodNacionalUf(cidadeList.get(cli).getCodNacionalUf());
+//                        cidade1.setNomeCidade(cidadeList.get(cli).getNomeCidade());
+//                        cidade1.setPais(cidadeList.get(cli).getPais());
+//                        cidade1.setUF(cidadeList.get(cli).getUF());
+//                        cidade1.setCodCidade(cidadeList.get(cli).getCodCidade());
 
                         ///
                         //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
@@ -88,13 +109,13 @@ public class SincCidade {
         if (cursor.getCount() > 0){
             for (long i = 0L ; cursor.getCount() != i; i++){
                 Cidade cidade1 = new Cidade();
-                cidade1.setCodcidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
-                cidade1.setNomecidade(cursor.getString(cursor.getColumnIndex("nomecidade")));
-                cidade1.setUf(cursor.getString(cursor.getColumnIndex("uf")));
-                cidade1.setCodnacionaluf(cursor.getString(cursor.getColumnIndex("codnacionaluf")));
-                cidade1.setCodnacionalcidade(cursor.getString(cursor.getColumnIndex("codnacionalcidade")));
+                cidade1.setCodCidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
+                cidade1.setNomeCidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
+                cidade1.setUF(cursor.getString(cursor.getColumnIndex("uf")));
+                cidade1.setCodNacionalUf(cursor.getString(cursor.getColumnIndex("codNacionalUf")));
+                cidade1.setCodNacionalCidade(cursor.getString(cursor.getColumnIndex("codNacionalCidade")));
                 cidade1.setPais(cursor.getString(cursor.getColumnIndex("pais")));
-                cidade1.setCodnacionalpais(cursor.getString(cursor.getColumnIndex("codnacionalpais")));
+                cidade1.setCodNacionalPais(cursor.getString(cursor.getColumnIndex("codNacionalPais")));
                 cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")).replace("-",""));
                 cidadeList.add(cidade1);
 
