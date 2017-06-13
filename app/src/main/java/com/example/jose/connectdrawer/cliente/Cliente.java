@@ -733,158 +733,177 @@ public class Cliente {
         List<Field> fieldList = new ArrayList<>(Arrays.asList(cliente.getClass().getDeclaredFields()));
 
         for (int i = 0 ; fieldList.size() != i ; i++){
-            dadosBanco.insereValoresContent(fieldList.get(i), cliente);
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), cliente, valores);
         }
 
-
-
-
-        return true;
-    }
-
-    public Boolean cadastraCliente(Context context, Long codigo, String nomeCliente, String cpf, Long dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Long dataCadastro, Long dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
-        Banco myDb = new Banco(context);
-        ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codigo", codigo);
-        valores.put("nomeCliente", nomeCliente);
-        valores.put("cpf", cpf);
-        //valores.put("dataNasc", dataNasc.toString());
-        valores.put("endereco", endereco);
-        valores.put("posicao", posicao);
-        valores.put("pai", pai);
-        valores.put("mae", mae);
-        valores.put("bairro", bairro);
-        valores.put("cep", cep);
-        valores.put("identidade", identidade);
-        valores.put("trabalho", trabalho);
-        valores.put("telefone", telefone);
-        valores.put("fonetrab", fonetrab);
-        valores.put("cgc", cgc);
-        valores.put("incest", incest);
-        valores.put("enderecotrab", enderecotrab);
-        valores.put("codProfissao", codProfissao);
-        valores.put("codCidade", codCidade);
-        valores.put("responsavel", responsavel);
-        valores.put("fone", fone);
-        valores.put("obs", obs);
-        valores.put("nume", nume);
-        valores.put("email", email);
-        valores.put("pessoaAuto", pessoaAuto);
-        valores.put("limiteCredito", limiteCredito);
-        valores.put("pessoaAuto1", pessoaAuto1);
-        valores.put("limiteCredito1", limiteCredito1);
-        valores.put("pessoaAuto2", pessoaAuto2);
-        valores.put("limiteCredito2", limiteCredito2);
-        valores.put("limitePessoal", limitePessoal);
-        valores.put("tipoCliente", tipoCliente);
-        valores.put("codVendedor", codVendedor);
-        valores.put("simples", simples);
-        valores.put("celular", celular);
-        valores.put("fisJu", fisJu);
-        valores.put("conjuge", conjuge);
-        valores.put("freteCli", freteCli);
-        valores.put("antecipacao", antecipacao);
-        valores.put("etiquetas", etiquetas);
-        valores.put("sistema", sistema);
-        valores.put("vmanu", vmanu);
-        valores.put("recibo", recibo);
-        valores.put("codigoPgto", codigoPgto);
-        valores.put("codRepresentante", codRepresentante);
-        //valores.put("dataCadastro", dataCadastro.toString());
-        //valores.put("dataAlteracao", dataAlteracao.toString());
-        valores.put("liberaLimite", liberaLimite);
-        valores.put("fantasia", fantasia);
-        valores.put("contatoCobranca", contatoCobranca);
-        valores.put("inativo", inativo);
-        valores.put("clienteTipo", clienteTipo);
-        valores.put("diaCobranca", diaCobranca);
-        valores.put("diaParaVencimento", diaParaVencimento);
-        valores.put("cadastroAndroid", cadastroAndroid);
-        valores.put("deletadoAndroid", deletadoAndroid);
-        valores.put("alteradoAndroid", alteradoAndroid);
-
-        long result = db.insert("cliente", null, valores);
-        db.close();
-        valores.clear();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
+        if (valores.get("codigo").equals("")){
+            valores.remove("cadastroandroid");
+            valores.put("cadastroandroid", true);
+            long retorno = db.insert("cliente", null, valores);
+            db.close();
+            valores.clear();
+            if (retorno == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }else{
+            valores.remove("alteradoandroid");
+            valores.put("alteradoandroid", true);
+            long retorno = db.update("cliente", valores, "codigo= " + valores.get("codigo").toString(), null);
+            db.close();
+            valores.clear();
+            if (retorno == -1) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
-    public Boolean alterarCliente(Context context, Long codigo, String nomeCliente, String cpf, Date dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Date dataCadastro, Date dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
-        Banco myDb = new Banco(context);
-        ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codigo", codigo);
-        valores.put("nomecliente", nomeCliente);
-        valores.put("cpf", cpf);
-        valores.put("datanasc", dataNasc.getTime());
-        valores.put("endereco", endereco);
-        valores.put("posicao", posicao);
-        valores.put("pai", pai);
-        valores.put("mae", mae);
-        valores.put("bairro", bairro);
-        valores.put("cep", cep);
-        valores.put("identidade", identidade);
-        valores.put("trabalho", trabalho);
-        valores.put("telefone", telefone);
-        valores.put("fonetrab", fonetrab);
-        valores.put("cgc", cgc);
-        valores.put("incest", incest);
-        valores.put("enderecotrab", enderecotrab);
-        valores.put("codprofissao", codProfissao);
-        valores.put("codcidade", codCidade);
-        valores.put("responsavel", responsavel);
-        valores.put("fone", fone);
-        valores.put("obs", obs);
-        valores.put("nume", nume);
-        valores.put("email", email);
-        valores.put("pessoaauto", pessoaAuto);
-        valores.put("limitecredito", limiteCredito);
-        valores.put("pessoaauto1", pessoaAuto1);
-        valores.put("limitecredito1", limiteCredito1);
-        valores.put("pessoaauto2", pessoaAuto2);
-        valores.put("limitecredito2", limiteCredito2);
-        valores.put("limitepessoal", limitePessoal);
-        valores.put("tipocliente", tipoCliente);
-        valores.put("codvendedor", codVendedor);
-        valores.put("simples", simples);
-        valores.put("celular", celular);
-        valores.put("fisju", fisJu);
-        valores.put("conjuge", conjuge);
-        valores.put("freteCli", freteCli);
-        valores.put("antecipacao", antecipacao);
-        valores.put("etiquetas", etiquetas);
-        valores.put("sistema", sistema);
-        valores.put("vmanu", vmanu);
-        valores.put("recibo", recibo);
-        valores.put("codigopgto", codigoPgto);
-        valores.put("codrepresentante", codRepresentante);
-        valores.put("datacadastro", dataCadastro.getTime());
-        valores.put("dataalteracao", dataAlteracao.getTime());
-        valores.put("liberalimite", liberaLimite);
-        valores.put("fantasia", fantasia);
-        valores.put("contatocobranca", contatoCobranca);
-        valores.put("inativo", inativo);
-        valores.put("clientetipo", clienteTipo);
-        valores.put("diacobranca", diaCobranca);
-        valores.put("diaparavencimento", diaParaVencimento);
-        valores.put("cadastroandroid", cadastroAndroid);
-        valores.put("deletadoandroid", deletadoAndroid);
-        valores.put("alteradoandroid", alteradoAndroid);
-
-        long result = db.insert("cliente", null, valores);
-        db.close();
-        valores.clear();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+//    public Boolean cadastraCliente(Context context, Long codigo, String nomeCliente, String cpf, Long dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Long dataCadastro, Long dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
+//        Banco myDb = new Banco(context);
+//        ContentValues valores = new ContentValues();
+//        SQLiteDatabase db = myDb.getWritableDatabase();
+//        valores.put("codigo", codigo);
+//        valores.put("nomeCliente", nomeCliente);
+//        valores.put("cpf", cpf);
+//        //valores.put("dataNasc", dataNasc.toString());
+//        valores.put("endereco", endereco);
+//        valores.put("posicao", posicao);
+//        valores.put("pai", pai);
+//        valores.put("mae", mae);
+//        valores.put("bairro", bairro);
+//        valores.put("cep", cep);
+//        valores.put("identidade", identidade);
+//        valores.put("trabalho", trabalho);
+//        valores.put("telefone", telefone);
+//        valores.put("fonetrab", fonetrab);
+//        valores.put("cgc", cgc);
+//        valores.put("incest", incest);
+//        valores.put("enderecotrab", enderecotrab);
+//        valores.put("codProfissao", codProfissao);
+//        valores.put("codCidade", codCidade);
+//        valores.put("responsavel", responsavel);
+//        valores.put("fone", fone);
+//        valores.put("obs", obs);
+//        valores.put("nume", nume);
+//        valores.put("email", email);
+//        valores.put("pessoaAuto", pessoaAuto);
+//        valores.put("limiteCredito", limiteCredito);
+//        valores.put("pessoaAuto1", pessoaAuto1);
+//        valores.put("limiteCredito1", limiteCredito1);
+//        valores.put("pessoaAuto2", pessoaAuto2);
+//        valores.put("limiteCredito2", limiteCredito2);
+//        valores.put("limitePessoal", limitePessoal);
+//        valores.put("tipoCliente", tipoCliente);
+//        valores.put("codVendedor", codVendedor);
+//        valores.put("simples", simples);
+//        valores.put("celular", celular);
+//        valores.put("fisJu", fisJu);
+//        valores.put("conjuge", conjuge);
+//        valores.put("freteCli", freteCli);
+//        valores.put("antecipacao", antecipacao);
+//        valores.put("etiquetas", etiquetas);
+//        valores.put("sistema", sistema);
+//        valores.put("vmanu", vmanu);
+//        valores.put("recibo", recibo);
+//        valores.put("codigoPgto", codigoPgto);
+//        valores.put("codRepresentante", codRepresentante);
+//        //valores.put("dataCadastro", dataCadastro.toString());
+//        //valores.put("dataAlteracao", dataAlteracao.toString());
+//        valores.put("liberaLimite", liberaLimite);
+//        valores.put("fantasia", fantasia);
+//        valores.put("contatoCobranca", contatoCobranca);
+//        valores.put("inativo", inativo);
+//        valores.put("clienteTipo", clienteTipo);
+//        valores.put("diaCobranca", diaCobranca);
+//        valores.put("diaParaVencimento", diaParaVencimento);
+//        valores.put("cadastroAndroid", cadastroAndroid);
+//        valores.put("deletadoAndroid", deletadoAndroid);
+//        valores.put("alteradoAndroid", alteradoAndroid);
+//
+//        long result = db.insert("cliente", null, valores);
+//        db.close();
+//        valores.clear();
+//        if (result == -1) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
+//
+//    public Boolean alterarCliente(Context context, Long codigo, String nomeCliente, String cpf, Date dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Date dataCadastro, Date dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
+//        Banco myDb = new Banco(context);
+//        ContentValues valores = new ContentValues();
+//        SQLiteDatabase db = myDb.getWritableDatabase();
+//        valores.put("codigo", codigo);
+//        valores.put("nomecliente", nomeCliente);
+//        valores.put("cpf", cpf);
+//        valores.put("datanasc", dataNasc.getTime());
+//        valores.put("endereco", endereco);
+//        valores.put("posicao", posicao);
+//        valores.put("pai", pai);
+//        valores.put("mae", mae);
+//        valores.put("bairro", bairro);
+//        valores.put("cep", cep);
+//        valores.put("identidade", identidade);
+//        valores.put("trabalho", trabalho);
+//        valores.put("telefone", telefone);
+//        valores.put("fonetrab", fonetrab);
+//        valores.put("cgc", cgc);
+//        valores.put("incest", incest);
+//        valores.put("enderecotrab", enderecotrab);
+//        valores.put("codprofissao", codProfissao);
+//        valores.put("codcidade", codCidade);
+//        valores.put("responsavel", responsavel);
+//        valores.put("fone", fone);
+//        valores.put("obs", obs);
+//        valores.put("nume", nume);
+//        valores.put("email", email);
+//        valores.put("pessoaauto", pessoaAuto);
+//        valores.put("limitecredito", limiteCredito);
+//        valores.put("pessoaauto1", pessoaAuto1);
+//        valores.put("limitecredito1", limiteCredito1);
+//        valores.put("pessoaauto2", pessoaAuto2);
+//        valores.put("limitecredito2", limiteCredito2);
+//        valores.put("limitepessoal", limitePessoal);
+//        valores.put("tipocliente", tipoCliente);
+//        valores.put("codvendedor", codVendedor);
+//        valores.put("simples", simples);
+//        valores.put("celular", celular);
+//        valores.put("fisju", fisJu);
+//        valores.put("conjuge", conjuge);
+//        valores.put("freteCli", freteCli);
+//        valores.put("antecipacao", antecipacao);
+//        valores.put("etiquetas", etiquetas);
+//        valores.put("sistema", sistema);
+//        valores.put("vmanu", vmanu);
+//        valores.put("recibo", recibo);
+//        valores.put("codigopgto", codigoPgto);
+//        valores.put("codrepresentante", codRepresentante);
+//        valores.put("datacadastro", dataCadastro.getTime());
+//        valores.put("dataalteracao", dataAlteracao.getTime());
+//        valores.put("liberalimite", liberaLimite);
+//        valores.put("fantasia", fantasia);
+//        valores.put("contatocobranca", contatoCobranca);
+//        valores.put("inativo", inativo);
+//        valores.put("clientetipo", clienteTipo);
+//        valores.put("diacobranca", diaCobranca);
+//        valores.put("diaparavencimento", diaParaVencimento);
+//        valores.put("cadastroandroid", cadastroAndroid);
+//        valores.put("deletadoandroid", deletadoAndroid);
+//        valores.put("alteradoandroid", alteradoAndroid);
+//
+//        long result = db.insert("cliente", null, valores);
+//        db.close();
+//        valores.clear();
+//        if (result == -1) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 
     public Boolean deletaCliente(Context context, Long codigo) {
         Banco myDb = new Banco(context);

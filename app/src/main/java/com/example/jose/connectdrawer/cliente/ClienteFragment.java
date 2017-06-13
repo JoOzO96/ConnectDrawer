@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -83,6 +84,23 @@ public class ClienteFragment extends Fragment {
         inflater.inflate(R.menu.cliente_opcoes, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
 
+            //noinspection SimplifiableIfStatement
+        if (id == R.id.cliente_opcoes) {
+            ClienteDados clienteDados = new ClienteDados();
+            Bundle bundle = new Bundle();
+            bundle.putLong("codigo", -1L);
+            clienteDados.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, clienteDados, clienteDados.getTag()).commit();
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 }
