@@ -628,76 +628,6 @@ public class Cliente {
         }
         db.close();
         return cursor;
-//        GetSetDinamico getSetDinamico = new GetSetDinamico();
-//        Cliente cliente = new Cliente();
-//        List<Field> fieldList = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
-//
-//        for (int i = 0; fieldList.size() != i; i++) {
-//            Object ret = getSetDinamico.setValorObjetoCursor(fieldList.get(i), cliente, cursor);
-//            cliente = (Cliente) ret;
-//        }
-//        cliente.setCodigo(cursor.getLong(cursor.getColumnIndex("codigo")));
-//        cliente.setNomeCliente(cursor.getString(cursor.getColumnIndex("nomecliente")));
-//        cliente.setCpf(cursor.getString(cursor.getColumnIndex("cpf")));
-//        cliente.setCgc(cursor.getString(cursor.getColumnIndex("cgc")));
-//        cliente.setDataNasc(new Date(cursor.getLong(cursor.getColumnIndex("datanasc"))));
-//        cliente.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
-//        cliente.setPosicao(cursor.getString(cursor.getColumnIndex("posicao")));
-//        cliente.setPai(cursor.getString(cursor.getColumnIndex("pai")));
-//        cliente.setMae(cursor.getString(cursor.getColumnIndex("mae")));
-//        cliente.setBairro(cursor.getString(cursor.getColumnIndex("bairro")));
-//        cliente.setCep(cursor.getString(cursor.getColumnIndex("cep")));
-//        cliente.setBairro(cursor.getString(cursor.getColumnIndex("bairro")));
-//        cliente.setCep(cursor.getString(cursor.getColumnIndex("cep")));
-//        cliente.setIdentidade(cursor.getString(cursor.getColumnIndex("identidade")));
-//        cliente.setTrabalho(cursor.getString(cursor.getColumnIndex("trabalho")));
-//        cliente.setEnderecotrab(cursor.getString(cursor.getColumnIndex("enderecotrab")));
-//        cliente.setCodProfissao(cursor.getLong(cursor.getColumnIndex("codprofissao")));
-//        cliente.setCodCidade(cursor.getLong(cursor.getColumnIndex("codcidade")));
-//        cliente.setResponsavel(cursor.getString(cursor.getColumnIndex("responsavel")));
-//        cliente.setFone(cursor.getString(cursor.getColumnIndex("fone")));
-//        cliente.setObs(cursor.getString(cursor.getColumnIndex("obs")));
-//        cliente.setNume(cursor.getString(cursor.getColumnIndex("nume")));
-//        cliente.setEmail(cursor.getString(cursor.getColumnIndex("email")));
-//        cliente.setPessoaAuto(cursor.getString(cursor.getColumnIndex("pessoaauto")));
-//        cliente.setLimiteCredito(cursor.getDouble(cursor.getColumnIndex("limitecredito")));
-//        cliente.setPessoaAuto1(cursor.getString(cursor.getColumnIndex("pessoaauto1")));
-//        cliente.setLimiteCredito1(cursor.getDouble(cursor.getColumnIndex("limitecredito1")));
-//        cliente.setPessoaAuto2(cursor.getString(cursor.getColumnIndex("pessoaauto2")));
-//        cliente.setLimiteCredito2(cursor.getDouble(cursor.getColumnIndex("limitecredito2")));
-//        cliente.setLimitePessoal(cursor.getDouble(cursor.getColumnIndex("limitepessoal")));
-//        cliente.setLimitePessoal(cursor.getDouble(cursor.getColumnIndex("tipocliente")));
-//        cliente.setCodVendedor(cursor.getString(cursor.getColumnIndex("codvendedor")));
-//        cliente.setSimples(cursor.getInt(cursor.getColumnIndex("simples")) == 1);
-//        cliente.setCelular(cursor.getString(cursor.getColumnIndex("celular")));
-//        cliente.setIncest(cursor.getString(cursor.getColumnIndex("incest")));
-//        cliente.setFisJu(cursor.getString(cursor.getColumnIndex("fisju")));
-//        cliente.setFonetrab(cursor.getString(cursor.getColumnIndex("fonetrab")));
-//        cliente.setTelefone(cursor.getString(cursor.getColumnIndex("telefone")));
-//        cliente.setConjuge(cursor.getString(cursor.getColumnIndex("conjuge")));
-//        cliente.setFreteCli(cursor.getString(cursor.getColumnIndex("fretecli")));
-//        cliente.setAntecipacao(cursor.getLong(cursor.getColumnIndex("antecipacao")));
-//        cliente.setEtiquetas(cursor.getInt(cursor.getColumnIndex("etiquetas")) == 1);
-//        cliente.setSistema(cursor.getInt(cursor.getColumnIndex("sistema")) == 1);
-//        cliente.setRecibo(cursor.getInt(cursor.getColumnIndex("recibo")) == 1);
-//        cliente.setVmanu(cursor.getDouble(cursor.getColumnIndex("vmanu")));
-//        cliente.setCodigoPgto(cursor.getLong(cursor.getColumnIndex("codigopgto")));
-//        cliente.setCodRepresentante(cursor.getString(cursor.getColumnIndex("codrepresentante")));
-//        cliente.setDataCadastro(new Date(cursor.getLong(cursor.getColumnIndex("datacadastro"))));
-//        cliente.setDataAlteracao(new Date(cursor.getLong(cursor.getColumnIndex("dataalteracao"))));
-//        cliente.setLiberaLimite(cursor.getInt(cursor.getColumnIndex("liberalimite")) == 1);
-//        cliente.setFantasia(cursor.getString(cursor.getColumnIndex("fantasia")));
-//        cliente.setContatoCobranca(cursor.getString(cursor.getColumnIndex("contatocobranca")));
-//        cliente.setInativo(cursor.getInt(cursor.getColumnIndex("inativo")) == 1);
-//        cliente.setClienteTipo(cursor.getLong(cursor.getColumnIndex("clientetipo")));
-//        cliente.setDiaCobranca(cursor.getLong(cursor.getColumnIndex("diacobranca")));
-//        cliente.setDiaParaVencimento(cursor.getLong(cursor.getColumnIndex("diaparavencimento")));
-//        cliente.setCadastroAndroid(cursor.getInt(cursor.getColumnIndex("cadastroandroid")) == 1);
-//        cliente.setDeletadoAndroid(cursor.getInt(cursor.getColumnIndex("deletadoandroid")) == 1);
-//        cliente.setAlteradoAndroid(cursor.getInt(cursor.getColumnIndex("alteradoandroid")) == 1);
-        //db.close();
-
-        //return cliente;
     }
 
     public Cursor retornaClienteFiltradoCursor(Context context, Long codigo) {
@@ -722,6 +652,18 @@ public class Cliente {
         return cursor;
     }
 
+    public Long retornaMaiorCod(Context context) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,max(codigo) from cliente", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return cursor.getLong(1);
+        } else {
+            return 0L;
+        }
+    }
+
     public Cliente() {
     }
 
@@ -736,10 +678,14 @@ public class Cliente {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), cliente, valores);
         }
 
-        if (valores.get("codigo").equals("")){
+        if (valores.get("codigo") == null){
+            long retorno = retornaMaiorCod(context);
+            retorno = retorno + 1;
+            valores.remove("codigo");
             valores.remove("cadastroandroid");
+            valores.put("codigo", retorno);
             valores.put("cadastroandroid", true);
-            long retorno = db.insert("cliente", null, valores);
+            retorno = db.insert("cliente", null, valores);
             db.close();
             valores.clear();
             if (retorno == -1) {
@@ -760,150 +706,6 @@ public class Cliente {
             }
         }
     }
-
-//    public Boolean cadastraCliente(Context context, Long codigo, String nomeCliente, String cpf, Long dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Long dataCadastro, Long dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
-//        Banco myDb = new Banco(context);
-//        ContentValues valores = new ContentValues();
-//        SQLiteDatabase db = myDb.getWritableDatabase();
-//        valores.put("codigo", codigo);
-//        valores.put("nomeCliente", nomeCliente);
-//        valores.put("cpf", cpf);
-//        //valores.put("dataNasc", dataNasc.toString());
-//        valores.put("endereco", endereco);
-//        valores.put("posicao", posicao);
-//        valores.put("pai", pai);
-//        valores.put("mae", mae);
-//        valores.put("bairro", bairro);
-//        valores.put("cep", cep);
-//        valores.put("identidade", identidade);
-//        valores.put("trabalho", trabalho);
-//        valores.put("telefone", telefone);
-//        valores.put("fonetrab", fonetrab);
-//        valores.put("cgc", cgc);
-//        valores.put("incest", incest);
-//        valores.put("enderecotrab", enderecotrab);
-//        valores.put("codProfissao", codProfissao);
-//        valores.put("codCidade", codCidade);
-//        valores.put("responsavel", responsavel);
-//        valores.put("fone", fone);
-//        valores.put("obs", obs);
-//        valores.put("nume", nume);
-//        valores.put("email", email);
-//        valores.put("pessoaAuto", pessoaAuto);
-//        valores.put("limiteCredito", limiteCredito);
-//        valores.put("pessoaAuto1", pessoaAuto1);
-//        valores.put("limiteCredito1", limiteCredito1);
-//        valores.put("pessoaAuto2", pessoaAuto2);
-//        valores.put("limiteCredito2", limiteCredito2);
-//        valores.put("limitePessoal", limitePessoal);
-//        valores.put("tipoCliente", tipoCliente);
-//        valores.put("codVendedor", codVendedor);
-//        valores.put("simples", simples);
-//        valores.put("celular", celular);
-//        valores.put("fisJu", fisJu);
-//        valores.put("conjuge", conjuge);
-//        valores.put("freteCli", freteCli);
-//        valores.put("antecipacao", antecipacao);
-//        valores.put("etiquetas", etiquetas);
-//        valores.put("sistema", sistema);
-//        valores.put("vmanu", vmanu);
-//        valores.put("recibo", recibo);
-//        valores.put("codigoPgto", codigoPgto);
-//        valores.put("codRepresentante", codRepresentante);
-//        //valores.put("dataCadastro", dataCadastro.toString());
-//        //valores.put("dataAlteracao", dataAlteracao.toString());
-//        valores.put("liberaLimite", liberaLimite);
-//        valores.put("fantasia", fantasia);
-//        valores.put("contatoCobranca", contatoCobranca);
-//        valores.put("inativo", inativo);
-//        valores.put("clienteTipo", clienteTipo);
-//        valores.put("diaCobranca", diaCobranca);
-//        valores.put("diaParaVencimento", diaParaVencimento);
-//        valores.put("cadastroAndroid", cadastroAndroid);
-//        valores.put("deletadoAndroid", deletadoAndroid);
-//        valores.put("alteradoAndroid", alteradoAndroid);
-//
-//        long result = db.insert("cliente", null, valores);
-//        db.close();
-//        valores.clear();
-//        if (result == -1) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
-//
-//    public Boolean alterarCliente(Context context, Long codigo, String nomeCliente, String cpf, Date dataNasc, String endereco, String posicao, String pai, String mae, String bairro, String cep, String identidade, String trabalho, String telefone, String fonetrab, String cgc, String incest, String enderecotrab, Long codProfissao, Long codCidade, String responsavel, String fone, String obs, String nume, String email, String pessoaAuto, Double limiteCredito, String pessoaAuto1, Double limiteCredito1, String pessoaAuto2, Double limiteCredito2, Double limitePessoal, Long tipoCliente, String codVendedor, Boolean simples, String celular, String fisJu, String conjuge, String freteCli, Long antecipacao, Boolean etiquetas, Boolean sistema, Double vmanu, Boolean recibo, Long codigoPgto, String codRepresentante, Date dataCadastro, Date dataAlteracao, Boolean liberaLimite, String fantasia, String contatoCobranca, Boolean inativo, Long clienteTipo, Long diaCobranca, Long diaParaVencimento, Boolean cadastroAndroid, Boolean deletadoAndroid, Boolean alteradoAndroid) {
-//        Banco myDb = new Banco(context);
-//        ContentValues valores = new ContentValues();
-//        SQLiteDatabase db = myDb.getWritableDatabase();
-//        valores.put("codigo", codigo);
-//        valores.put("nomecliente", nomeCliente);
-//        valores.put("cpf", cpf);
-//        valores.put("datanasc", dataNasc.getTime());
-//        valores.put("endereco", endereco);
-//        valores.put("posicao", posicao);
-//        valores.put("pai", pai);
-//        valores.put("mae", mae);
-//        valores.put("bairro", bairro);
-//        valores.put("cep", cep);
-//        valores.put("identidade", identidade);
-//        valores.put("trabalho", trabalho);
-//        valores.put("telefone", telefone);
-//        valores.put("fonetrab", fonetrab);
-//        valores.put("cgc", cgc);
-//        valores.put("incest", incest);
-//        valores.put("enderecotrab", enderecotrab);
-//        valores.put("codprofissao", codProfissao);
-//        valores.put("codcidade", codCidade);
-//        valores.put("responsavel", responsavel);
-//        valores.put("fone", fone);
-//        valores.put("obs", obs);
-//        valores.put("nume", nume);
-//        valores.put("email", email);
-//        valores.put("pessoaauto", pessoaAuto);
-//        valores.put("limitecredito", limiteCredito);
-//        valores.put("pessoaauto1", pessoaAuto1);
-//        valores.put("limitecredito1", limiteCredito1);
-//        valores.put("pessoaauto2", pessoaAuto2);
-//        valores.put("limitecredito2", limiteCredito2);
-//        valores.put("limitepessoal", limitePessoal);
-//        valores.put("tipocliente", tipoCliente);
-//        valores.put("codvendedor", codVendedor);
-//        valores.put("simples", simples);
-//        valores.put("celular", celular);
-//        valores.put("fisju", fisJu);
-//        valores.put("conjuge", conjuge);
-//        valores.put("freteCli", freteCli);
-//        valores.put("antecipacao", antecipacao);
-//        valores.put("etiquetas", etiquetas);
-//        valores.put("sistema", sistema);
-//        valores.put("vmanu", vmanu);
-//        valores.put("recibo", recibo);
-//        valores.put("codigopgto", codigoPgto);
-//        valores.put("codrepresentante", codRepresentante);
-//        valores.put("datacadastro", dataCadastro.getTime());
-//        valores.put("dataalteracao", dataAlteracao.getTime());
-//        valores.put("liberalimite", liberaLimite);
-//        valores.put("fantasia", fantasia);
-//        valores.put("contatocobranca", contatoCobranca);
-//        valores.put("inativo", inativo);
-//        valores.put("clientetipo", clienteTipo);
-//        valores.put("diacobranca", diaCobranca);
-//        valores.put("diaparavencimento", diaParaVencimento);
-//        valores.put("cadastroandroid", cadastroAndroid);
-//        valores.put("deletadoandroid", deletadoAndroid);
-//        valores.put("alteradoandroid", alteradoAndroid);
-//
-//        long result = db.insert("cliente", null, valores);
-//        db.close();
-//        valores.clear();
-//        if (result == -1) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
 
     public Boolean deletaCliente(Context context, Long codigo) {
         Banco myDb = new Banco(context);

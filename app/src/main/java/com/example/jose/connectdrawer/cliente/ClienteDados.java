@@ -61,7 +61,7 @@ public class ClienteDados extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Cidade cidade = new Cidade();
+        final Cidade cidade = new Cidade();
         camposRequeridos = new ArrayList<>();
         camposRequeridosMensagem = new ArrayList<>();
         camposRequeridosTamanho = new ArrayList<>();
@@ -286,6 +286,7 @@ public class ClienteDados extends Fragment {
                 if (retorno == 0) {
                     Cliente cliente1 = new Cliente();
                     for (int i = 0; fieldListObjeto.size() != i; i++) {
+                        String valorCampo = "";
                         String nomecampo = fieldListObjeto.get(i).getName();
                         if (fieldListObjeto.get(i).getName().equals("cgc")) {
                             nomecampo = "CpfCnpj";
@@ -296,8 +297,13 @@ public class ClienteDados extends Fragment {
                         if (fieldListObjeto.get(i).getName().equals("nomecliente")) {
                             nomecampo = "nomeCliente";
                         }
-                        String valorCampo = getSetDinamicoTelas.retornaValorEditText(view, nomecampo);
-
+                        if (nomecampo.equals("codcidade")) {
+                            nomecampo = "Cidade";
+                            spCidade = (Spinner) view.findViewById(R.id.spCidade);
+                            valorCampo = getSetDinamicoTelas.retornaValorSpinner(view, nomecampo);
+                        } else {
+                            valorCampo = getSetDinamicoTelas.retornaValorEditText(view, nomecampo);
+                        }
                         if (fieldListObjeto.get(i).getName().equals("cep")) {
                             valorCampo = Mascara.unmask(valorCampo);
                         }
@@ -326,6 +332,9 @@ public class ClienteDados extends Fragment {
                                     teste = getSetDinamico.insereField(fieldListObjeto.get(i), cliente1, valorCampo);
                                     cliente1 = (Cliente) teste;
                                 }
+                            } else if (nomecampo.equals("Cidade")) {
+                                teste = getSetDinamico.insereField(fieldListObjeto.get(i), cliente1, valorCampo);
+                                cliente1 = (Cliente) teste;
                             } else {
                                 teste = getSetDinamico.insereField(fieldListObjeto.get(i), cliente1, valorCampo);
                                 cliente1 = (Cliente) teste;

@@ -123,4 +123,25 @@ public class GetSetDinamicoTelas extends Fragment {
         }
         return "";
     }
+
+    public String retornaValorSpinner(View view,String nomeCampo){
+        String primeiro = nomeCampo.substring(0, 1);
+        primeiro = "sp" + primeiro.toUpperCase();
+        String nomeCampo1 = nomeCampo.substring(1, nomeCampo.length());
+        primeiro += nomeCampo1;
+        Spinner valorId = (Spinner) retornaIDCampo(view, primeiro);
+        if (valorId != null){
+            String string = valorId.getSelectedItem().toString();
+            String valor = "";
+            for(int i = 0 ; string.length() != i ; i++){
+                if (String.valueOf(string.charAt(i+1)).equals("-")){
+                    return valor;
+                }else{
+                    valor += string.charAt(i);
+                }
+            }
+            Log.i("sdf","asd");
+        }
+        return "";
+    }
 }
