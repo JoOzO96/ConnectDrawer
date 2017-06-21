@@ -92,7 +92,6 @@ public class ClienteDados extends Fragment {
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         ClienteDados clienteDados = new ClienteDados();
         //PEGA A LISTA DE CAMPOS DA CLASSE
-        final List<Field> fieldList = new ArrayList<>(Arrays.asList(clienteDados.getClass().getDeclaredFields()));
 
         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
         List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
@@ -116,57 +115,57 @@ public class ClienteDados extends Fragment {
             boolean cpfcnpj = false;
             Cursor cursor = cliente.retornaClienteFiltrado(getContext(), codigoCliente);
             if (cursor.getCount() > 0) {
-                for (int i = 0; fieldList.size() != i; i++) {
+                for (int i = 0; fieldListPassar.size() != i; i++) {
 
                     String mascara = null;
-                    if (fieldList.get(i).getName().toLowerCase().equals("$change") ||
-                            fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                    if (fieldListPassar.get(i).getName().toLowerCase().equals("$change") ||
+                            fieldListPassar.get(i).getName().toLowerCase().equals("serialversionuid")) {
                     } else {
-                        if (fieldList.get(i).getName().substring(0, 2).equals("tx")) {
-                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(i));
+                        if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
+                            String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
                             String nomecampo = "";
-                            nomecampo = fieldList.get(i).getName().replace("tx", "").toLowerCase();
+                            nomecampo = fieldListPassar.get(i).getName().replace("tx", "").toLowerCase();
                             if (nomecampo.equals("cpfcnpj")) {
                                 if (cursor.getString(cursor.getColumnIndex("cpf")) != null) {
                                     Object retorno = getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
                                     if (retorno != null) {
-                                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), "###.###.###-##");
+                                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, retorno.toString(), "###.###.###-##");
                                     } else {
-                                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "###.###.###-##");
+                                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", "###.###.###-##");
                                     }
                                 } else {
                                     if (cursor.getString(cursor.getColumnIndex("cgc")) != null) {
                                         Object retorno = getSetDinamico.retornaValorCursor(tipo, "cgc", cursor);
                                         if (retorno != null) {
-                                            getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), "##.###.###/####-##");
+                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, retorno.toString(), "##.###.###/####-##");
                                         } else {
-                                            getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "##.###.###/####-##");
+                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", "##.###.###/####-##");
                                         }
                                     }
                                 }
                             } else {
-                                if (fieldList.get(i).getName().equals("txCep")) {
+                                if (fieldListPassar.get(i).getName().equals("txCep")) {
                                     mascara = "#####-###";
                                 }
-                                if (fieldList.get(i).getName().equals("txTelefone")) {
+                                if (fieldListPassar.get(i).getName().equals("txTelefone")) {
                                     mascara = "(##)#####-####";
                                 }
-                                if (fieldList.get(i).getName().equals("txCelular")) {
+                                if (fieldListPassar.get(i).getName().equals("txCelular")) {
                                     mascara = "(##)#####-####";
                                 }
-                                if (fieldList.get(i).getName().equals("txFonetrab")) {
+                                if (fieldListPassar.get(i).getName().equals("txFonetrab")) {
                                     mascara = "(##)#####-####";
                                 }
                                 Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
                                 if (retorno != null) {
-                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), mascara);
+                                    getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, retorno.toString(), mascara);
                                 } else {
-                                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", mascara);
+                                    getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", mascara);
                                 }
                             }
 
 //                        }
-                        } else if (fieldList.get(i).getName().substring(0, 2).equals("sp")) {
+                        } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                             Cursor cursorCidade = cidade.retornaCidade(getContext());
 
                             int posicao = 0;
@@ -199,33 +198,33 @@ public class ClienteDados extends Fragment {
                                     }
                                 }
                             }
-                            getSetDinamicoTelas.colocaValorSpinner(fieldList.get(i), view, cidadeList, getContext(), posicao);
+                            getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, cidadeList, getContext(), posicao);
                         }
                     }
                 }
             }
         } else {
-            for (int i = 0; fieldList.size() != i; i++) {
+            for (int i = 0; fieldListPassar.size() != i; i++) {
                 String mascara = null;
-                if (fieldList.get(i).getName().equals("txCep")) {
+                if (fieldListPassar.get(i).getName().equals("txCep")) {
                     mascara = "#####-###";
                 }
-                if (fieldList.get(i).getName().equals("txTelefone")) {
+                if (fieldListPassar.get(i).getName().equals("txTelefone")) {
                     mascara = "(##)#####-####";
                 }
-                if (fieldList.get(i).getName().equals("txCelular")) {
+                if (fieldListPassar.get(i).getName().equals("txCelular")) {
                     mascara = "(##)#####-####";
                 }
-                if (fieldList.get(i).getName().equals("txFonetrab")) {
+                if (fieldListPassar.get(i).getName().equals("txFonetrab")) {
                     mascara = "(##)#####-####";
                 }
-                if (fieldList.get(i).getName().toLowerCase().equals("$change") ||
-                        fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                if (fieldListPassar.get(i).getName().toLowerCase().equals("$change") ||
+                        fieldListPassar.get(i).getName().toLowerCase().equals("serialversionuid")) {
 
                 } else {
-                    if (fieldList.get(i).getName().substring(0, 2).equals("tx")) {
-                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", mascara);
-                    } else if (fieldList.get(i).getName().substring(0, 2).equals("sp")) {
+                    if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
+                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", mascara);
+                    } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                         Cursor cursorCidade = cidade.retornaCidade(getContext());
 
                         int posicao = 0;
@@ -251,7 +250,7 @@ public class ClienteDados extends Fragment {
                                 cidadeList.add(cidade1.toString());
                             }
                         }
-                        getSetDinamicoTelas.colocaValorSpinner(fieldList.get(i), view, cidadeList, getContext(), posicao);
+                        getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, cidadeList, getContext(), posicao);
                     }
                 }
             }

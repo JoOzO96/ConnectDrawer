@@ -94,6 +94,8 @@ public class Banco extends SQLiteOpenHelper {
                 "alteradoandroid boolean);";
         db.execSQL(sql);
 
+
+
     }
 
     @Override
