@@ -77,7 +77,9 @@ public class GetSetDinamico {
                 objeto = cursor.getString(cursor.getColumnIndex(nome));
             } else if (tipo.equals("LONG")) {
                 objeto = cursor.getLong(cursor.getColumnIndex(nome));
-            } else if (tipo.equals("DOUBLE")) {
+            } else if (tipo.equals("INT")) {
+                objeto = cursor.getInt(cursor.getColumnIndex(nome));
+            }else if (tipo.equals("DOUBLE")) {
                 objeto = cursor.getDouble(cursor.getColumnIndex(nome));
             } else if (tipo.equals("BOOLEAN")) {
                 objeto = cursor.getInt(cursor.getColumnIndex(nome)) == 0;

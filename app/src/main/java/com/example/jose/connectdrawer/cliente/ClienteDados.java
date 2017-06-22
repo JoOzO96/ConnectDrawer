@@ -93,19 +93,8 @@ public class ClienteDados extends Fragment {
         ClienteDados clienteDados = new ClienteDados();
         //PEGA A LISTA DE CAMPOS DA CLASSE
 
-        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
-        List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
-        List<Field> fieldListPassar = new ArrayList<>();
+        List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
 
-        for (int i = 0; fieldListRid.size() != i; i++) {
-            for (int j = 0; fieldListClasse.size() != j; j++) {
-                if (fieldListRid.get(i).getName().toLowerCase().equals(fieldListClasse.get(j).getName().toLowerCase())) {
-                    fieldListPassar.add(fieldListRid.get(i));
-                    break;
-                } else {
-                }
-            }
-        }
 
 
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
@@ -164,7 +153,6 @@ public class ClienteDados extends Fragment {
                                 }
                             }
 
-//                        }
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                             Cursor cursorCidade = cidade.retornaCidade(getContext());
 

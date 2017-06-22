@@ -1,0 +1,124 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="com.example.jose.connectdrawer.Pedido.PedidoDados">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <EditText
+                android:id="@+id/txCodigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:hint="Codigo"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txcliente"
+            android:layout_below="@+id/textInputLayout"
+            android:text="Cliente"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:id="@+id/spcliente"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txcliente">
+
+        </Spinner>
+
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/textInputLayout1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_below="@id/txCliente"-->
+            <!--&gt;-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/txData"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Data"-->
+                <!--android:inputType="number" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txVendedor"
+            android:layout_below="@+id/spcliente"
+            android:text="Vendedor"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:id="@+id/spCodvendedor"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txVendedor">
+        </Spinner>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txFormapagamento"
+            android:layout_below="@+id/spCodvendedor"
+            android:text="Forma Pagamento"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:id="@+id/spFormadepagamento"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txFormapagamento">
+        </Spinner>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            android:layout_below="@id/spFormadepagamento">
+
+            <Button
+                android:id="@+id/btSalvar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/inputCodNacionalPais"
+                android:layout_weight="0.5"
+                android:text="Salvar" />
+
+            <Button
+                android:id="@+id/btCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/inputCodNacionalPais"
+                android:layout_weight="0.5"
+                android:text="Cancelar" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</ScrollView>

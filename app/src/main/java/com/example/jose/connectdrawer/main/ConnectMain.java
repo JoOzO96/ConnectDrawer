@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.example.jose.connectdrawer.Pedido.PedidoFragment;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.cliente.ClienteFragment;
@@ -101,6 +102,11 @@ public class ConnectMain extends AppCompatActivity
             CidadeFragment cidadeFragment = new CidadeFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, cidadeFragment, cidadeFragment.getTag()).commit();
+
+        }else if (id == R.id.nav_pedido) {
+            PedidoFragment pedidoFragment = new PedidoFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
 
         } else if (id == R.id.nav_sync) {
             Sincroniza sincroniza = new Sincroniza();

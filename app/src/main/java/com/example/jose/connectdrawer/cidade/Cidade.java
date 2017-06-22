@@ -196,41 +196,6 @@ public class Cidade {
         }
     }
 
-    public boolean atualizaDados(Context context, Cidade cidade) {
-        Banco myDb = new Banco(context);
-        ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codcidade", cidade.getCodcidade());
-        valores.put("nomecidade", cidade.getNomecidade());
-        valores.put("uf", cidade.getUf());
-        valores.put("codnacionaluf", cidade.getCodnacionaluf());
-        valores.put("codnacionalcidade", cidade.getCodnacionalcidade());
-        valores.put("pais", cidade.getPais());
-        valores.put("codnacionalpais", cidade.getCodnacionalpais());
-        valores.put("cep", cidade.getCep());
-        valores.put("cadastroandroid", cidade.getCadastroandroid());
-
-        long result = db.update("cidade", valores, "codCidade = " + cidade.getCodcidade(), null);
-        db.close();
-        valores.clear();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public Long retornaMaiorCodCidade(Context context) {
-        Banco myDb = new Banco(context);
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,max(codCidade) from cidade", null);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            return cursor.getLong(1);
-        } else {
-            return 0L;
-        }
-    }
 
     public boolean remover(Context context, Cidade cidade) {
         Banco myDb = new Banco(context);
