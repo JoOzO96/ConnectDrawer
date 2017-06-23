@@ -27,7 +27,7 @@ public class Vendedor {
 
     @Override
     public String toString() {
-        return codvendedor + " - " + nomevendedor ;
+        return codvendedor + " - " + nomevendedor;
     }
 
     public String getCodvendedor() {
@@ -63,7 +63,6 @@ public class Vendedor {
     }
 
 
-
     public Cursor retornaVendedor(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
@@ -75,10 +74,10 @@ public class Vendedor {
         return cursor;
     }
 
-    public Cursor retornaVendedorFiltradaCursor(Context context, Long codVendedor) {
+    public Cursor retornaVendedorFiltradaCursor(Context context, String codVendedor) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM vendedor where codvendedor = " + codVendedor, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM vendedor where codvendedor = '" + codVendedor + "'", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -98,7 +97,6 @@ public class Vendedor {
     }
 
 
-
     public boolean remover(Context context, Vendedor pedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
@@ -110,10 +108,10 @@ public class Vendedor {
         }
     }
 
-    public boolean removerVendedor(Context context, Long codvendedor) {
+    public boolean removerVendedor(Context context, String codvendedor) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
-        int retorno = db.delete("vendedor", "codvendedor = " + codvendedor, null);
+        int retorno = db.delete("vendedor", "codvendedor = '" + codvendedor + "'", null);
         if (retorno > 0) {
             return true;
         } else {
@@ -122,21 +120,21 @@ public class Vendedor {
     }
 
 
-    public Boolean cadastraVendedor(Context context, Vendedor vendedor){
+    public Boolean cadastraVendedor(Context context, Vendedor vendedor) {
         Banco myDb = new Banco(context);
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(vendedor.getClass().getDeclaredFields()));
 
-        for (int i = 0 ; fieldList.size() != i ; i++){
+        for (int i = 0; fieldList.size() != i; i++) {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), vendedor, valores);
         }
 
-        if (valores.get("codvendedor") == null){
+        if (valores.get("codvendedor") == null) {
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
-            valores.remove("codpedido");
+            valores.remove("codvendedor");
             valores.remove("cadastroandroid");
             valores.put("codvendedor", retorno);
             valores.put("cadastroandroid", true);
@@ -148,10 +146,10 @@ public class Vendedor {
             } else {
                 return true;
             }
-        }else{
+        } else {
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
-            long retorno = db.update("vendedor", valores, "codvendedor = " + valores.get("codvendedor").toString(), null);
+            long retorno = db.update("vendedor", valores, "codvendedor = '" + valores.get("codvendedor").toString() + "'", null);
             db.close();
             valores.clear();
             if (retorno == -1) {
@@ -161,6 +159,26 @@ public class Vendedor {
             }
         }
     }
+
+    public Boolean cadastraVendedorSinc(Context context, Vendedor vendedor) {
+        Banco myDb = new Banco(context);
+        DadosBanco dadosBanco = new DadosBanco();
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(vendedor.getClass().getDeclaredFields()));
+
+        for (int i = 0; fieldList.size() != i; i++) {
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), vendedor, valores);
+        }
+        long retorno = 0;
+        retorno = db.insert("vendedor", null, valores);
+        if (retorno == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();

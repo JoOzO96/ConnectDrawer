@@ -73,12 +73,12 @@ public class VendedorFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                             Vendedor vendedor = (Vendedor) listaVendedor.getItemAtPosition(position);
-                            PedidoDados pedidoDados = new PedidoDados();
+                            VendedorDados vendedorDados = new VendedorDados();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("codigo", Long.parseLong(vendedor.getCodvendedor()));
-                            pedidoDados.setArguments(bundle);
+                            bundle.putString("codigo", vendedor.getCodvendedor());
+                            vendedorDados.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
+                            fragmentTransaction.replace(R.id.fragment_container, vendedorDados, vendedorDados.getTag()).commit();
                         }
                     }
             );
@@ -96,7 +96,7 @@ public class VendedorFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
 
                             MostraToast toast = new MostraToast();
-                            boolean retorno = vendedor.removerVendedor(getContext(), Long.parseLong(vendedor.getCodvendedor()));
+                            boolean retorno = vendedor.removerVendedor(getContext(), vendedor.getCodvendedor());
                             if (retorno == true) {
                                 toast.mostraToastShort(getContext(), "Vendedor excluido com sucesso");
                                 VendedorFragment vendedorFragment = new VendedorFragment();

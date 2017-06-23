@@ -135,7 +135,7 @@ public class Banco extends SQLiteOpenHelper {
         db.execSQL(sql);
 
         sql = "CREATE TABLE vendedor (" +
-                "codvendedor long primary key,"+
+                "codvendedor text primary key,"+
                 "nomevendedor text,"+
                 "comi double,"+
                 "comis double,"+

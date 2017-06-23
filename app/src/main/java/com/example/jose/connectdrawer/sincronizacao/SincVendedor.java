@@ -44,7 +44,7 @@ public class SincVendedor {
                 for (int i = 0; vendedorList.size() != i; i++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
-                    Cursor cursor = vendedor.retornaVendedorFiltradaCursor(context1, Long.parseLong(vendedorList.get(i).getCodvendedor()));
+                    Cursor cursor = vendedor.retornaVendedorFiltradaCursor(context1, vendedorList.get(i).getCodvendedor());
                     if (cursor.getCount() > 0) {
                         cursor.close();
                     } else {
@@ -58,7 +58,7 @@ public class SincVendedor {
                                 String tipo = getSetDinamico.retornaTipoCampo(fieldListClasse.get(j));
                                 String nomecampo = "";
                                 nomecampo = fieldListClasse.get(j).getName().toLowerCase();
-                                Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(j), vendedorList.get(j));
+                                Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(j), vendedorList.get(i));
                                 if (valorCampo != null) {
                                     Object teste;
                                     teste = getSetDinamico.insereField(fieldListClasse.get(j), vendedor1, valorCampo);
@@ -74,7 +74,7 @@ public class SincVendedor {
                         //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
                         //
 
-                        boolean retorno = vendedor.cadastraVendedor(context1, vendedor1);
+                        boolean retorno = vendedor.cadastraVendedorSinc(context1, vendedor1);
 
                         cursor.close();
                     }
