@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.example.jose.connectdrawer.Pedido.PedidoFragment;
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.Vendedor.VendedorFragment;
 import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.cliente.ClienteFragment;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
@@ -103,14 +104,19 @@ public class ConnectMain extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, cidadeFragment, cidadeFragment.getTag()).commit();
 
-        }else if (id == R.id.nav_pedido) {
+        } else if (id == R.id.nav_pedido) {
             PedidoFragment pedidoFragment = new PedidoFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
 
+        } else if (id == R.id.nav_vendedor) {
+            VendedorFragment vendedorFragment = new VendedorFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, vendedorFragment, vendedorFragment.getTag()).commit();
+
         } else if (id == R.id.nav_sync) {
             Sincroniza sincroniza = new Sincroniza();
-            sincroniza.iniciaSincronizacao(getBaseContext());
+            sincroniza.iniciaSincronizacao(this);
         } else if (id == R.id.nav_deleta) {
             Context context = this;
             context.deleteDatabase("connect.db");

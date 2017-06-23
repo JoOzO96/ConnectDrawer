@@ -107,40 +107,45 @@ public class PedidoDados extends Fragment {
                     String mascara = null;
                     if (fieldListPassar.get(i).getName().toLowerCase().equals("$change") ||
                             fieldListPassar.get(i).getName().toLowerCase().equals("serialversionuid")) {
-                    }else{
+                    } else {
                         //TESTA SE O CAMPO QUE ESTA PASSANDO É UM EDITTEXT
                         if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
 
-                        }else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
+                        } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                             //TESTA SE O CAMPO QUE ESTA PASSANDO É UM SPINNER
                             //TESTA QUAL SPINNER É, E COLOCA OS DADOS REFERENTES A ELE
-                            if (fieldListPassar.get(i).getName().toLowerCase().equals("spcliente")){
+                            if (fieldListPassar.get(i).getName().toLowerCase().equals("spcliente")) {
                                 //SPINNER DOS CLIENTES
                                 Cliente cliente = new Cliente();
                                 int posicao = 0;
                                 Cursor cursorCliente = cliente.retornaCliente(getContext());
                                 //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
-                                if (cursorCliente.getCount()>0){
+                                if (cursorCliente.getCount() > 0) {
                                     //posição do spinner para sair selecionado
+                                    List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+                                    for (int f = fieldListCliente.size() - 1; -1 != f; f--) {
+                                        if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")) {
 
+                                        } else {
+                                            fieldListCliente.remove(f);
+                                        }
+                                    }
                                     cursor.moveToFirst();
                                     for (int j = 0; cursorCliente.getCount() != j; j++) {
                                         Cliente cliente1 = new Cliente();
-                                        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
-                                        for (int f = fieldListCliente.size() -1; 0 != f; f--) {
-                                            if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")){
-
-                                            }else{
-                                                fieldListCliente.remove(f);
-                                            }
-                                        }
-
 
                                         for (int f = 0; fieldListCliente.size() != f; f++) {
 
                                             String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
                                             String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
                                             Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
+
+//                                            if (nomeCampo.equals("codigo")){
+//                                                cliente1.setCodigo(cursorCliente.getLong(cursorCliente.getColumnIndex("codigo")));
+//                                            }else{
+//                                                cliente1.setNomecliente(cursorCliente.getString(cursorCliente.getColumnIndex("nomecliente")));
+//                                            }
+
                                             if (retorno != null) {
                                                 Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
                                                 cliente1 = (Cliente) retCliente;
@@ -148,19 +153,25 @@ public class PedidoDados extends Fragment {
 
 
                                         }
-                                        cursorCliente.moveToNext();
-                                        clienteList.add(cliente1.toString());
-                                        if (cursor.getString(cursor.getColumnIndex("codcliente")).equals(cliente1.getCodigo().toString())) {
-                                            for (int k = 0; clienteList.size() != k; k++) {
-                                                if (clienteList.get(k).equals(clienteList.toString())) {
-                                                    posicao = k;
-                                                }
-                                            }
-                                        }
 
+                                        clienteList.add(cliente1.toString());
+                                        cursorCliente.moveToNext();
                                     }
                                 }
+
+                                for (int k = 0; clienteList.size() != k; k++) {
+                                    Integer codHifen = clienteList.get(k).indexOf("-");
+                                    String codCliente = clienteList.get(k).substring(0, codHifen - 1);
+                                    if (codCliente.equals(cursor.getString(cursor.getColumnIndex("codcliente")))) {
+                                        posicao = k;
+                                        break;
+                                    }
+                                }
+
+
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
+                            }else if (fieldListPassar.get(i).getName().toLowerCase().equals("spvendedor")) {
+
                             }
                         }
                     }
