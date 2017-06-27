@@ -144,6 +144,23 @@ public class Banco extends SQLiteOpenHelper {
                 "alteradoandroid boolean);";
         db.execSQL(sql);
 
+
+        sql = "CREATE TABLE formapagamento (" +
+                "codigo long primary key,"+
+                "pagamento text,"+
+                "prazo boolean,"+
+                "cartao boolean,"+
+                "codcaixa long,"+
+                "encaixa boolean,"+
+                "fechamento boolean,"+
+                "cheque boolean,"+
+                "listapre long,"+
+                "naolancareceber boolean,"+
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
+        db.execSQL(sql);
+
     }
 
     @Override

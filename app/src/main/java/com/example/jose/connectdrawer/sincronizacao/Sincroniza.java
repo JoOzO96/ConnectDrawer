@@ -23,6 +23,7 @@ public class Sincroniza {
         SincCidade sincCidade = new SincCidade();
         SincPedido sincPedido = new SincPedido();
         SincVendedor sincVendedor = new SincVendedor();
+        SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
         dialog.setMessage("Aguarde... Sincronizando Clientes");
         dialog.show();
         sincCliente.iniciaSinc(context);
@@ -34,7 +35,7 @@ public class Sincroniza {
         dialog.setMessage("Aguarde... Sincronizando Pedidos");
         dialog.show();
         sincPedido.iniciaSinc(context);
-
+        sincFormaPagamento.iniciaSinc(context);
         sincVendedor.iniciaSinc(context);
         try {
             sincCidade.iniciaEnvio(context);

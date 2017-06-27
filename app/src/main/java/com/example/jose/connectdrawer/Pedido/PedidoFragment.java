@@ -7,19 +7,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.jose.connectdrawer.R;
-import com.example.jose.connectdrawer.cliente.Cliente;
-import com.example.jose.connectdrawer.cliente.ClienteDados;
-import com.example.jose.connectdrawer.cliente.ClienteFragment;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.util.ArrayList;
