@@ -87,7 +87,7 @@ public class CidadeFragment extends Fragment {
                             Cidade cidade1 = (Cidade) listCidade.getItemAtPosition(position);
                             CidadeDados cidadeDados = new CidadeDados();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("codigo", cidade1.getCodcidade());
+                            bundle.putLong("codcidade", cidade1.getCodcidade());
                             cidadeDados.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                             fragmentTransaction.replace(R.id.fragment_container, cidadeDados, cidadeDados.getTag()).commit();

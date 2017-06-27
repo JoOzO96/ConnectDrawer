@@ -56,7 +56,7 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
         try {
             URL obj = null;
 
-            obj = new URL("http://192.168.0.150:8080/ConnectServices/recebeCidade");
+            obj = new URL("http://192.168.2.103:8080/ConnectServices/recebeCidade");
 
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();  //abre conexao
 

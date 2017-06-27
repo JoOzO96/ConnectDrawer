@@ -1,13 +1,16 @@
 package com.example.jose.connectdrawer.cliente;
 
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.cidade.Cidade;
+import com.example.jose.connectdrawer.cidade.CidadeFragment;
+import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +78,48 @@ public class ClienteFragment extends Fragment {
                         }
                     }
             );
+            listaCliente.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    final Cliente cliente1 = (Cliente) listaCliente.getItemAtPosition(position);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                    builder.setTitle("Confirm");
+                    builder.setMessage("Confirma a exclusao do cliente " + cliente1.getNomecliente() + "?");
+
+                    builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            MostraToast toast = new MostraToast();
+                            boolean retorno = cliente1.deletaCliente(getContext(), cliente1.getCodigo());
+                            if (retorno == true) {
+                                toast.mostraToastShort(getContext(), "Cliente excluido com sucesso");
+                                ClienteFragment clienteFragment = new ClienteFragment();
+                                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, clienteFragment, clienteFragment.getTag()).commit();
+                            } else {
+                                toast.mostraToastShort(getContext(), "Erro ao deletar cliente");
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    return true;
+                }
+            });
         }
 
         return view;
@@ -83,6 +131,23 @@ public class ClienteFragment extends Fragment {
         inflater.inflate(R.menu.cliente_opcoes, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
 
+            //noinspection SimplifiableIfStatement
+        if (id == R.id.cliente_opcoes) {
+            ClienteDados clienteDados = new ClienteDados();
+            Bundle bundle = new Bundle();
+            bundle.putLong("codigo", -1L);
+            clienteDados.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, clienteDados, clienteDados.getTag()).commit();
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 }

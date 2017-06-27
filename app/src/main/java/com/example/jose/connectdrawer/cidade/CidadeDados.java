@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.cliente.ClienteDados;
+import com.example.jose.connectdrawer.uteis.CamposRequeridos;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.Mascara;
@@ -39,6 +42,9 @@ public class CidadeDados extends Fragment {
     private EditText txCep;
     private Button btSalvar;
     private Button btCancelar;
+    private List<String> camposRequeridos;
+    private List<String> camposRequeridosMensagem;
+    private List<String> camposRequeridosTamanho;
 
     public CidadeDados() {
         // Required empty public constructor
@@ -48,21 +54,30 @@ public class CidadeDados extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_cidade_dados, container, false);
-
+        GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+        final View view = inflater.inflate(R.layout.fragment_cidade_dados, container, false);
+        camposRequeridos = new ArrayList<>();
+        camposRequeridosMensagem = new ArrayList<>();
+        camposRequeridosTamanho = new ArrayList<>();
+        camposRequeridos.add("txNomecidade");
+        camposRequeridosMensagem.add("O nome da cidade é obrigatório");
+        camposRequeridosTamanho.add("5");
+        camposRequeridos.add("txUf");
+        camposRequeridosMensagem.add("A UF é obrigatoria");
+        camposRequeridosTamanho.add("2");
+        camposRequeridos.add("txCodnacionalcidade");
+        camposRequeridosMensagem.add("O Codigo Nacional da Cidade é obrigado");
+        camposRequeridosTamanho.add("7");
+        camposRequeridos.add("txPais");
+        camposRequeridosMensagem.add("O nome do país é obrigatorio");
+        camposRequeridosTamanho.add("5");
+        camposRequeridos.add("txCodnacionalpais");
+        camposRequeridosMensagem.add("O codigo internacional do país é obrigatorio. (Brasil = 1058)");
+        camposRequeridosTamanho.add("4");
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
-
-        txCodcidade = (EditText) view.findViewById(R.id.txCodcidade);
-        txNomecidade = (EditText) view.findViewById(R.id.txNomecidade);
-        txUf = (EditText) view.findViewById(R.id.txUf);
-        txCodnacionalcidade = (EditText) view.findViewById(R.id.txCodnacionalcidade);
-        txPais = (EditText) view.findViewById(R.id.txPais);
-        txCodnacionalpais = (EditText) view.findViewById(R.id.txCodnacionalpais);
-        txCep = (EditText) view.findViewById(R.id.txCep);
-        txCep.addTextChangedListener(Mascara.insert("#####-###", txCep));
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
+
         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(CidadeDados.class.getDeclaredFields()));
         List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
         List<Field> fieldListPassar = new ArrayList<>();
@@ -76,22 +91,22 @@ public class CidadeDados extends Fragment {
                 }
             }
         }
-
+        CidadeDados cidadeDados = new CidadeDados();
         Bundle bundle = this.getArguments();
         if (bundle == null) {
-            txCodcidade.setText("");
-            txNomecidade.setText("");
-            txUf.setText("");
-            txCodnacionalcidade.setText("");
-            txPais.setText("");
-            txCodnacionalpais.setText("");
-            txCep.setText("");
+            List<Field> fieldList = new ArrayList<>(Arrays.asList(cidadeDados.getClass().getDeclaredFields()));
+            for (int i = 0; fieldList.size() != i; i++) {
+                if (fieldList.get(i).getName().toLowerCase().equals("txcep")){
+                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "#####-###");
+                } else if (fieldList.get(i).getName().toLowerCase().equals("tx")){
+                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", null);
+                }
+            }
         } else {
-            CidadeDados cidadeDados = new CidadeDados();
-            GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             List<Field> fieldList = new ArrayList<>(Arrays.asList(cidadeDados.getClass().getDeclaredFields()));
-            Long codigoCidade = bundle.getLong("codigo");
+            Long codigoCidade = bundle.getLong("codcidade");
             Cidade cidade = new Cidade();
             Cursor cursor = cidade.retornaCidadeFiltradaCursor(getContext(), codigoCidade);
 
@@ -114,57 +129,8 @@ public class CidadeDados extends Fragment {
                     }
                 }
             }
-
-
-//            if (cursor.getCount() > 0) {
-//                if (cursor.getString(cursor.getColumnIndex("codcidade")) != null) {
-//                    txCodcidade.setText(cursor.getString(cursor.getColumnIndex("codcidade")));
-//                } else {
-//                    txCodcidade.setText("");
-//                }
-//                if (cursor.getString(cursor.getColumnIndex("nomecidade")) != null) {
-//                    txNomeCidade.setText(cursor.getString(cursor.getColumnIndex("nomecidade")));
-//                } else {
-//                    txNomeCidade.setText("");
-//                }
-//                if (cursor.getString(cursor.getColumnIndex("uf")) != null) {
-//                    txUf.setText(cursor.getString(cursor.getColumnIndex("uf")));
-//                } else {
-//                    txUf.setText("");
-//                }
-//                if (cursor.getString(cursor.getColumnIndex("codnacionalcidade")) != null) {
-//                    txCodNacionalCidade.setText(cursor.getString(cursor.getColumnIndex("codnacionalcidade")));
-//                } else {
-//                    txCodNacionalCidade.setText("");
-//                }
-//                if (cursor.getString(cursor.getColumnIndex("pais")) != null) {
-//                    txPais.setText(cursor.getString(cursor.getColumnIndex("pais")));
-//                } else {
-//                    txPais.setText("");
-//                }
-//                if (cursor.getString(cursor.getColumnIndex("codnacionalpais")) != null) {
-//                    txCodNacionalPais.setText(cursor.getString(cursor.getColumnIndex("codnacionalpais")));
-//                } else {
-//                    txCodNacionalPais.setText("");
-//                }
-//                if (cursor.getString(cursor.getColumnIndex("cep")) != null) {
-//                    txCep.setText(cursor.getString(cursor.getColumnIndex("cep")));
-//                } else {
-//                    txCep.setText("");
-//                }
-//
-//            } else {
-//                txCodCidade.setText("");
-//                txNomeCidade.setText("");
-//                txUf.setText("");
-//                txCodNacionalCidade.setText("");
-//                txPais.setText("");
-//                txCodNacionalPais.setText("");
-//                txCep.setText("");
-//
-//            }
-
         }
+
 
 
         // BOTAO SALVAR ON CLICK LISTNER
@@ -172,7 +138,49 @@ public class CidadeDados extends Fragment {
             @Override
             public void onClick(View v) {
                 MostraToast toast = new MostraToast();
-                int status = 0;
+                GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+                GetSetDinamico getSetDinamico = new GetSetDinamico();
+                CidadeDados cidadeDados = new CidadeDados();
+
+                //PEGA A LISTA DE CAMPOS DA CLASSE
+                List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(CidadeDados.class.getDeclaredFields()));
+                List<Field> fieldListRid = new ArrayList<>(Arrays.asList(R.id.class.getDeclaredFields()));
+                List<Field> fieldListPassar = new ArrayList<>();
+
+                for (int i = 0; fieldListRid.size() != i; i++) {
+                    for (int j = 0; fieldListClasse.size() != j; j++) {
+                        if (fieldListRid.get(i).getName().toLowerCase().equals(fieldListClasse.get(j).getName().toLowerCase())) {
+                            fieldListPassar.add(fieldListRid.get(i));
+                            break;
+                        }
+                    }
+                }
+
+                CamposRequeridos camposRequeridosClass = new CamposRequeridos();
+                int retorno = camposRequeridosClass.retornaMensagemRequerido(camposRequeridos, camposRequeridosMensagem, camposRequeridosTamanho, fieldListPassar, view);
+                List<Field> fieldListObjeto = new ArrayList<Field>(Arrays.asList(Cidade.class.getDeclaredFields()));
+
+                if (retorno == 0) {
+                    Cidade cidade = new Cidade();
+                    for (int i = 0; fieldListObjeto.size() != i; i++) {
+                        String valorCampo = "";
+                        String nomecampo = fieldListObjeto.get(i).getName();
+                        valorCampo = getSetDinamicoTelas.retornaValorEditText(view, nomecampo);
+                        if (valorCampo != null) {
+                            Object teste;
+                            teste = getSetDinamico.insereField(fieldListObjeto.get(i), cidade, valorCampo);
+                            cidade = (Cidade) teste;
+                        }
+                    }
+                    boolean status = cidade.cadastraCidade(getContext(), cidade);
+                    if (status == true) {
+                        btCancelar.performClick();
+                        new MostraToast().mostraToastShort(getContext(), "A cidade foi cadastrado com sucesso");
+
+                    } else {
+                        new MostraToast().mostraToastShort(getContext(), "Erro ao cadastrar a cidade");
+                    }
+                }
 //                if (txNomeCidade.length() == 0) {
 //                    toast.mostraToastShort(getContext(), "O nome da cidade deve ser informado");
 //                    status = 1;

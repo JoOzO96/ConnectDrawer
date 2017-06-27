@@ -1,6 +1,7 @@
 package com.example.jose.connectdrawer.uteis;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -45,25 +46,19 @@ public class GetSetDinamico {
             }
             return objetoInstanciado;
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.i("IllegalAccessException", "ACESSO ILEGAL");
         } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.i("NoSuchMethodException", "METODO NAO ENCONTRADO");
         } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
         } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
         } catch (InstantiationException e) {
-            e.printStackTrace();
+
         }
         return objetoInstanciado;
     }
@@ -82,7 +77,9 @@ public class GetSetDinamico {
                 objeto = cursor.getString(cursor.getColumnIndex(nome));
             } else if (tipo.equals("LONG")) {
                 objeto = cursor.getLong(cursor.getColumnIndex(nome));
-            } else if (tipo.equals("DOUBLE")) {
+            } else if (tipo.equals("INT")) {
+                objeto = cursor.getInt(cursor.getColumnIndex(nome));
+            }else if (tipo.equals("DOUBLE")) {
                 objeto = cursor.getDouble(cursor.getColumnIndex(nome));
             } else if (tipo.equals("BOOLEAN")) {
                 objeto = cursor.getInt(cursor.getColumnIndex(nome)) == 0;

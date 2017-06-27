@@ -6,8 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.uteis.DadosBanco;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jose on 25/05/2017.
@@ -190,41 +196,6 @@ public class Cidade {
         }
     }
 
-    public boolean atualizaDados(Context context, Cidade cidade) {
-        Banco myDb = new Banco(context);
-        ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codcidade", cidade.getCodcidade());
-        valores.put("nomecidade", cidade.getNomecidade());
-        valores.put("uf", cidade.getUf());
-        valores.put("codnacionaluf", cidade.getCodnacionaluf());
-        valores.put("codnacionalcidade", cidade.getCodnacionalcidade());
-        valores.put("pais", cidade.getPais());
-        valores.put("codnacionalpais", cidade.getCodnacionalpais());
-        valores.put("cep", cidade.getCep());
-        valores.put("cadastroandroid", cidade.getCadastroandroid());
-
-        long result = db.update("cidade", valores, "codCidade = " + cidade.getCodcidade(), null);
-        db.close();
-        valores.clear();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public Long retornaMaiorCodCidade(Context context) {
-        Banco myDb = new Banco(context);
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,max(codCidade) from cidade", null);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            return cursor.getLong(1);
-        } else {
-            return 0L;
-        }
-    }
 
     public boolean remover(Context context, Cidade cidade) {
         Banco myDb = new Banco(context);
@@ -234,6 +205,58 @@ public class Cidade {
             return true;
         } else {
             return false;
+        }
+    }
+
+
+    public Boolean cadastraCidade(Context context, Cidade cidade){
+        Banco myDb = new Banco(context);
+        DadosBanco dadosBanco = new DadosBanco();
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+
+        for (int i = 0 ; fieldList.size() != i ; i++){
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), cidade, valores);
+        }
+
+        if (valores.get("codcidade") == null){
+            long retorno = retornaMaiorCod(context);
+            retorno = retorno + 1;
+            valores.remove("codcidade");
+            valores.remove("cadastroandroid");
+            valores.put("codcidade", retorno);
+            valores.put("cadastroandroid", true);
+            retorno = db.insert("cidade", null, valores);
+            db.close();
+            valores.clear();
+            if (retorno == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }else{
+            valores.remove("alteradoandroid");
+            valores.put("alteradoandroid", true);
+            long retorno = db.update("cidade", valores, "codcidade= " + valores.get("codcidade").toString(), null);
+            db.close();
+            valores.clear();
+            if (retorno == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    public Long retornaMaiorCod(Context context) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,max(codcidade) from cidade", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return cursor.getLong(1);
+        } else {
+            return 0L;
         }
     }
 }
