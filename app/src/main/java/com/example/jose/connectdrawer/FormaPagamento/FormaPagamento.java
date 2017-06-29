@@ -116,7 +116,7 @@ public class FormaPagamento {
 
 
 
-    public Cursor retornaFormaPagamento(Context context) {
+    public static Cursor retornaFormaPagamento(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM formapagamento", null);

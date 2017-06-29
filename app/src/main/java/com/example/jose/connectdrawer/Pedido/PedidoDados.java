@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteDados;
@@ -82,6 +84,8 @@ public class PedidoDados extends Fragment {
         GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
+        List<String> vendedorList = new ArrayList<>();
+        List<String> formaPagamentoList = new ArrayList<>();
         Pedido pedido = new Pedido();
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
@@ -139,26 +143,15 @@ public class PedidoDados extends Fragment {
                                             String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
                                             String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
                                             Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
-
-//                                            if (nomeCampo.equals("codigo")){
-//                                                cliente1.setCodigo(cursorCliente.getLong(cursorCliente.getColumnIndex("codigo")));
-//                                            }else{
-//                                                cliente1.setNomecliente(cursorCliente.getString(cursorCliente.getColumnIndex("nomecliente")));
-//                                            }
-
                                             if (retorno != null) {
                                                 Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
                                                 cliente1 = (Cliente) retCliente;
                                             }
-
-
                                         }
-
                                         clienteList.add(cliente1.toString());
                                         cursorCliente.moveToNext();
                                     }
                                 }
-
                                 for (int k = 0; clienteList.size() != k; k++) {
                                     Integer codHifen = clienteList.get(k).indexOf("-");
                                     String codCliente = clienteList.get(k).substring(0, codHifen - 1);
@@ -167,11 +160,87 @@ public class PedidoDados extends Fragment {
                                         break;
                                     }
                                 }
-
-
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
-                            }else if (fieldListPassar.get(i).getName().toLowerCase().equals("spvendedor")) {
-
+                            } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spcodvendedor")) {
+                                //SPINNER DOS Vendedores
+                                Vendedor vendedor = new Vendedor();
+                                int posicao = 0;
+                                Cursor cursorVendedor = vendedor.retornaVendedor(getContext());
+                                //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+                                if (cursorVendedor.getCount() > 0) {
+                                    //posição do spinner para sair selecionado
+                                    List<Field> fieldListVendedor = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+                                    for (int f = fieldListVendedor.size() - 1; -1 != f; f--) {
+                                        if (fieldListVendedor.get(f).getName().toLowerCase().equals("codvendedor") || fieldListVendedor.get(f).getName().toLowerCase().equals("nomevendedor")) {
+                                        } else {
+                                            fieldListVendedor.remove(f);
+                                        }
+                                    }
+                                    cursor.moveToFirst();
+                                    for (int j = 0; cursorVendedor.getCount() != j; j++) {
+                                        vendedor = new Vendedor();
+                                        for (int f = 0; fieldListVendedor.size() != f; f++) {
+                                            String tipo = getSetDinamico.retornaTipoCampo(fieldListVendedor.get(f));
+                                            String nomeCampo = fieldListVendedor.get(f).getName().toLowerCase();
+                                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorVendedor);
+                                            if (retorno != null) {
+                                                Object retVendedor = getSetDinamico.insereField(fieldListVendedor.get(f), vendedor, retorno);
+                                                vendedor = (Vendedor) retVendedor;
+                                            }
+                                        }
+                                        vendedorList.add(vendedor.toString());
+                                        cursorVendedor.moveToNext();
+                                    }
+                                }
+                                for (int k = 0; vendedorList.size() != k; k++) {
+                                    Integer codHifen = vendedorList.get(k).indexOf("-");
+                                    String codVendedor = vendedorList.get(k).substring(0, codHifen - 1);
+                                    if (codVendedor.equals(cursor.getString(cursor.getColumnIndex("codvendedor")))) {
+                                        posicao = k;
+                                        break;
+                                    }
+                                }
+                                getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
+                            }else if (fieldListPassar.get(i).getName().toLowerCase().equals("spformadepagamento")) {
+                                //SPINNER DOS FORMAS DE PAGAMENTO
+                                FormaPagamento formaPagamento = new FormaPagamento();
+                                int posicao = 0;
+                                Cursor cursorFormaPagamento = formaPagamento.retornaFormaPagamento(getContext());
+                                //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+                                if (cursorFormaPagamento.getCount() > 0) {
+                                    //posição do spinner para sair selecionado
+                                    List<Field> fieldListFormaPagamento = new ArrayList<>(Arrays.asList(FormaPagamento.class.getDeclaredFields()));
+                                    for (int f = fieldListFormaPagamento.size() - 1; -1 != f; f--) {
+                                        if (fieldListFormaPagamento.get(f).getName().toLowerCase().equals("codigo") || fieldListFormaPagamento.get(f).getName().toLowerCase().equals("pagamento")) {
+                                        } else {
+                                            fieldListFormaPagamento.remove(f);
+                                        }
+                                    }
+                                    cursor.moveToFirst();
+                                    for (int j = 0; cursorFormaPagamento.getCount() != j; j++) {
+                                        formaPagamento = new FormaPagamento();
+                                        for (int f = 0; fieldListFormaPagamento.size() != f; f++) {
+                                            String tipo = getSetDinamico.retornaTipoCampo(fieldListFormaPagamento.get(f));
+                                            String nomeCampo = fieldListFormaPagamento.get(f).getName().toLowerCase();
+                                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorFormaPagamento);
+                                            if (retorno != null) {
+                                                Object retFormaPagamento = getSetDinamico.insereField(fieldListFormaPagamento.get(f), formaPagamento, retorno);
+                                                formaPagamento = (FormaPagamento) retFormaPagamento;
+                                            }
+                                        }
+                                        formaPagamentoList.add(formaPagamento.toString());
+                                        cursorFormaPagamento.moveToNext();
+                                    }
+                                }
+                                for (int k = 0; formaPagamentoList.size() != k; k++) {
+                                    Integer codHifen = formaPagamentoList.get(k).indexOf("-");
+                                    String codFormaPagamento = formaPagamentoList.get(k).substring(0, codHifen - 1);
+                                    if (codFormaPagamento.equals(cursor.getString(cursor.getColumnIndex("formadepagamento")))) {
+                                        posicao = k;
+                                        break;
+                                    }
+                                }
+                                getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, formaPagamentoList, getContext(), posicao);
                             }
                         }
                     }

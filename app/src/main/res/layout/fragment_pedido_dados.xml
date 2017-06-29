@@ -70,7 +70,7 @@
 
         <Spinner
             android:layout_width="match_parent"
-            android:id="@+id/spCodvendedor"
+            android:id="@+id/spcodvendedor"
             android:layout_height="wrap_content"
             android:layout_below="@id/txVendedor">
         </Spinner>
@@ -79,22 +79,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txFormapagamento"
-            android:layout_below="@+id/spCodvendedor"
+            android:layout_below="@+id/spcodvendedor"
             android:text="Forma Pagamento"/>
 
         <Spinner
             android:layout_width="match_parent"
-            android:id="@+id/spFormadepagamento"
+            android:id="@+id/spformadepagamento"
             android:layout_height="wrap_content"
             android:layout_below="@id/txFormapagamento">
         </Spinner>
 
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Adicionar Itens"
+            android:layout_below="@+id/spformadepagamento"
+            android:id="@+id/btAdicionaritens"/>
+
+        <ListView
+            android:id="@+id/listItenspedido"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/btAdicionaritens"></ListView>
+
         <LinearLayout
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
-            android:layout_below="@id/spFormadepagamento">
+            android:layout_below="@id/listItenspedido">
 
             <Button
                 android:id="@+id/btSalvar"
