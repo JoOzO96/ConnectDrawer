@@ -1,271 +1,135 @@
 package com.example.jose.connectdrawer.PedidoProduto;
 
-import java.util.Date;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.jose.connectdrawer.Pedido.Pedido;
+import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.DadosBanco;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * Created by Jose on 21/06/2017.
+ * Created by Jose on 30/06/2017.
  */
 
 public class PedidoProduto {
-    private String Pedido;
-    private String codproduto; // Cód Produto
-    private Long conta;
-    private Long codpedido; // Cód Pedido
-    private Double quantidade;
-    private Double valorunitario; // Valor Unitário
-    private Double valortotal; // Valor Total
-    private String tamanho;
-    private Double totalimposto;
-    private String descri;
-    private Double custo;
-    private Double desvalor;
-    private Boolean eminota;
-    private Double quanti;
-    private Double lucro;
-    private String codmecanico; // Cód Mecanico
-    private Date datas;
-    private Double desconto;
-    private Double totalimpostoest;
-    private String modelo;
-    private String marca;
-    private String desenho;
-    private String nserie;
-    private String dot;
-    private Long retirada;
-    private Double saldoret;
-    private Long comip;
-    private Boolean eminotaagru;
-    private Double porimposto;
 
-    public String getPedido() {
-        return Pedido;
+
+
+
+    public Cursor retornaPedido(Context context) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM pedidoproduto", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
     }
 
-    public void setPedido(String pedido) {
-        Pedido = pedido;
+    public Cursor retornaPedidoFiltradaCursor(Context context, Long codPedido) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM pedido where pedidoproduto = " + codPedido, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
     }
 
-    public String getCodproduto() {
-        return codproduto;
+    public Cursor retornaPedidoAlteradaAndroid(Context context, String tipo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto where " + tipo + " = 1", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
     }
 
-    public void setCodproduto(String codproduto) {
-        this.codproduto = codproduto;
+
+
+    public boolean remover(Context context, Pedido pedido) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        int retorno = db.delete("pedidoproduto", "pedido = " + pedido.getPedido(), null);
+        if (retorno > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public Long getConta() {
-        return conta;
+    public boolean removerPedido(Context context, Long pedido) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        int retorno = db.delete("pedidoproduto", "pedido = " + pedido, null);
+        if (retorno > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void setConta(Long conta) {
-        this.conta = conta;
+
+    public Boolean cadastraPedido(Context context, Pedido pedido){
+        Banco myDb = new Banco(context);
+        DadosBanco dadosBanco = new DadosBanco();
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(pedido.getClass().getDeclaredFields()));
+
+        for (int i = 0 ; fieldList.size() != i ; i++){
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), pedido, valores);
+        }
+
+        if (valores.get("codpedido") == null){
+            long retorno = retornaMaiorCod(context);
+            retorno = retorno + 1;
+            valores.remove("codpedido");
+            valores.remove("cadastroandroid");
+            valores.put("codpedido", retorno);
+            valores.put("cadastroandroid", true);
+            retorno = db.insert("pedidoproduto", null, valores);
+            db.close();
+            valores.clear();
+            if (retorno == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }else{
+            valores.remove("alteradoandroid");
+            valores.put("alteradoandroid", true);
+            long retorno = db.update("pedidoproduto", valores, "pedido= " + valores.get("codpedido").toString(), null);
+            db.close();
+            valores.clear();
+            if (retorno == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    public Long retornaMaiorCod(Context context) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,max(pedido) from pedidoproduto", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return cursor.getLong(1);
+        } else {
+            return 0L;
+        }
     }
 
-    public Long getCodpedido() {
-        return codpedido;
-    }
-
-    public void setCodpedido(Long codpedido) {
-        this.codpedido = codpedido;
-    }
-
-    public Double getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Double quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public Double getValorunitario() {
-        return valorunitario;
-    }
-
-    public void setValorunitario(Double valorunitario) {
-        this.valorunitario = valorunitario;
-    }
-
-    public Double getValortotal() {
-        return valortotal;
-    }
-
-    public void setValortotal(Double valortotal) {
-        this.valortotal = valortotal;
-    }
-
-    public String getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(String tamanho) {
-        this.tamanho = tamanho;
-    }
-
-    public Double getTotalimposto() {
-        return totalimposto;
-    }
-
-    public void setTotalimposto(Double totalimposto) {
-        this.totalimposto = totalimposto;
-    }
-
-    public String getDescri() {
-        return descri;
-    }
-
-    public void setDescri(String descri) {
-        this.descri = descri;
-    }
-
-    public Double getCusto() {
-        return custo;
-    }
-
-    public void setCusto(Double custo) {
-        this.custo = custo;
-    }
-
-    public Double getDesvalor() {
-        return desvalor;
-    }
-
-    public void setDesvalor(Double desvalor) {
-        this.desvalor = desvalor;
-    }
-
-    public Boolean getEminota() {
-        return eminota;
-    }
-
-    public void setEminota(Boolean eminota) {
-        this.eminota = eminota;
-    }
-
-    public Double getQuanti() {
-        return quanti;
-    }
-
-    public void setQuanti(Double quanti) {
-        this.quanti = quanti;
-    }
-
-    public Double getLucro() {
-        return lucro;
-    }
-
-    public void setLucro(Double lucro) {
-        this.lucro = lucro;
-    }
-
-    public String getCodmecanico() {
-        return codmecanico;
-    }
-
-    public void setCodmecanico(String codmecanico) {
-        this.codmecanico = codmecanico;
-    }
-
-    public Date getDatas() {
-        return datas;
-    }
-
-    public void setDatas(Date datas) {
-        this.datas = datas;
-    }
-
-    public Double getDesconto() {
-        return desconto;
-    }
-
-    public void setDesconto(Double desconto) {
-        this.desconto = desconto;
-    }
-
-    public Double getTotalimpostoest() {
-        return totalimpostoest;
-    }
-
-    public void setTotalimpostoest(Double totalimpostoest) {
-        this.totalimpostoest = totalimpostoest;
-    }
-
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
-    public String getDesenho() {
-        return desenho;
-    }
-
-    public void setDesenho(String desenho) {
-        this.desenho = desenho;
-    }
-
-    public String getNserie() {
-        return nserie;
-    }
-
-    public void setNserie(String nserie) {
-        this.nserie = nserie;
-    }
-
-    public String getDot() {
-        return dot;
-    }
-
-    public void setDot(String dot) {
-        this.dot = dot;
-    }
-
-    public Long getRetirada() {
-        return retirada;
-    }
-
-    public void setRetirada(Long retirada) {
-        this.retirada = retirada;
-    }
-
-    public Double getSaldoret() {
-        return saldoret;
-    }
-
-    public void setSaldoret(Double saldoret) {
-        this.saldoret = saldoret;
-    }
-
-    public Long getComip() {
-        return comip;
-    }
-
-    public void setComip(Long comip) {
-        this.comip = comip;
-    }
-
-    public Boolean getEminotaagru() {
-        return eminotaagru;
-    }
-
-    public void setEminotaagru(Boolean eminotaagru) {
-        this.eminotaagru = eminotaagru;
-    }
-
-    public Double getPorimposto() {
-        return porimposto;
-    }
-
-    public void setPorimposto(Double porimposto) {
-        this.porimposto = porimposto;
-    }
 }

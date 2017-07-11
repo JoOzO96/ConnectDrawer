@@ -161,6 +161,21 @@ public class Banco extends SQLiteOpenHelper {
                 "alteradoandroid boolean);";
         db.execSQL(sql);
 
+
+        sql = "CREATE TABLE pedidoproduto (" +
+                "id long,"+
+                "pedido long,"+
+                "codproduto long,"+
+                "quantidade double,"+
+                "valorunitario double,"+
+                "descri double,"+
+                "custo double,"+
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean," +
+                "PRIMARY KEY(id, pedido, codproduto);";
+        db.execSQL(sql);
+
     }
 
     @Override

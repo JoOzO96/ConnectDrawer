@@ -67,15 +67,6 @@ public class SincPedido {
                                 }
                             }
                         }
-//                        cidade1.setCep(cidadeList.get(cli).getCep());
-//                        cidade1.setCodnacionalcidade(cidadeList.get(cli).getCodnacionalcidade());
-//                        cidade1.setPais(cidadeList.get(cli).getCodnacionalpais());
-//                        cidade1.setCodnacionaluf(cidadeList.get(cli).getCodnacionaluf());
-//                        cidade1.setNomecidade(cidadeList.get(cli).getNomecidade());
-//                        cidade1.setPais(cidadeList.get(cli).getPais());
-//                        cidade1.setUf(cidadeList.get(cli).getUf());
-//                        cidade1.setCodcidade(cidadeList.get(cli).getCodcidade());
-
                         ///
                         //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
                         //

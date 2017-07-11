@@ -4,6 +4,7 @@ package com.example.jose.connectdrawer.Pedido;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +13,16 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
-import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
+import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
-import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
-import com.example.jose.connectdrawer.cliente.ClienteDados;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +35,7 @@ public class PedidoDados extends Fragment {
     private EditText txdata;
     private Spinner spcodvendedor;
     private Spinner spformadepagamento;
+    private Button btAdicionarItens;
     //    private EditText txcodvendedor;
 //    private EditText txformadepagamento;
 //    private EditText txfrete;
@@ -71,7 +70,7 @@ public class PedidoDados extends Fragment {
     private Button btCancelar;
 
 
-    public PedidoDados() {
+    public PedidoDados(){
         // Required empty public constructor
     }
 
@@ -81,6 +80,7 @@ public class PedidoDados extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
+        btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
@@ -253,6 +253,23 @@ public class PedidoDados extends Fragment {
         {
             // codigo do pedido é diferente de 1.
         }
+
+        btAdicionarItens.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
+                pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+            }
+        });
+
+
+
+
+        //PARTE AONDE PEGA O CLIQUE DO BOTAO PARA ADICIONAR O ITEM
+
+
+
 
         return view;
     }
