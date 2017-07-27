@@ -12,6 +12,7 @@ import com.example.jose.connectdrawer.uteis.DadosBanco;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,10 +21,130 @@ import java.util.List;
 
 public class PedidoProduto {
 
+    private Long idPedidoProduto;
+    private String pedido;
+    private String codproduto; // Cód Produto
+    private Double quantidade;
+    private Double valorunitario; // Valor Unitário
+    private String descri;
+    private Double custo;
+    private Double desvalor;
+    private Double quanti;
+    private Double desconto;
+    private Long retirada;
+    private Double saldoret;
+    private Long comip;
 
+    public Long getIdPedidoProduto() {
+        return idPedidoProduto;
+    }
 
+    public void setIdPedidoProduto(Long idPedidoProduto) {
+        this.idPedidoProduto = idPedidoProduto;
+    }
 
-    public Cursor retornaPedido(Context context) {
+    public String getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(String pedido) {
+        this.pedido = pedido;
+    }
+
+    public String getCodproduto() {
+        return codproduto;
+    }
+
+    public void setCodproduto(String codproduto) {
+        this.codproduto = codproduto;
+    }
+
+    public Double getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Double quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public Double getValorunitario() {
+        return valorunitario;
+    }
+
+    public void setValorunitario(Double valorunitario) {
+        this.valorunitario = valorunitario;
+    }
+
+    public String getDescri() {
+        return descri;
+    }
+
+    public void setDescri(String descri) {
+        this.descri = descri;
+    }
+
+    public Double getCusto() {
+        return custo;
+    }
+
+    public void setCusto(Double custo) {
+        this.custo = custo;
+    }
+
+    public Double getDesvalor() {
+        return desvalor;
+    }
+
+    public void setDesvalor(Double desvalor) {
+        this.desvalor = desvalor;
+    }
+
+    public Double getQuanti() {
+        return quanti;
+    }
+
+    public void setQuanti(Double quanti) {
+        this.quanti = quanti;
+    }
+
+    public Double getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(Double desconto) {
+        this.desconto = desconto;
+    }
+
+    public Long getRetirada() {
+        return retirada;
+    }
+
+    public void setRetirada(Long retirada) {
+        this.retirada = retirada;
+    }
+
+    public Double getSaldoret() {
+        return saldoret;
+    }
+
+    public void setSaldoret(Double saldoret) {
+        this.saldoret = saldoret;
+    }
+
+    public Long getComip() {
+        return comip;
+    }
+
+    public void setComip(Long comip) {
+        this.comip = comip;
+    }
+
+    @Override
+    public String toString() {
+        return codproduto + " - " + descri;
+    }
+
+    public Cursor retornaPedidoProduto(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM pedidoproduto", null);
@@ -34,7 +155,18 @@ public class PedidoProduto {
         return cursor;
     }
 
-    public Cursor retornaPedidoFiltradaCursor(Context context, Long codPedido) {
+    public Cursor retornaItensPedido(Context context, Long codPedido){
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where pedido = " + codPedido, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
+    public Cursor retornaPedidoProdutoFiltradaCursor(Context context, Long codPedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM pedido where pedidoproduto = " + codPedido, null);
@@ -45,7 +177,7 @@ public class PedidoProduto {
         return cursor;
     }
 
-    public Cursor retornaPedidoAlteradaAndroid(Context context, String tipo) {
+    public Cursor retornaPedidoProdutoAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto where " + tipo + " = 1", null);
@@ -56,20 +188,7 @@ public class PedidoProduto {
         return cursor;
     }
 
-
-
-    public boolean remover(Context context, Pedido pedido) {
-        Banco myDb = new Banco(context);
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        int retorno = db.delete("pedidoproduto", "pedido = " + pedido.getPedido(), null);
-        if (retorno > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean removerPedido(Context context, Long pedido) {
+    public boolean removerPedidoProduto(Context context, Long pedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
         int retorno = db.delete("pedidoproduto", "pedido = " + pedido, null);
@@ -81,23 +200,23 @@ public class PedidoProduto {
     }
 
 
-    public Boolean cadastraPedido(Context context, Pedido pedido){
+    public Boolean cadastraPedidoProduto(Context context, PedidoProduto pedidoProduto){
         Banco myDb = new Banco(context);
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(pedido.getClass().getDeclaredFields()));
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(pedidoProduto.getClass().getDeclaredFields()));
 
         for (int i = 0 ; fieldList.size() != i ; i++){
-            valores = dadosBanco.insereValoresContent(fieldList.get(i), pedido, valores);
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), pedidoProduto, valores);
         }
 
-        if (valores.get("codpedido") == null){
+        if (valores.get("idPedidoProduto") == null){
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
-            valores.remove("codpedido");
+            valores.remove("idPedidoProduto");
             valores.remove("cadastroandroid");
-            valores.put("codpedido", retorno);
+            valores.put("idPedidoProduto", retorno);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedidoproduto", null, valores);
             db.close();
@@ -110,7 +229,7 @@ public class PedidoProduto {
         }else{
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
-            long retorno = db.update("pedidoproduto", valores, "pedido= " + valores.get("codpedido").toString(), null);
+            long retorno = db.update("pedidoproduto", valores, "idPedidoProduto= " + valores.get("idPedidoProduto").toString(), null);
             db.close();
             valores.clear();
             if (retorno == -1) {
@@ -123,7 +242,7 @@ public class PedidoProduto {
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,max(pedido) from pedidoproduto", null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,max(idPedidoProduto) from pedidoproduto", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getLong(1);

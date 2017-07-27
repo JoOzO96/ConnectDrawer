@@ -5,14 +5,18 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
+import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
@@ -36,6 +40,7 @@ public class PedidoDados extends Fragment {
     private Spinner spcodvendedor;
     private Spinner spformadepagamento;
     private Button btAdicionarItens;
+    private ListView listItenspedido;
     //    private EditText txcodvendedor;
 //    private EditText txformadepagamento;
 //    private EditText txfrete;
@@ -81,6 +86,7 @@ public class PedidoDados extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
+        listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
@@ -245,6 +251,35 @@ public class PedidoDados extends Fragment {
                         }
                     }
                 }
+
+
+                // AQUI TESTA SE O PEDIDO TEM PRODUTOS, SE TIVER PRODUTOS ELE IRA POPULAR A LISTA
+
+                PedidoProduto pedidoProduto = new PedidoProduto();
+
+                Cursor cursorPedidoProduto = pedidoProduto.retornaItensPedido(getContext(), codigoPedido);
+                List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
+                if (cursorPedidoProduto.getCount() > 0){
+
+                    for (Long cont = 0L; cursorPedidoProduto.getCount() != cont; cont++) {
+                        PedidoProduto pedidoProdutoListar = new PedidoProduto();
+                        pedidoProdutoListar.setCodproduto(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("codproduto")));
+                        pedidoProdutoListar.setDescri(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("descri")));
+
+                        pedidoProdutoList.add(pedidoProdutoListar);
+                        try {
+                            cursorPedidoProduto.moveToNext();
+                        }catch (IllegalStateException i){
+                        }
+                    }
+
+                    ArrayAdapter<PedidoProduto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, pedidoProdutoList);
+                    listItenspedido.setAdapter(adapter);
+                }else{
+                    //O PEDIDO NAO TEM NENHUM ITEM
+                }
+
+
             } else {
                 //CURSOR SEM INFORMAÇÕES
             }

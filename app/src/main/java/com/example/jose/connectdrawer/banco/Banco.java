@@ -3,6 +3,7 @@ package com.example.jose.connectdrawer.banco;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Jose on 18/05/2017.
@@ -163,19 +164,24 @@ public class Banco extends SQLiteOpenHelper {
 
 
         sql = "CREATE TABLE pedidoproduto (" +
-                "id long,"+
+                "idPedidoProduto long PRIMARY KEY,"+
                 "pedido long,"+
                 "codproduto long,"+
                 "quantidade double,"+
                 "valorunitario double,"+
                 "descri double,"+
                 "custo double,"+
+                "desvalor double,"+
+                "quanti double,"+
+                "desconto double,"+
+                "retirada double,"+
+                "saldoret double,"+
+                "comip double,"+
                 "cadastroandroid boolean," +
                 "deletadoandroid boolean," +
-                "alteradoandroid boolean," +
-                "PRIMARY KEY(id, pedido, codproduto);";
+                "alteradoandroid boolean);";
         db.execSQL(sql);
-
+        Log.e("teste", "Teste");
     }
 
     @Override

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
+import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
 
@@ -53,7 +53,7 @@ public class Pedido {
     private String nfc;
     private Long codcaixa;
     private String servicosolicitado;
-    private List<PedidoProdutoTela> itensPedido;
+    private List<PedidoProduto> itensPedido;
 
     public Long getPedido() {
         return pedido;
@@ -319,11 +319,11 @@ public class Pedido {
         this.servicosolicitado = servicosolicitado;
     }
 
-    public List<PedidoProdutoTela> getItensPedido() {
+    public List<PedidoProduto> getItensPedido() {
         return itensPedido;
     }
 
-    public void setItensPedido(List<PedidoProdutoTela> itensPedido) {
+    public void setItensPedido(List<PedidoProduto> itensPedido) {
         this.itensPedido = itensPedido;
     }
 
