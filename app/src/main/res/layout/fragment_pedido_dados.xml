@@ -95,17 +95,18 @@
             android:layout_below="@+id/spformadepagamento"
             android:text="Adicionar Itens" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:id="@+id/relList"
+            android:orientation="vertical"
             android:layout_height="match_parent"
             android:layout_below="@+id/btAdicionaritens">
 
-            <ListView
+            <com.example.jose.connectdrawer.uteis.NonScrollListView
                 android:id="@+id/listItenspedido"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

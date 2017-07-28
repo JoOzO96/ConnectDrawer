@@ -29,12 +29,9 @@ import java.util.List;
 public class ConnectMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ListView listaCliente;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listaCliente = (ListView) findViewById(R.id.listDados);
         setContentView(R.layout.activity_connect_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -47,7 +47,13 @@ public class PedidoProdutoTela extends DialogFragment {
         // PEGA A LISTA DE CAMPOS QUE POSSUI A CLASSE
         List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(PedidoProdutoTela.class.getDeclaredFields()));
 
+        //RETORNA O PRODUTO FILTRADO PELO BUNDLE
+        Bundle bundle = this.getArguments();
+        String codigoProduto = bundle.getString("codigo");
 
+        if (!codigoProduto.equals("")){
+
+        }
 
 
         btCancelar.setOnClickListener(new View.OnClickListener() {

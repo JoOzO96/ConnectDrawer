@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.cliente.ClienteDados;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 
@@ -298,11 +301,44 @@ public class PedidoDados extends Fragment {
             }
         });
 
+        btCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PedidoFragment pedidoFragment = new PedidoFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+            }
+        });
+
 
 
 
         //PARTE AONDE PEGA O CLIQUE DO BOTAO PARA ADICIONAR O ITEM
 
+        //PARTE AONDE PEGA O CLIQUE NA LISTA E ABRE A EDIÇÃO DO PRODUTO RESPECTIVO
+
+
+        listItenspedido.setOnClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                Bundle bundle = new Bundle();
+                PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
+                PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
+                bundle.putString("codigo", pedidoProduto.getCodproduto());
+                pedidoProdutoTela.setArguments(bundle);
+
+                FragmentManager fragmentManager = getFragmentManager();
+                pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+            }
+        } );
+
+        listItenspedido.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
 
 
 
