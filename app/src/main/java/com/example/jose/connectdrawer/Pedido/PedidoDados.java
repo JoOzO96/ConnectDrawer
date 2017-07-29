@@ -268,7 +268,7 @@ public class PedidoDados extends Fragment {
                         PedidoProduto pedidoProdutoListar = new PedidoProduto();
                         pedidoProdutoListar.setCodproduto(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("codproduto")));
                         pedidoProdutoListar.setDescri(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("descri")));
-
+                        pedidoProdutoListar.setIdPedidoProduto(cursorPedidoProduto.getLong(cursorPedidoProduto.getColumnIndex("idPedidoProduto")));
                         pedidoProdutoList.add(pedidoProdutoListar);
                         try {
                             cursorPedidoProduto.moveToNext();
@@ -297,6 +297,9 @@ public class PedidoDados extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
+                Bundle bundle = new Bundle();
+                bundle.putLong("codigo", 0L);
+                pedidoProdutoTela.setArguments(bundle);
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
         });
@@ -318,17 +321,15 @@ public class PedidoDados extends Fragment {
         //PARTE AONDE PEGA O CLIQUE NA LISTA E ABRE A EDIÇÃO DO PRODUTO RESPECTIVO
 
 
-        listItenspedido.setOnClickListener(new AdapterView.OnItemClickListener() {
-
+        final FragmentManager fragmentManager = getFragmentManager();
+        listItenspedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 Bundle bundle = new Bundle();
                 PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
-                bundle.putString("codigo", pedidoProduto.getCodproduto());
+                bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
                 pedidoProdutoTela.setArguments(bundle);
-
-                FragmentManager fragmentManager = getFragmentManager();
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
         } );

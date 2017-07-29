@@ -42,7 +42,7 @@
         android:layout_below="@+id/textInputLayout">
 
         <EditText
-            android:id="@+id/txValorUn"
+            android:id="@+id/txValorUnitario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Valor Unitario"

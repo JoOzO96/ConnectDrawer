@@ -166,6 +166,17 @@ public class PedidoProduto {
         return cursor;
     }
 
+    public Cursor retornaItemPedido(Context context, Long idPedidoProduto){
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where idPedidoProduto = " + idPedidoProduto, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
     public Cursor retornaPedidoProdutoFiltradaCursor(Context context, Long codPedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
