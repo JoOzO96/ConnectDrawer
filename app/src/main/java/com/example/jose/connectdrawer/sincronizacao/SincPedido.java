@@ -2,11 +2,13 @@ package com.example.jose.connectdrawer.sincronizacao;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.Pedido.PedidoService;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
+import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeDados;
 import com.example.jose.connectdrawer.cliente.Cliente;
@@ -36,7 +38,8 @@ public class SincPedido {
 
         PedidoService pedidoService = retrofit.create(PedidoService.class);
         Call<List<Pedido>> requestPedido = pedidoService.listPedido();
-
+        final Banco myDb = new Banco(context);
+        final SQLiteDatabase db = myDb.getReadableDatabase();
         requestPedido.enqueue(new Callback<List<Pedido>>() {
             @Override
             public void onResponse(Call<List<Pedido>> call, Response<List<Pedido>> response) {
@@ -70,7 +73,7 @@ public class SincPedido {
                                 }
                             }
                         }
-                        ///
+                        //
                         //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
                         //
                         //
@@ -88,7 +91,7 @@ public class SincPedido {
 
                     if (cursor.getCount() > 0){
                         if (cursor.getCount() != pedidoList.get(ped).getItensPedido().size()){
-                           Log.e("Teste", "Teste" + pedidoList.get(ped).getItensPedido().size());
+                           cursor.close();
                         }
                     }else {
                         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
@@ -109,11 +112,13 @@ public class SincPedido {
                                     }
                                 }
                             }
-                            boolean status = pedidoProduto.cadastraPedidoProduto(context1, pedidoProduto);
+                            boolean status = pedidoProduto.cadastraPedidoProduto(db, pedidoProduto);
                         }
+                        cursor.close();
                     }
 
                 }
+                myDb.close();
             }
 
             @Override

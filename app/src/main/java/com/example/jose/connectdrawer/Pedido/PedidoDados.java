@@ -1,6 +1,7 @@
 package com.example.jose.connectdrawer.Pedido;
 
 
+import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -78,7 +79,7 @@ public class PedidoDados extends Fragment {
     private Button btCancelar;
 
 
-    public PedidoDados(){
+    public PedidoDados() {
         // Required empty public constructor
     }
 
@@ -87,7 +88,7 @@ public class PedidoDados extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
+        final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
@@ -210,7 +211,7 @@ public class PedidoDados extends Fragment {
                                     }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
-                            }else if (fieldListPassar.get(i).getName().toLowerCase().equals("spformadepagamento")) {
+                            } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spformadepagamento")) {
                                 //SPINNER DOS FORMAS DE PAGAMENTO
                                 FormaPagamento formaPagamento = new FormaPagamento();
                                 int posicao = 0;
@@ -262,7 +263,7 @@ public class PedidoDados extends Fragment {
 
                 Cursor cursorPedidoProduto = pedidoProduto.retornaItensPedido(getContext(), codigoPedido);
                 List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
-                if (cursorPedidoProduto.getCount() > 0){
+                if (cursorPedidoProduto.getCount() > 0) {
 
                     for (Long cont = 0L; cursorPedidoProduto.getCount() != cont; cont++) {
                         PedidoProduto pedidoProdutoListar = new PedidoProduto();
@@ -272,13 +273,13 @@ public class PedidoDados extends Fragment {
                         pedidoProdutoList.add(pedidoProdutoListar);
                         try {
                             cursorPedidoProduto.moveToNext();
-                        }catch (IllegalStateException i){
+                        } catch (IllegalStateException i) {
                         }
                     }
 
                     ArrayAdapter<PedidoProduto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, pedidoProdutoList);
                     listItenspedido.setAdapter(adapter);
-                }else{
+                } else {
                     //O PEDIDO NAO TEM NENHUM ITEM
                 }
 
@@ -314,33 +315,32 @@ public class PedidoDados extends Fragment {
         });
 
 
-
-
         //PARTE AONDE PEGA O CLIQUE DO BOTAO PARA ADICIONAR O ITEM
 
         //PARTE AONDE PEGA O CLIQUE NA LISTA E ABRE A EDIÇÃO DO PRODUTO RESPECTIVO
-
-
         final FragmentManager fragmentManager = getFragmentManager();
+
+
         listItenspedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                fragmentManager.beginTransaction();
                 Bundle bundle = new Bundle();
                 PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
                 bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
                 pedidoProdutoTela.setArguments(bundle);
+
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
-        } );
-
+        });
         listItenspedido.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 return false;
             }
         });
-
 
 
         return view;

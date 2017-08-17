@@ -22,18 +22,36 @@ import java.util.List;
 public class PedidoProduto {
 
     private Long idPedidoProduto;
-    private String pedido;
-    private String codproduto; // Cód Produto
-    private Double quantidade;
-    private Double valorunitario; // Valor Unitário
-    private String descri;
+    private String codmecanico;//Cód Mecanico
+    private Double codpedido;//Cód Pedido
+    private String codproduto;//Cód Produto
+    private Double comip;
+    private Integer conta;
     private Double custo;
-    private Double desvalor;
-    private Double quanti;
+    private Date datas;
     private Double desconto;
-    private Long retirada;
+    private String descri;
+    private String desenho;
+    private Double desvalor;
+    private String dot;
+    private Boolean eminota;
+    private Boolean eminotaagru;
+    private Double lucro;
+    private String marca;
+    private String modelo;
+    private String nserie;
+    private Long pedido;
+    private Double porimposto;
+    private Double quanti;
+    private Double quantidade;
+    private Double retirada;
     private Double saldoret;
-    private Long comip;
+    private String tamanho;
+    private Double totalimposto;
+    private Double totalimpostoest;
+    private Double valortotal;//Valor Total
+    private Double valorunitario;//Valor Unitário
+    private Double vcomi;
 
     public Long getIdPedidoProduto() {
         return idPedidoProduto;
@@ -43,12 +61,172 @@ public class PedidoProduto {
         this.idPedidoProduto = idPedidoProduto;
     }
 
-    public String getPedido() {
+    public String getCodmecanico() {
+        return codmecanico;
+    }
+
+    public Double getComip() {
+        return comip;
+    }
+
+    public Double getRetirada() {
+        return retirada;
+    }
+
+    public void setCodmecanico(String codmecanico) {
+        this.codmecanico = codmecanico;
+    }
+
+    public Double getCodpedido() {
+        return codpedido;
+    }
+
+    public void setCodpedido(Double codpedido) {
+        this.codpedido = codpedido;
+    }
+
+    public void setComip(Double comip) {
+        this.comip = comip;
+    }
+
+    public Integer getConta() {
+        return conta;
+    }
+
+    public void setConta(Integer conta) {
+        this.conta = conta;
+    }
+
+    public Date getDatas() {
+        return datas;
+    }
+
+    public void setDatas(Date datas) {
+        this.datas = datas;
+    }
+
+    public String getDesenho() {
+        return desenho;
+    }
+
+    public void setDesenho(String desenho) {
+        this.desenho = desenho;
+    }
+
+    public String getDot() {
+        return dot;
+    }
+
+    public void setDot(String dot) {
+        this.dot = dot;
+    }
+
+    public Boolean getEminota() {
+        return eminota;
+    }
+
+    public void setEminota(Boolean eminota) {
+        this.eminota = eminota;
+    }
+
+    public Boolean getEminotaagru() {
+        return eminotaagru;
+    }
+
+    public void setEminotaagru(Boolean eminotaagru) {
+        this.eminotaagru = eminotaagru;
+    }
+
+    public Double getLucro() {
+        return lucro;
+    }
+
+    public void setLucro(Double lucro) {
+        this.lucro = lucro;
+    }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+
+    public String getNserie() {
+        return nserie;
+    }
+
+    public void setNserie(String nserie) {
+        this.nserie = nserie;
+    }
+
+    public Long getPedido() {
         return pedido;
     }
 
-    public void setPedido(String pedido) {
+    public void setPedido(Long pedido) {
         this.pedido = pedido;
+    }
+
+    public Double getPorimposto() {
+        return porimposto;
+    }
+
+    public void setPorimposto(Double porimposto) {
+        this.porimposto = porimposto;
+    }
+
+    public void setRetirada(Double retirada) {
+        this.retirada = retirada;
+    }
+
+    public String getTamanho() {
+        return tamanho;
+    }
+
+    public void setTamanho(String tamanho) {
+        this.tamanho = tamanho;
+    }
+
+    public Double getTotalimposto() {
+        return totalimposto;
+    }
+
+    public void setTotalimposto(Double totalimposto) {
+        this.totalimposto = totalimposto;
+    }
+
+    public Double getTotalimpostoest() {
+        return totalimpostoest;
+    }
+
+    public void setTotalimpostoest(Double totalimpostoest) {
+        this.totalimpostoest = totalimpostoest;
+    }
+
+    public Double getValortotal() {
+        return valortotal;
+    }
+
+    public void setValortotal(Double valortotal) {
+        this.valortotal = valortotal;
+    }
+
+    public Double getVcomi() {
+        return vcomi;
+    }
+
+    public void setVcomi(Double vcomi) {
+        this.vcomi = vcomi;
     }
 
     public String getCodproduto() {
@@ -114,29 +292,12 @@ public class PedidoProduto {
     public void setDesconto(Double desconto) {
         this.desconto = desconto;
     }
-
-    public Long getRetirada() {
-        return retirada;
-    }
-
-    public void setRetirada(Long retirada) {
-        this.retirada = retirada;
-    }
-
     public Double getSaldoret() {
         return saldoret;
     }
 
     public void setSaldoret(Double saldoret) {
         this.saldoret = saldoret;
-    }
-
-    public Long getComip() {
-        return comip;
-    }
-
-    public void setComip(Long comip) {
-        this.comip = comip;
     }
 
     @Override
@@ -211,11 +372,9 @@ public class PedidoProduto {
     }
 
 
-    public Boolean cadastraPedidoProduto(Context context, PedidoProduto pedidoProduto){
-        Banco myDb = new Banco(context);
+    public Boolean cadastraPedidoProduto(SQLiteDatabase db, PedidoProduto pedidoProduto){
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(pedidoProduto.getClass().getDeclaredFields()));
 
         for (int i = 0 ; fieldList.size() != i ; i++){
@@ -223,14 +382,14 @@ public class PedidoProduto {
         }
 
         if (valores.get("idPedidoProduto") == null){
-            long retorno = retornaMaiorCod(context);
+            long retorno = retornaMaiorCod(db);
             retorno = retorno + 1;
             valores.remove("idPedidoProduto");
             valores.remove("cadastroandroid");
             valores.put("idPedidoProduto", retorno);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedidoproduto", null, valores);
-            db.close();
+
             valores.clear();
             if (retorno == -1) {
                 return false;
@@ -241,7 +400,6 @@ public class PedidoProduto {
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
             long retorno = db.update("pedidoproduto", valores, "idPedidoProduto= " + valores.get("idPedidoProduto").toString(), null);
-            db.close();
             valores.clear();
             if (retorno == -1) {
                 return false;
@@ -250,9 +408,7 @@ public class PedidoProduto {
             }
         }
     }
-    public Long retornaMaiorCod(Context context) {
-        Banco myDb = new Banco(context);
-        SQLiteDatabase db = myDb.getReadableDatabase();
+    public Long retornaMaiorCod(SQLiteDatabase db) {
         Cursor cursor = db.rawQuery("SELECT rowid _id,max(idPedidoProduto) from pedidoproduto", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

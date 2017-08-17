@@ -11,7 +11,7 @@
 
     <Spinner
         android:layout_width="match_parent"
-        android:id="@+id/spproduto"
+        android:id="@+id/spProduto"
         android:layout_height="wrap_content"
         android:layout_below="@id/txProduto">
     </Spinner>
@@ -22,10 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/spproduto">
+        android:layout_below="@+id/spProduto">
 
         <EditText
-            android:id="@+id/txQuantidade"
+            android:id="@+id/txquantidade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Quantidade"
@@ -42,7 +42,7 @@
         android:layout_below="@+id/textInputLayout">
 
         <EditText
-            android:id="@+id/txValorUnitario"
+            android:id="@+id/txvalorunitario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Valor Unitario"
@@ -58,7 +58,7 @@
         android:layout_below="@+id/textInputLayout1">
 
         <EditText
-            android:id="@+id/txValorTotal"
+            android:id="@+id/txvalortotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Valor Total"
