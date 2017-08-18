@@ -299,7 +299,7 @@ public class PedidoDados extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
                 Bundle bundle = new Bundle();
-                bundle.putLong("codigo", 0L);
+                bundle.putString("codigo", "0");
                 pedidoProdutoTela.setArguments(bundle);
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
@@ -330,6 +330,7 @@ public class PedidoDados extends Fragment {
                 PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
                 bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
+                bundle.putString("codigoClicado", pedidoProduto.getCodproduto());
                 pedidoProdutoTela.setArguments(bundle);
 
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");

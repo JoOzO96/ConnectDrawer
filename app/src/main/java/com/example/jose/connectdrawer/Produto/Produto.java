@@ -1228,11 +1228,10 @@ public class Produto {
     public Cursor retornaProdutoFiltradaCursor(Context context, String codProduto) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM produto where codProduto = " + codProduto, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM produto where codproduto = '" + codProduto + "'", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
-        db.close();
         return cursor;
     }
 

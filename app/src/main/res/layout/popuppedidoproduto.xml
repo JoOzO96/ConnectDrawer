@@ -12,6 +12,7 @@
     <Spinner
         android:layout_width="match_parent"
         android:id="@+id/spProduto"
+
         android:layout_height="wrap_content"
         android:layout_below="@id/txProduto">
     </Spinner>
