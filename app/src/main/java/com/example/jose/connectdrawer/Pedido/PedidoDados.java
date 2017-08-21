@@ -2,11 +2,13 @@ package com.example.jose.connectdrawer.Pedido;
 
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +27,10 @@ import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteDados;
+import com.example.jose.connectdrawer.cliente.ClienteFragment;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
+import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ import java.util.List;
  */
 public class PedidoDados extends Fragment {
 
-    private EditText txpedido;
+    private EditText txcodpedido;
     private Spinner spcliente;
     private EditText txdata;
     private Spinner spcodvendedor;
@@ -91,12 +95,12 @@ public class PedidoDados extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
-        GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+        final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
         List<String> vendedorList = new ArrayList<>();
         List<String> formaPagamentoList = new ArrayList<>();
-        Pedido pedido = new Pedido();
+        final Pedido pedido = new Pedido();
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
@@ -124,6 +128,17 @@ public class PedidoDados extends Fragment {
                     } else {
                         //TESTA SE O CAMPO QUE ESTA PASSANDO É UM EDITTEXT
                         if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
+
+                            String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
+                            String nomecampo = "";
+                            nomecampo = fieldListPassar.get(i).getName().replace("tx", "").toLowerCase();
+                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
+                            mascara = null;
+                            if (retorno != null) {
+                                getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, retorno.toString(), mascara);
+                            } else {
+                                getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", mascara);
+                            }
 
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                             //TESTA SE O CAMPO QUE ESTA PASSANDO É UM SPINNER
@@ -298,8 +313,11 @@ public class PedidoDados extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
+                txcodpedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txcodpedido");
                 Bundle bundle = new Bundle();
                 bundle.putString("codigo", "0");
+                bundle.putString("codigoClicado", "");
+                bundle.putString("codigoPedido", txcodpedido.getText().toString());
                 pedidoProdutoTela.setArguments(bundle);
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
@@ -331,15 +349,58 @@ public class PedidoDados extends Fragment {
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
                 bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
                 bundle.putString("codigoClicado", pedidoProduto.getCodproduto());
+
+
+                bundle.putString("codigoPedido", txcodpedido.getText().toString());
                 pedidoProdutoTela.setArguments(bundle);
 
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
         });
-        listItenspedido.setOnLongClickListener(new View.OnLongClickListener() {
+        listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                return false;
+            public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, long id) {
+                final PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Confirma a exclusao do item " + pedidoProduto.getDescri() + "?");
+
+                builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        MostraToast toast = new MostraToast();
+                        txcodpedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txcodpedido");
+                        boolean retorno = pedidoProduto.removerPedidoProduto(getContext(), pedidoProduto.getIdPedidoProduto());
+                        if (retorno == true) {
+                            toast.mostraToastShort(getContext(), "Item excluido com sucesso");
+                            PedidoDados pedidoDados = new PedidoDados();
+                            Bundle bundle = new Bundle();
+                            bundle.putLong("codigo", pedidoProduto.getPedido());
+                            pedidoDados.setArguments(bundle);
+                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
+                        } else {
+                            toast.mostraToastShort(getContext(), "Erro ao deletar item");
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
             }
         });
 

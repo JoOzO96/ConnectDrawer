@@ -351,6 +351,13 @@ public class ClienteDados extends Fragment {
             }
         });
 
+        btSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return view;
 
 

@@ -219,6 +219,7 @@ public class Banco extends SQLiteOpenHelper {
                 "codeauto boolean,"+
                 "codemitente integer,"+
                 "codfornecedor text,"+
+                "codpedido text,"+
                 "codgrupo text,"+
                 "codifeanp text,"+
                 "codipi text,"+

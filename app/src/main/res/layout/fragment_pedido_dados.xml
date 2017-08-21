@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true">
 
             <EditText
-                android:id="@+id/txCodigo"
+                android:id="@+id/txcodpedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"

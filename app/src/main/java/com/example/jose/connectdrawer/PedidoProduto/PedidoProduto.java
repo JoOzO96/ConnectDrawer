@@ -360,10 +360,10 @@ public class PedidoProduto {
         return cursor;
     }
 
-    public boolean removerPedidoProduto(Context context, Long pedido) {
+    public boolean removerPedidoProduto(Context context, Long idPedidoProduto) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
-        int retorno = db.delete("pedidoproduto", "pedido = " + pedido, null);
+        int retorno = db.delete("pedidoproduto", "idPedidoProduto = " + idPedidoProduto, null);
         if (retorno > 0) {
             return true;
         } else {

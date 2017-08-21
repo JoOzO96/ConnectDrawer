@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,8 +19,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.jose.connectdrawer.Pedido.PedidoDados;
 import com.example.jose.connectdrawer.Produto.Produto;
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
@@ -60,13 +63,14 @@ public class PedidoProdutoTela extends DialogFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate(R.layout.popuppedidoproduto, container);
         contaAcessos = 0L;
+        final Banco myDb = new Banco(getContext());
         List<String> produtoList = new ArrayList<>();
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
 
         Bundle bundle = this.getArguments();
         final String codItem = bundle.getString("codigoClicado");
-
+        final String codPedido = bundle.getString("codigoPedido");
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
 
@@ -196,22 +200,48 @@ public class PedidoProdutoTela extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Produto produto1 = new Produto();
-                List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(PedidoProdutoTela.class.getDeclaredFields()));
-                for (int i = 0; fieldListPassar.size() != i; i++) {
-                    if (fieldListPassar.get(i).getName().toLowerCase().substring(0, 2).equals("tx")) {
-
-                    } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spproduto")) {
-                        String valorCampo = getSetDinamicoTelas.retornaValorSpinner(view, "Produto");
-                        Cursor cursorProduto = produto1.retornaProdutoFiltradaCursor(getContext(), valorCampo);
-                        if (cursorProduto.getCount() > 0) {
-
+                List<Field> fieldListObjeto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
+                Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), getSetDinamicoTelas.retornaValorSpinner(view, "Produto"));
+                if (cursor.getCount() > 0){
+                    for (int f = 0; fieldListObjeto.size() != f; f++) {
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListObjeto.get(f));
+                        String nomeCampo = fieldListObjeto.get(f).getName().toLowerCase();
+                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                        if (retorno != null) {
+                            Object retProduto = getSetDinamico.insereField(fieldListObjeto.get(f), produto1, retorno);
+                            produto1 = (Produto) retProduto;
                         }
                     }
+                }
 
+                PedidoProduto pedidoProduto = new PedidoProduto();
+                txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
+                txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
+                txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
+
+                pedidoProduto.setValorunitario(Double.parseDouble(txvalorunitario.getText().toString()));
+                pedidoProduto.setQuantidade(Double.parseDouble(txquantidade.getText().toString()));
+                pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString()));
+                pedidoProduto.setCodproduto(produto1.getCodproduto());
+                pedidoProduto.setDescri(produto1.getMercadoria());
+                pedidoProduto.setPedido(Long.parseLong(codPedido));
+                boolean retorno = pedidoProduto.cadastraPedidoProduto(myDb.getWritableDatabase(), pedidoProduto);
+                if (retorno == false){
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar produto no pedido");
+                }else{
+                    dismiss();
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastShort(getContext(), "Item adicionado com sucesso.");
+                    PedidoDados pedidoDados = new PedidoDados();
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("codigo", Long.parseLong(codPedido));
+                    pedidoDados.setArguments(bundle);
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
                 }
             }
         });
-
 
         spProduto = (Spinner) getSetDinamicoTelas.retornaIDCampo(view, "spProduto");
         spProduto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -383,9 +413,11 @@ public class PedidoProdutoTela extends DialogFragment {
                             quantidade = Double.parseDouble(txquantidade.getText().toString());
                             total = Double.parseDouble(txvalortotal.getText().toString());
                             valorunitario = total / quantidade;
-                            evitaLoop = true;
-                            DecimalFormat format = new DecimalFormat("0.000");
-                            txvalorunitario.setText(format.format(valorunitario).toString());
+                            if (valorunitario > 0) {
+                                evitaLoop = true;
+                                DecimalFormat format = new DecimalFormat("0.000");
+                                txvalorunitario.setText(format.format(valorunitario).toString());
+                            }
                         }
                     }
                 }
