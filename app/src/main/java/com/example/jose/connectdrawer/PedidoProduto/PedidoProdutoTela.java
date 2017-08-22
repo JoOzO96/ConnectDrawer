@@ -1,8 +1,5 @@
 package com.example.jose.connectdrawer.PedidoProduto;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +7,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +74,7 @@ public class PedidoProdutoTela extends DialogFragment {
         List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(PedidoProdutoTela.class.getDeclaredFields()));
         //RETORNA O PRODUTO FILTRADO PELO BUNDLE
         Long codigoProduto = bundle.getLong("codigo");
+        final Long idPedidoProduto = bundle.getLong("idPedidoProduto");
         Produto produto = new Produto();
         final List<Field> fieldListProduto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
         if (codigoProduto > 0) {
@@ -202,7 +199,7 @@ public class PedidoProdutoTela extends DialogFragment {
                 Produto produto1 = new Produto();
                 List<Field> fieldListObjeto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
                 Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), getSetDinamicoTelas.retornaValorSpinner(view, "Produto"));
-                if (cursor.getCount() > 0){
+                if (cursor.getCount() > 0) {
                     for (int f = 0; fieldListObjeto.size() != f; f++) {
                         String tipo = getSetDinamico.retornaTipoCampo(fieldListObjeto.get(f));
                         String nomeCampo = fieldListObjeto.get(f).getName().toLowerCase();
@@ -225,14 +222,23 @@ public class PedidoProdutoTela extends DialogFragment {
                 pedidoProduto.setCodproduto(produto1.getCodproduto());
                 pedidoProduto.setDescri(produto1.getMercadoria());
                 pedidoProduto.setPedido(Long.parseLong(codPedido));
+
+                if (idPedidoProduto > 0) {
+                    pedidoProduto.setIdPedidoProduto(idPedidoProduto);
+                }
+
                 boolean retorno = pedidoProduto.cadastraPedidoProduto(myDb.getWritableDatabase(), pedidoProduto);
-                if (retorno == false){
+                if (retorno == false) {
                     MostraToast mostraToast = new MostraToast();
                     mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar produto no pedido");
-                }else{
+                } else {
                     dismiss();
                     MostraToast mostraToast = new MostraToast();
-                    mostraToast.mostraToastShort(getContext(), "Item adicionado com sucesso.");
+                    if (idPedidoProduto > 0) {
+                        mostraToast.mostraToastShort(getContext(), "Item atualizado com sucesso.");
+                    } else {
+                        mostraToast.mostraToastShort(getContext(), "Item adicionado com sucesso.");
+                    }
                     PedidoDados pedidoDados = new PedidoDados();
                     Bundle bundle = new Bundle();
                     bundle.putLong("codigo", Long.parseLong(codPedido));

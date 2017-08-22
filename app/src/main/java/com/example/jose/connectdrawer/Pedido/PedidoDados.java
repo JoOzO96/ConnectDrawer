@@ -1,7 +1,6 @@
 package com.example.jose.connectdrawer.Pedido;
 
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +24,6 @@ import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cliente.Cliente;
-import com.example.jose.connectdrawer.cliente.ClienteDados;
-import com.example.jose.connectdrawer.cliente.ClienteFragment;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
@@ -230,7 +226,7 @@ public class PedidoDados extends Fragment {
                                 //SPINNER DOS FORMAS DE PAGAMENTO
                                 FormaPagamento formaPagamento = new FormaPagamento();
                                 int posicao = 0;
-                                Cursor cursorFormaPagamento = formaPagamento.retornaFormaPagamento(getContext());
+                                Cursor cursorFormaPagamento = FormaPagamento.retornaFormaPagamento(getContext());
                                 //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
                                 if (cursorFormaPagamento.getCount() > 0) {
                                     //posição do spinner para sair selecionado
@@ -317,6 +313,7 @@ public class PedidoDados extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("codigo", "0");
                 bundle.putString("codigoClicado", "");
+                bundle.putLong("idPedidoProduto", -1L);
                 bundle.putString("codigoPedido", txcodpedido.getText().toString());
                 pedidoProdutoTela.setArguments(bundle);
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
@@ -349,8 +346,8 @@ public class PedidoDados extends Fragment {
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
                 bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
                 bundle.putString("codigoClicado", pedidoProduto.getCodproduto());
-
-
+                bundle.putLong("idPedidoProduto", pedidoProduto.getIdPedidoProduto());
+                txcodpedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txcodpedido");
                 bundle.putString("codigoPedido", txcodpedido.getText().toString());
                 pedidoProdutoTela.setArguments(bundle);
 
@@ -359,7 +356,7 @@ public class PedidoDados extends Fragment {
         });
         listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, final View view1, int position, long id) {
                 final PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -377,7 +374,7 @@ public class PedidoDados extends Fragment {
                             toast.mostraToastShort(getContext(), "Item excluido com sucesso");
                             PedidoDados pedidoDados = new PedidoDados();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("codigo", pedidoProduto.getPedido());
+                            bundle.putLong("codigo", Long.parseLong(txcodpedido.getText().toString()));
                             pedidoDados.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                             fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
