@@ -2,10 +2,13 @@ package com.example.jose.connectdrawer.sincronizacao;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.Pedido.PedidoService;
+import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
+import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeDados;
 import com.example.jose.connectdrawer.cliente.Cliente;
@@ -35,13 +38,16 @@ public class SincPedido {
 
         PedidoService pedidoService = retrofit.create(PedidoService.class);
         Call<List<Pedido>> requestPedido = pedidoService.listPedido();
-
+        final Banco myDb = new Banco(context);
+        final SQLiteDatabase db = myDb.getReadableDatabase();
         requestPedido.enqueue(new Callback<List<Pedido>>() {
             @Override
             public void onResponse(Call<List<Pedido>> call, Response<List<Pedido>> response) {
                 List<Pedido> pedidoList= response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Pedido pedido = new Pedido();
+                PedidoProduto pedidoProduto = new PedidoProduto();
+                Long codPedido = 0L;
                 for (int ped = 0; pedidoList.size() != ped; ped++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
@@ -67,27 +73,52 @@ public class SincPedido {
                                 }
                             }
                         }
-//                        cidade1.setCep(cidadeList.get(cli).getCep());
-//                        cidade1.setCodnacionalcidade(cidadeList.get(cli).getCodnacionalcidade());
-//                        cidade1.setPais(cidadeList.get(cli).getCodnacionalpais());
-//                        cidade1.setCodnacionaluf(cidadeList.get(cli).getCodnacionaluf());
-//                        cidade1.setNomecidade(cidadeList.get(cli).getNomecidade());
-//                        cidade1.setPais(cidadeList.get(cli).getPais());
-//                        cidade1.setUf(cidadeList.get(cli).getUf());
-//                        cidade1.setCodcidade(cidadeList.get(cli).getCodcidade());
-
-                        ///
+                        //
                         //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
                         //
                         //
                         //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
                         //
-
+                        codPedido = pedido1.getPedido();
                         boolean retorno = pedido.cadastraPedido(context1, pedido1);
 
                         cursor.close();
                     }
+
+                    //CADASTRA OS ITENS DO PEDIDO
+
+                    cursor = pedidoProduto.retornaItensPedido(context1, codPedido);
+
+                    if (cursor.getCount() > 0){
+                        if (cursor.getCount() != pedidoList.get(ped).getItensPedido().size()){
+                           cursor.close();
+                        }
+                    }else {
+                        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
+                        pedidoProduto = new PedidoProduto();
+                        for (int itensPed = 0; pedidoList.get(ped).getItensPedido().size() != itensPed; itensPed++) {
+                            for (int i = 0; fieldListClasse.size() != i; i++) {
+                                if (fieldListClasse.get(i).getName().toLowerCase().equals("$change") ||
+                                        fieldListClasse.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                                } else {
+                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListClasse.get(i));
+                                    String nomecampo = "";
+                                    nomecampo = fieldListClasse.get(i).getName().toLowerCase();
+                                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(i), pedidoList.get(ped).getItensPedido().get(itensPed));
+                                    if (valorCampo != null) {
+                                        Object teste;
+                                        teste = getSetDinamico.insereField(fieldListClasse.get(i), pedidoProduto, valorCampo);
+                                        pedidoProduto = (PedidoProduto) teste;
+                                    }
+                                }
+                            }
+                            boolean status = pedidoProduto.cadastraPedidoProduto(db, pedidoProduto);
+                        }
+                        cursor.close();
+                    }
+
                 }
+                myDb.close();
             }
 
             @Override

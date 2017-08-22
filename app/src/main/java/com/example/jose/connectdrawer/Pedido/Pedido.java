@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
-import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
 
 import java.lang.reflect.Field;

@@ -13,7 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
+import com.example.jose.connectdrawer.FormaPagamento.FormaPagamentoFragment;
 import com.example.jose.connectdrawer.Pedido.PedidoFragment;
+import com.example.jose.connectdrawer.Produto.ProdutoFragment;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.VendedorFragment;
 import com.example.jose.connectdrawer.cidade.CidadeFragment;
@@ -27,12 +30,9 @@ import java.util.List;
 public class ConnectMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ListView listaCliente;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listaCliente = (ListView) findViewById(R.id.listDados);
         setContentView(R.layout.activity_connect_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,6 +113,15 @@ public class ConnectMain extends AppCompatActivity
             VendedorFragment vendedorFragment = new VendedorFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, vendedorFragment, vendedorFragment.getTag()).commit();
+        } else if (id == R.id.nav_formapagamento) {
+            FormaPagamentoFragment formaPagamentoFragment = new FormaPagamentoFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, formaPagamentoFragment, formaPagamentoFragment.getTag()).commit();
+
+        } else if (id == R.id.nav_produto) {
+            ProdutoFragment produtoFragment = new ProdutoFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, produtoFragment, produtoFragment.getTag()).commit();
 
         } else if (id == R.id.nav_sync) {
             Sincroniza sincroniza = new Sincroniza();

@@ -54,9 +54,6 @@ public class PedidoFragment extends Fragment {
                 try {
                     cursor.moveToNext();
                 }catch (IllegalStateException i){
-                    cursor.close();
-                    cursor = pedido.retornaPedido(getContext());
-                    cursor.moveToPosition(Integer.parseInt(cont.toString()));
                 }
             }
             cursor.close();

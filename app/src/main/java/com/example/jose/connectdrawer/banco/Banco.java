@@ -3,6 +3,7 @@ package com.example.jose.connectdrawer.banco;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Jose on 18/05/2017.
@@ -160,6 +161,184 @@ public class Banco extends SQLiteOpenHelper {
                 "deletadoandroid boolean," +
                 "alteradoandroid boolean);";
         db.execSQL(sql);
+
+
+        sql = "CREATE TABLE pedidoproduto (" +
+                "idPedidoProduto long PRIMARY KEY,"+
+                "codmecanico text,"+//cód mecanico
+                "codpedido double,"+//cód pedido
+                "codproduto text,"+//cód produto
+                "comip double,"+
+                "conta integer,"+
+                "custo double,"+
+                "datas real,"+
+                "desconto double,"+
+                "descri text,"+
+                "desenho text,"+
+                "desvalor double,"+
+                "dot text,"+
+                "eminota boolean,"+
+                "eminotaagru boolean,"+
+                "lucro double,"+
+                "marca text,"+
+                "modelo text,"+
+                "nserie text,"+
+                "pedido long,"+
+                "porimposto double,"+
+                "quanti double,"+
+                "quantidade double,"+
+                "retirada double,"+
+                "saldoret double,"+
+                "tamanho text,"+
+                "totalimposto double,"+
+                "totalimpostoest double,"+
+                "valortotal double,"+//valor total
+                "valorunitario double,"+//valor unitário
+                "vcomi double,"+
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
+        db.execSQL(sql);
+
+        sql = "CREATE TABLE produto (" +
+                "codproduto text PRIMARY KEY,"+
+                "aliqcide text,"+
+                "ano text,"+
+                "anomodelo text,"+
+                "anp text,"+
+                "aplicacao text,"+
+                "ativo text,"+
+                "carencia text,"+
+                "cfop text,"+
+                "chassis text,"+
+                "classe text,"+
+                "codicms text,"+
+                "codcest text,"+
+                "codcofins text,"+
+                "codcofinse text,"+
+                "codeauto boolean,"+
+                "codemitente integer,"+
+                "codfornecedor text,"+
+                "codpedido text,"+
+                "codgrupo text,"+
+                "codifeanp text,"+
+                "codipi text,"+
+                "codipise text,"+
+                "codpis text,"+
+                "codpise text,"+
+                "codsubgrupo text,"+
+                "combustivel text,"+
+                "comentario text,"+
+                "comissao double,"+
+                "compra boolean,"+
+                "concentracao text,"+
+                "conversao text,"+
+                "conversao1 text,"+
+                "conversao2 text,"+
+                "cor text,"+
+                "cstcofins double,"+
+                "cstcofinse double,"+
+                "cstpis double,"+
+                "cstpise double,"+
+                "cusope double,"+
+                "custo double,"+
+                "custo1 double,"+
+                "custoimpostos double,"+
+                "custosobrelucro double,"+
+                "dataalte real,"+
+                "datacad real,"+
+                "datacompra real,"+
+                "datavencimentoprocuracao real,"+
+                "datavenda real,"+
+                "descobal double,"+
+                "desconto double,"+
+                "desp text,"+
+                "despesas double,"+
+                "dificms double,"+
+                "divisao double,"+
+                "dosagem text,"+
+                "ean text,"+
+                "embala text,"+
+                "equipamento text,"+
+                "especietipo text,"+
+                "fitoxidade text,"+
+                "formulacao text,"+
+                "frete double,"+
+                "genero text,"+
+                "imposobrelucro double,"+
+                "inativo boolean,"+
+                "infade text,"+
+                "infadicionais text,"+
+                "infespecifica text,"+
+                "ipi double,"+
+                "letras text,"+
+                "locregistro text,"+
+                "maquina boolean,"+
+                "marca text,"+
+                "markup double,"+
+                "maximo double,"+
+                "mercadoria text,"+
+                "minimo double,"+
+                "modelo text,"+
+                "montapedido boolean,"+
+                "mva double,"+
+                "mvafora double,"+
+                "ncm text,"+
+                "numero text,"+
+                "numeroori text,"+
+                "obs text,"+
+                "obsproduto text,"+
+                "oleosoja boolean,"+
+                "perconsumidor double,"+
+                "perprazo double,"+
+                "peso double,"+
+                "pesoc double,"+
+                "placa text,"+
+                "porcofins double,"+
+                "porcofinse double,"+
+                "porpis double,"+
+                "porpise double,"+
+                "porsimples double,"+
+                "porsub double,"+
+                "prateleira text,"+
+                "produtocereais boolean,"+
+                "produtoconversao boolean,"+
+                "produtonaofiscal boolean,"+
+                "produtotanque boolean,"+
+                "produtotrigo boolean,"+
+                "quantidade double,"+
+                "quantidadeconversao double,"+
+                "redu double,"+
+                "reentrada text,"+
+                "renavan text,"+
+                "sittrib text,"+
+                "tamanho text,"+
+                "taxafora double,"+
+                "tortasoja boolean,"+
+                "total double,"+
+                "toxidade text,"+
+                "unid text,"+
+                "vaca boolean,"+
+                "valodificms double,"+
+                "valoipi double,"+
+                "valorcompra double,"+
+                "valoravista double,"+
+                "valorconsumidor double,"+
+                "valorprazo double,"+
+                "valortaxa double,"+
+                "vcofins double,"+
+                "vcofinse double,"+
+                "veiculo boolean,"+
+                "vfrete double,"+
+                "vimpsimples double,"+
+                "vpis double,"+
+                "vpise double,"+
+                "vsubsti double,"+
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
+        db.execSQL(sql);
+
 
     }
 

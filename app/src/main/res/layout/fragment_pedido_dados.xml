@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true">
 
             <EditText
-                android:id="@+id/txCodigo"
+                android:id="@+id/txcodpedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
@@ -29,72 +29,89 @@
         </android.support.design.widget.TextInputLayout>
 
         <TextView
+            android:id="@+id/txcliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txcliente"
             android:layout_below="@+id/textInputLayout"
-            android:text="Cliente"/>
+            android:text="Cliente" />
 
         <Spinner
-            android:layout_width="match_parent"
             android:id="@+id/spcliente"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txcliente">
 
         </Spinner>
 
         <!--<android.support.design.widget.TextInputLayout-->
-            <!--android:id="@+id/textInputLayout1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_below="@id/txCliente"-->
-            <!--&gt;-->
+        <!--android:id="@+id/textInputLayout1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_below="@id/txCliente"-->
+        <!--&gt;-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/txData"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="Data"-->
-                <!--android:inputType="number" />-->
+        <!--<EditText-->
+        <!--android:id="@+id/txData"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="Data"-->
+        <!--android:inputType="number" />-->
         <!--</android.support.design.widget.TextInputLayout>-->
 
         <TextView
+            android:id="@+id/txVendedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txVendedor"
             android:layout_below="@+id/spcliente"
-            android:text="Vendedor"/>
+            android:text="Vendedor" />
 
         <Spinner
+            android:id="@+id/spcodvendedor"
             android:layout_width="match_parent"
-            android:id="@+id/spCodvendedor"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txVendedor">
-        </Spinner>
+            android:layout_below="@id/txVendedor"></Spinner>
 
         <TextView
+            android:id="@+id/txFormapagamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txFormapagamento"
-            android:layout_below="@+id/spCodvendedor"
-            android:text="Forma Pagamento"/>
+            android:layout_below="@+id/spcodvendedor"
+            android:text="Forma Pagamento" />
 
         <Spinner
+            android:id="@+id/spformadepagamento"
             android:layout_width="match_parent"
-            android:id="@+id/spFormadepagamento"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txFormapagamento">
-        </Spinner>
+            android:layout_below="@id/txFormapagamento"></Spinner>
 
+
+        <Button
+            android:id="@+id/btAdicionaritens"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/spformadepagamento"
+            android:text="Adicionar Itens" />
 
         <LinearLayout
             android:layout_width="match_parent"
-
+            android:id="@+id/relList"
+            android:orientation="vertical"
             android:layout_height="match_parent"
-            android:layout_below="@id/spFormadepagamento">
+            android:layout_below="@+id/btAdicionaritens">
+
+            <com.example.jose.connectdrawer.uteis.NonScrollListView
+                android:id="@+id/listItenspedido"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/relList">
 
             <Button
                 android:id="@+id/btSalvar"

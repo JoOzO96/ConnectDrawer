@@ -49,7 +49,7 @@ public class SincFormaPagamento {
                         cursor.close();
                     } else {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-                        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+                        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(FormaPagamento.class.getDeclaredFields()));
                         FormaPagamento formaPagamento1 = new FormaPagamento();
                         for (int j = 0; fieldListClasse.size() != j; j++) {
                             if (fieldListClasse.get(j).getName().toLowerCase().equals("$change") ||
