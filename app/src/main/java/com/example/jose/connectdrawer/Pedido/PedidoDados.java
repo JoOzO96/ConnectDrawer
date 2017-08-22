@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,7 @@ public class PedidoDados extends Fragment {
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
-        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        final GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
         List<String> vendedorList = new ArrayList<>();
         List<String> formaPagamentoList = new ArrayList<>();
@@ -108,7 +109,7 @@ public class PedidoDados extends Fragment {
 
 
         // PEGA A LISTA DE CAMPOS QUE POSSUI A CLASSE
-        List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
+        final List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
 
         if (codigoPedido > 1) {
             // codigo do pedido e maior que um, no caso, veio da lista.
@@ -398,6 +399,50 @@ public class PedidoDados extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.show();
                 return true;
+            }
+        });
+
+
+        btSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
+                List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
+                //fieldListPedido CONTEM OS DADOS DO OBJETO PEDIDO QUE SERA SALVO NO BANCO
+                List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+                Pedido pedido = new Pedido();
+                for (int f = 0; fieldListPedidoDados.size() != f; f++) {
+
+                    if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
+                        String nomeCampo = "";
+                        nomeCampo = fieldListPedidoDados.get(f).getName().toLowerCase();
+                        if (nomeCampo.equals("spcliente")) {
+                            nomeCampo = "codcliente";
+                        } else if (nomeCampo.equals("spformapagamento")) {
+                            nomeCampo = "formapagamento";
+                        } else if (nomeCampo.equals("spcodvendedor")) {
+                            nomeCampo = "codvendedor";
+                        }
+                        if (!nomeCampo.equals("")) {
+
+                            for (int p = 0; fieldListPedido.size() != p; p++) {
+
+                                if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
+                                    Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().toLowerCase().substring(0, 2));
+                                    Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
+                                    pedido = (Pedido) retornoPedido;
+                                    break;
+                                }
+                            }
+                            Log.e("Teste", "teste");
+                        } else {
+                            MostraToast mostraToast = new MostraToast();
+                            mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
+                        }
+                    } else {
+
+                    }
+                }
             }
         });
 
