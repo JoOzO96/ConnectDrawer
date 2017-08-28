@@ -371,22 +371,14 @@ public class Pedido {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
         int retorno = db.delete("pedido", "pedido = " + pedido.getPedido(), null);
-        if (retorno > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return retorno > 0;
     }
 
     public boolean removerPedido(Context context, Long pedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
         int retorno = db.delete("pedido", "pedido = " + pedido, null);
-        if (retorno > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return retorno > 0;
     }
 
 
@@ -401,32 +393,24 @@ public class Pedido {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), pedido, valores);
         }
 
-        if (valores.get("codpedido") == null){
+        if (valores.get("pedido") == null) {
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
-            valores.remove("codpedido");
+            valores.remove("pedido");
             valores.remove("cadastroandroid");
-            valores.put("codpedido", retorno);
+            valores.put("pedido", retorno);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedido", null, valores);
             db.close();
             valores.clear();
-            if (retorno == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return retorno != -1;
         }else{
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
-            long retorno = db.update("pedido", valores, "pedido= " + valores.get("codpedido").toString(), null);
+            long retorno = db.update("pedido", valores, "pedido= " + valores.get("pedido").toString(), null);
             db.close();
             valores.clear();
-            if (retorno == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return retorno != -1;
         }
     }
     public Long retornaMaiorCod(Context context) {

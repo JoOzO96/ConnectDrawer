@@ -309,7 +309,7 @@ public class PedidoProdutoTela extends DialogFragment {
                     } else {
                         evitaLoop = true;
                     }
-                }else{
+                } else {
                     evitaLoop = false;
                 }
             }

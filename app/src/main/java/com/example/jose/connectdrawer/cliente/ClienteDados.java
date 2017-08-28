@@ -5,9 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,6 @@ import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.cidade.Cidade;
-import com.example.jose.connectdrawer.cidade.CidadeDados;
 import com.example.jose.connectdrawer.uteis.CamposRequeridos;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
@@ -25,7 +21,6 @@ import com.example.jose.connectdrawer.uteis.Mascara;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,8 +89,6 @@ public class ClienteDados extends Fragment {
         //PEGA A LISTA DE CAMPOS DA CLASSE
 
         List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(ClienteDados.class.getDeclaredFields()));
-
-
 
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
         Bundle bundle = this.getArguments();
@@ -341,20 +334,12 @@ public class ClienteDados extends Fragment {
             }
         });
 
-
         btCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ClienteFragment clienteFragment = new ClienteFragment();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, clienteFragment, clienteFragment.getTag()).commit();
-            }
-        });
-
-        btSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 

@@ -3,13 +3,10 @@ package com.example.jose.connectdrawer.cliente;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
-import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -81,6 +78,9 @@ public class Cliente {
     private Boolean deletadoandroid;
     private Boolean alteradoandroid;
 
+
+    public Cliente() {
+    }
 
     public Long getCodigo() {
         return codigo;
@@ -543,7 +543,6 @@ public class Cliente {
         return codigo + " - " + nomecliente;
     }
 
-
     public boolean insereDados(Context context, Cliente cliente) {
         Banco myDb = new Banco(context);
         ContentValues valores = new ContentValues();
@@ -612,11 +611,7 @@ public class Cliente {
         long result = db.insert("cliente", null, valores);
         db.close();
         valores.clear();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return result != -1;
     }
 
     public Cursor retornaClienteFiltrado(Context context, Long codigo) {
@@ -644,7 +639,7 @@ public class Cliente {
     public Cursor retornaCliente(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente", null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente order by nomecliente", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -662,9 +657,6 @@ public class Cliente {
         } else {
             return 0L;
         }
-    }
-
-    public Cliente() {
     }
 
     public Boolean cadastraCliente(Context context, Cliente cliente){
@@ -688,22 +680,14 @@ public class Cliente {
             retorno = db.insert("cliente", null, valores);
             db.close();
             valores.clear();
-            if (retorno == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return retorno != -1;
         }else{
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
             long retorno = db.update("cliente", valores, "codigo= " + valores.get("codigo").toString(), null);
             db.close();
             valores.clear();
-            if (retorno == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return retorno != -1;
         }
     }
 
@@ -712,10 +696,6 @@ public class Cliente {
         SQLiteDatabase db = myDb.getWritableDatabase();
         long result = db.delete("cliente", "codigo = " + codigo, null);
         db.close();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return result != -1;
     }
 }

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +38,11 @@ import java.util.List;
  */
 public class PedidoDados extends Fragment {
 
-    private EditText txcodpedido;
-    private Spinner spcliente;
-    private EditText txdata;
-    private Spinner spcodvendedor;
-    private Spinner spformadepagamento;
+    private EditText txPedido;
+    private Spinner spCodcliente;
+    //    private EditText txdata;
+    private Spinner spCodvendedor;
+    private Spinner spFormadepagamento;
     private Button btAdicionarItens;
     private ListView listItenspedido;
     //    private EditText txcodvendedor;
@@ -140,7 +139,7 @@ public class PedidoDados extends Fragment {
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                             //TESTA SE O CAMPO QUE ESTA PASSANDO É UM SPINNER
                             //TESTA QUAL SPINNER É, E COLOCA OS DADOS REFERENTES A ELE
-                            if (fieldListPassar.get(i).getName().toLowerCase().equals("spcliente")) {
+                            if (fieldListPassar.get(i).getName().equals("spCodcliente")) {
                                 //SPINNER DOS CLIENTES
                                 Cliente cliente = new Cliente();
                                 int posicao = 0;
@@ -183,7 +182,7 @@ public class PedidoDados extends Fragment {
                                     }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
-                            } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spcodvendedor")) {
+                            } else if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
                                 //SPINNER DOS Vendedores
                                 Vendedor vendedor = new Vendedor();
                                 int posicao = 0;
@@ -223,7 +222,7 @@ public class PedidoDados extends Fragment {
                                     }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
-                            } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spformadepagamento")) {
+                            } else if (fieldListPassar.get(i).getName().equals("spFormadepagamento")) {
                                 //SPINNER DOS FORMAS DE PAGAMENTO
                                 FormaPagamento formaPagamento = new FormaPagamento();
                                 int posicao = 0;
@@ -299,29 +298,157 @@ public class PedidoDados extends Fragment {
             } else {
                 //CURSOR SEM INFORMAÇÕES
             }
-        } else
+        } else {
+            // codigo do pedido é diferente de 1. NO CASO QUANDO O PEDIDO E NOVO
 
-        {
-            // codigo do pedido é diferente de 1.
+            for (int i = 0; fieldListPassar.size() != i; i++) {
+                String mascara = null;
+                if (fieldListPassar.get(i).getName().toLowerCase().equals("$change") ||
+                        fieldListPassar.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                } else {
+                    //TESTA SE O CAMPO QUE ESTA PASSANDO É UM EDITTEXT
+                    if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
+                    } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
+                        //TESTA SE O CAMPO QUE ESTA PASSANDO É UM SPINNER
+                        //TESTA QUAL SPINNER É, E COLOCA OS DADOS REFERENTES A ELE
+                        if (fieldListPassar.get(i).getName().equals("spCodcliente")) {
+                            //SPINNER DOS CLIENTES
+                            Cliente cliente = new Cliente();
+                            int posicao = 0;
+                            Cursor cursorCliente = cliente.retornaCliente(getContext());
+                            //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+                            if (cursorCliente.getCount() > 0) {
+                                //posição do spinner para sair selecionado
+                                List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+                                for (int f = fieldListCliente.size() - 1; -1 != f; f--) {
+                                    if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")) {
+
+                                    } else {
+                                        fieldListCliente.remove(f);
+                                    }
+                                }
+                                for (int j = 0; cursorCliente.getCount() != j; j++) {
+                                    Cliente cliente1 = new Cliente();
+
+                                    for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                                        String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
+                                        if (retorno != null) {
+                                            Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
+                                            cliente1 = (Cliente) retCliente;
+                                        }
+                                    }
+                                    clienteList.add(cliente1.toString());
+                                    cursorCliente.moveToNext();
+                                }
+                            }
+
+                            getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
+
+                        } else if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
+                            //SPINNER DOS Vendedores
+                            Vendedor vendedor = new Vendedor();
+                            int posicao = 0;
+                            Cursor cursorVendedor = vendedor.retornaVendedor(getContext());
+                            //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+                            if (cursorVendedor.getCount() > 0) {
+                                //posição do spinner para sair selecionado
+                                List<Field> fieldListVendedor = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+                                for (int f = fieldListVendedor.size() - 1; -1 != f; f--) {
+                                    if (fieldListVendedor.get(f).getName().toLowerCase().equals("codvendedor") || fieldListVendedor.get(f).getName().toLowerCase().equals("nomevendedor")) {
+                                    } else {
+                                        fieldListVendedor.remove(f);
+                                    }
+                                }
+                                for (int j = 0; cursorVendedor.getCount() != j; j++) {
+                                    vendedor = new Vendedor();
+                                    for (int f = 0; fieldListVendedor.size() != f; f++) {
+                                        String tipo = getSetDinamico.retornaTipoCampo(fieldListVendedor.get(f));
+                                        String nomeCampo = fieldListVendedor.get(f).getName().toLowerCase();
+                                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorVendedor);
+                                        if (retorno != null) {
+                                            Object retVendedor = getSetDinamico.insereField(fieldListVendedor.get(f), vendedor, retorno);
+                                            vendedor = (Vendedor) retVendedor;
+                                        }
+                                    }
+                                    vendedorList.add(vendedor.toString());
+                                    cursorVendedor.moveToNext();
+                                }
+                            }
+                            getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
+                        } else if (fieldListPassar.get(i).getName().equals("spFormadepagamento")) {
+                            //SPINNER DOS FORMAS DE PAGAMENTO
+                            FormaPagamento formaPagamento = new FormaPagamento();
+                            int posicao = 0;
+                            Cursor cursorFormaPagamento = FormaPagamento.retornaFormaPagamento(getContext());
+                            //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+                            if (cursorFormaPagamento.getCount() > 0) {
+                                //posição do spinner para sair selecionado
+                                List<Field> fieldListFormaPagamento = new ArrayList<>(Arrays.asList(FormaPagamento.class.getDeclaredFields()));
+                                for (int f = fieldListFormaPagamento.size() - 1; -1 != f; f--) {
+                                    if (fieldListFormaPagamento.get(f).getName().toLowerCase().equals("codigo") || fieldListFormaPagamento.get(f).getName().toLowerCase().equals("pagamento")) {
+                                    } else {
+                                        fieldListFormaPagamento.remove(f);
+                                    }
+                                }
+                                for (int j = 0; cursorFormaPagamento.getCount() != j; j++) {
+                                    formaPagamento = new FormaPagamento();
+                                    for (int f = 0; fieldListFormaPagamento.size() != f; f++) {
+                                        String tipo = getSetDinamico.retornaTipoCampo(fieldListFormaPagamento.get(f));
+                                        String nomeCampo = fieldListFormaPagamento.get(f).getName().toLowerCase();
+                                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorFormaPagamento);
+                                        if (retorno != null) {
+                                            Object retFormaPagamento = getSetDinamico.insereField(fieldListFormaPagamento.get(f), formaPagamento, retorno);
+                                            formaPagamento = (FormaPagamento) retFormaPagamento;
+                                        }
+                                    }
+                                    formaPagamentoList.add(formaPagamento.toString());
+                                    cursorFormaPagamento.moveToNext();
+                                }
+                            }
+                            getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, formaPagamentoList, getContext(), posicao);
+                        }
+                    }
+                }
+            }
+
         }
 
-        btAdicionarItens.setOnClickListener(new View.OnClickListener() {
+        btAdicionarItens.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
-                txcodpedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txcodpedido");
-                Bundle bundle = new Bundle();
-                bundle.putString("codigo", "0");
-                bundle.putString("codigoClicado", "");
-                bundle.putLong("idPedidoProduto", -1L);
-                bundle.putString("codigoPedido", txcodpedido.getText().toString());
-                pedidoProdutoTela.setArguments(bundle);
-                pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+                txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
+
+                if (txPedido.length() == 0) {
+                    SalvaPedido(view, -1L);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("codigo", "0");
+                    bundle.putString("codigoClicado", "");
+                    bundle.putLong("idPedidoProduto", -1L);
+                    bundle.putString("codigoPedido", String.valueOf(pedido.retornaMaiorCod(getContext())));
+                    pedidoProdutoTela.setArguments(bundle);
+                    pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("codigo", "0");
+                    bundle.putString("codigoClicado", "");
+                    bundle.putLong("idPedidoProduto", -1L);
+                    bundle.putString("codigoPedido", txPedido.getText().toString());
+                    pedidoProdutoTela.setArguments(bundle);
+                    pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+                }
             }
         });
 
-        btCancelar.setOnClickListener(new View.OnClickListener() {
+        btCancelar.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 PedidoFragment pedidoFragment = new PedidoFragment();
@@ -337,7 +464,9 @@ public class PedidoDados extends Fragment {
         final FragmentManager fragmentManager = getFragmentManager();
 
 
-        listItenspedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listItenspedido.setOnItemClickListener(new AdapterView.OnItemClickListener()
+
+        {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -348,16 +477,19 @@ public class PedidoDados extends Fragment {
                 bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
                 bundle.putString("codigoClicado", pedidoProduto.getCodproduto());
                 bundle.putLong("idPedidoProduto", pedidoProduto.getIdPedidoProduto());
-                txcodpedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txcodpedido");
-                bundle.putString("codigoPedido", txcodpedido.getText().toString());
+                txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
+                bundle.putString("codigoPedido", txPedido.getText().toString());
                 pedidoProdutoTela.setArguments(bundle);
 
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
         });
-        listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+
+        {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, final View view1, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, final View view1, int position,
+                                           long id) {
                 final PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -369,13 +501,13 @@ public class PedidoDados extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         MostraToast toast = new MostraToast();
-                        txcodpedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txcodpedido");
+                        txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
                         boolean retorno = pedidoProduto.removerPedidoProduto(getContext(), pedidoProduto.getIdPedidoProduto());
                         if (retorno == true) {
                             toast.mostraToastShort(getContext(), "Item excluido com sucesso");
                             PedidoDados pedidoDados = new PedidoDados();
                             Bundle bundle = new Bundle();
-                            bundle.putLong("codigo", Long.parseLong(txcodpedido.getText().toString()));
+                            bundle.putLong("codigo", Long.parseLong(txPedido.getText().toString()));
                             pedidoDados.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                             fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
@@ -403,51 +535,119 @@ public class PedidoDados extends Fragment {
         });
 
 
-        btSalvar.setOnClickListener(new View.OnClickListener() {
+        btSalvar.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
-                //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
-                List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
-                //fieldListPedido CONTEM OS DADOS DO OBJETO PEDIDO QUE SERA SALVO NO BANCO
-                List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
-                Pedido pedido = new Pedido();
-                for (int f = 0; fieldListPedidoDados.size() != f; f++) {
-
-                    if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
-                        String nomeCampo = "";
-                        nomeCampo = fieldListPedidoDados.get(f).getName().toLowerCase();
-                        if (nomeCampo.equals("spcliente")) {
-                            nomeCampo = "codcliente";
-                        } else if (nomeCampo.equals("spformapagamento")) {
-                            nomeCampo = "formapagamento";
-                        } else if (nomeCampo.equals("spcodvendedor")) {
-                            nomeCampo = "codvendedor";
-                        }
-                        if (!nomeCampo.equals("")) {
-
-                            for (int p = 0; fieldListPedido.size() != p; p++) {
-
-                                if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
-                                    Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().toLowerCase().substring(0, 2));
-                                    Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
-                                    pedido = (Pedido) retornoPedido;
-                                    break;
-                                }
-                            }
-                            Log.e("Teste", "teste");
-                        } else {
-                            MostraToast mostraToast = new MostraToast();
-                            mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
-                        }
-                    } else {
-
-                    }
-                }
+                SalvaPedido(view, 1L);
             }
         });
 
-
         return view;
+    }
+
+
+    public void SalvaPedido(View view, Long clique) {
+
+        //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
+        List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
+        //fieldListPedido CONTEM OS DADOS DO OBJETO PEDIDO QUE SERA SALVO NO BANCO
+        List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+        Pedido pedido = new Pedido();
+        for (int f = 0; fieldListPedidoDados.size() != f; f++) {
+
+            if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
+                String nomeCampo = "";
+                nomeCampo = fieldListPedidoDados.get(f).getName();
+                if (nomeCampo.equals("spCodcliente")) {
+                    nomeCampo = "codcliente";
+                } else if (nomeCampo.equals("spFormadepagamento")) {
+                    nomeCampo = "formadepagamento";
+                } else if (nomeCampo.equals("spCodvendedor")) {
+                    nomeCampo = "codvendedor";
+                }
+                if (!nomeCampo.equals("")) {
+
+                    for (int p = 0; fieldListPedido.size() != p; p++) {
+
+                        if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
+                            Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().replace("sp", ""));
+                            Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
+                            pedido = (Pedido) retornoPedido;
+                            break;
+                        }
+                    }
+
+                } else {
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
+                }
+            } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("tx")) {
+
+                String nomeCampo = "";
+                nomeCampo = fieldListPedidoDados.get(f).getName();
+                String valorCampo = "";
+                if (!nomeCampo.equals("")) {
+
+                    for (int p = 0; fieldListPedido.size() != p; p++) {
+                        if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("tx", "").toLowerCase())) {
+                            valorCampo = getSetDinamicoTelas.retornaValorEditText(view, fieldListPedido.get(p).getName());
+                            Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
+                            pedido = (Pedido) retorno;
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+        Cliente cliente = new Cliente();
+        Cursor cursorCliente = cliente.retornaClienteFiltradoCursor(getContext(), pedido.getCodcliente());
+        List<Field> clienteFieldList = new ArrayList<Field>(Arrays.asList(cliente.getClass().getDeclaredFields()));
+        if (cursorCliente.getCount() > 0) {
+
+            for (int f = 0; clienteFieldList.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(clienteFieldList.get(f));
+                String nomeCampo = clienteFieldList.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(clienteFieldList.get(f), cliente, retorno);
+                    cliente = (Cliente) retCliente;
+                }
+            }
+
+        }
+        pedido.setNome(cliente.getNomecliente());
+
+        boolean retorno = pedido.cadastraPedido(getContext(), pedido);
+        if (retorno) {
+            if (clique == 1) {
+                if (pedido.getPedido() > 0) {
+                    PedidoFragment pedidoFragment = new PedidoFragment();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastShort(getContext(), "Pedido atualizado com sucesso.");
+
+                } else {
+                    PedidoFragment pedidoFragment = new PedidoFragment();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastShort(getContext(), "Pedido salvo com sucesso.");
+                }
+            }
+        } else {
+            PedidoFragment pedidoFragment = new PedidoFragment();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar o pedido.");
+        }
     }
 
 }

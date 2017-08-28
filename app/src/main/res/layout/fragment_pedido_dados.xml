@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true">
 
             <EditText
-                android:id="@+id/txcodpedido"
+                android:id="@+id/txPedido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
@@ -36,7 +36,7 @@
             android:text="Cliente" />
 
         <Spinner
-            android:id="@+id/spcliente"
+            android:id="@+id/spCodcliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txcliente">
@@ -65,11 +65,11 @@
             android:id="@+id/txVendedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spcliente"
+            android:layout_below="@+id/spCodcliente"
             android:text="Vendedor" />
 
         <Spinner
-            android:id="@+id/spcodvendedor"
+            android:id="@+id/spCodvendedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txVendedor"></Spinner>
@@ -78,11 +78,11 @@
             android:id="@+id/txFormapagamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spcodvendedor"
+            android:layout_below="@+id/spCodvendedor"
             android:text="Forma Pagamento" />
 
         <Spinner
-            android:id="@+id/spformadepagamento"
+            android:id="@+id/spFormadepagamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txFormapagamento"></Spinner>
@@ -92,15 +92,15 @@
             android:id="@+id/btAdicionaritens"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/spformadepagamento"
+            android:layout_below="@+id/spFormadepagamento"
             android:text="Adicionar Itens" />
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:id="@+id/relList"
-            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/btAdicionaritens">
+            android:layout_below="@+id/btAdicionaritens"
+            android:orientation="vertical">
 
             <com.example.jose.connectdrawer.uteis.NonScrollListView
                 android:id="@+id/listItenspedido"
