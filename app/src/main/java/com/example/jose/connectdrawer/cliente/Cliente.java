@@ -722,4 +722,13 @@ public class Cliente {
         db.close();
         return cursor;
     }
+
+    public void alteraCidadeCliente(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("codcidade", codigoServidor);
+        int retorno = db.update("cliente", values, "codcidade = " + codigoAndroid, null);
+        values.clear();
+    }
 }

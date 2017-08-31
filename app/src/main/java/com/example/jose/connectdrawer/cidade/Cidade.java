@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.jose.connectdrawer.banco.Banco;
-import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +30,9 @@ public class Cidade {
     private Boolean deletadoandroid;
     private Boolean alteradoandroid;
     private Context context;
+
+    public Cidade() {
+    }
 
     public Long getCodcidade() {
         return codcidade;
@@ -134,9 +135,6 @@ public class Cidade {
         return codcidade + " - " + nomecidade + " - " + uf;
     }
 
-    public Cidade() {
-    }
-
     public Cursor retornaCidade(Context context) {
         this.context = context;
         Banco myDb = new Banco(context);
@@ -189,11 +187,7 @@ public class Cidade {
         long result = db.insert("cidade", null, valores);
         db.close();
         valores.clear();
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return result != -1;
     }
 
 
@@ -201,11 +195,7 @@ public class Cidade {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
         int retorno = db.delete("cidade", "codCidade = " + cidade.getCodcidade(), null);
-        if (retorno > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return retorno > 0;
     }
 
 
@@ -230,22 +220,14 @@ public class Cidade {
             retorno = db.insert("cidade", null, valores);
             db.close();
             valores.clear();
-            if (retorno == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return retorno != -1;
         }else{
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
             long retorno = db.update("cidade", valores, "codcidade= " + valores.get("codcidade").toString(), null);
             db.close();
             valores.clear();
-            if (retorno == -1) {
-                return false;
-            } else {
-                return true;
-            }
+            return retorno != -1;
         }
     }
     public Long retornaMaiorCod(Context context) {
@@ -258,5 +240,23 @@ public class Cidade {
         } else {
             return 0L;
         }
+    }
+
+    public void alteraCodCidade(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("codcidade", codigoServidor);
+        int retorno = db.update("cidade", values, "codcidade = " + codigoAndroid, null);
+
+    }
+
+    public void removeCidadeAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo, "0");
+        int retorno = db.update("cidade", values, campo + " = 1", null);
+
     }
 }

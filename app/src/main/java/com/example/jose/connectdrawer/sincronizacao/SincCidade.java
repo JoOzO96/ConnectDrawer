@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeService;
+import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.google.gson.Gson;
 
@@ -110,7 +111,9 @@ public class SincCidade {
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(Cidade.class.getDeclaredFields()));
         Cursor cursor = cidade.retornaCidadeAlteradaAndroid(context, "cadastroAndroid");
+
         if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
             for (long i = 0L; cursor.getCount() != i; i++) {
                 Cidade cidade1 = new Cidade();
                 for (int cid = 0; fieldListCidade.size() != cid; cid++) {
@@ -122,19 +125,11 @@ public class SincCidade {
                         if (fieldListCidade.get(cid).getName().toLowerCase().equals("cep")) {
                             retornoCursor = String.valueOf(retornoCursor).replace("-", "");
                         }
-                        Object cidadeRetorno = getSetDinamico.insereField(fieldListCidade.get(cid), cidade, retornoCursor);
-                        cidade = (Cidade) cidadeRetorno;
+                        Object cidadeRetorno = getSetDinamico.insereField(fieldListCidade.get(cid), cidade1, retornoCursor);
+                        cidade1 = (Cidade) cidadeRetorno;
                     }
                 }
-//                cidade1.setCodcidade(cursor.getLong(cursor.getColumnIndex("codcidade")));
-//                cidade1.setNomecidade(cursor.getString(cursor.getColumnIndex("nomecidade")));
-//                cidade1.setUf(cursor.getString(cursor.getColumnIndex("uf")));
-//                cidade1.setCodnacionaluf(cursor.getString(cursor.getColumnIndex("codnacionaluf")));
-//                cidade1.setCodnacionalcidade(cursor.getString(cursor.getColumnIndex("codnacionalcidade")));
-//                cidade1.setPais(cursor.getString(cursor.getColumnIndex("pais")));
-//                cidade1.setCodnacionalpais(cursor.getString(cursor.getColumnIndex("codnacionalpais")));
-//                cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")).replace("-",""));
-                cidadeList.add(cidade);
+                cidadeList.add(cidade1);
 
                 cursor.moveToNext();
             }
@@ -153,7 +148,14 @@ public class SincCidade {
                 e.printStackTrace();
             }
             if (retornoEnvio != null) {
-                gson.
+                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                Cliente cliente = new Cliente();
+                for (int i = 0; controleCodigoList.size() != i; i++) {
+                    cliente.alteraCidadeCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    cidade.alteraCodCidade(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    cidade.removeCidadeAlteradaAndroid(context, "cadastroAndroid");
+                }
             }
 
         }
