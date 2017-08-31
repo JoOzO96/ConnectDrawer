@@ -698,4 +698,28 @@ public class Cliente {
         db.close();
         return result != -1;
     }
+
+    //                           CUIDADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    public Cursor retornaClienteFiltradaCursor(Context context, Long codPedido) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM cliente where codcliente = " + codPedido, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
+    public Cursor retornaClienteAlteradaAndroid(Context context, String tipo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM cliente where " + tipo + " = 1", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
 }

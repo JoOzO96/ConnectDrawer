@@ -1,12 +1,7 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-
-import com.example.jose.connectdrawer.cidade.Cidade;
-import com.example.jose.connectdrawer.cidade.CidadeService;
-import com.example.jose.connectdrawer.main.ConnectMain;
 
 import java.io.IOException;
 
@@ -24,23 +19,24 @@ public class Sincroniza {
         SincPedido sincPedido = new SincPedido();
         SincVendedor sincVendedor = new SincVendedor();
         SincProduto sincProduto = new SincProduto();
-        SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
+//        SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
 //        dialog.setMessage("Aguarde... Sincronizando Clientes");
 //        dialog.show();
-        sincCliente.iniciaSinc(context);
+//        sincCliente.iniciaSinc(context);
 //        dialog.dismiss();
 //        dialog.setMessage("Aguarde... Sincronizando Cidades");
 //        dialog.show();
-        sincCidade.iniciaSinc(context);
+//        sincCidade.iniciaSinc(context);
 //        dialog.dismiss();
 //        dialog.setMessage("Aguarde... Sincronizando Pedidos");
 //        dialog.show();
-        sincPedido.iniciaSinc(context);
-        sincFormaPagamento.iniciaSinc(context);
-        sincVendedor.iniciaSinc(context);
-        sincProduto.iniciaSinc(context);
+//        sincPedido.iniciaSinc(context);
+//        sincFormaPagamento.iniciaSinc(context);
+//        sincVendedor.iniciaSinc(context);
+//        sincProduto.iniciaSinc(context);
         try {
             sincCidade.iniciaEnvio(context);
+            sincCliente.iniciaenvio(context);
             dialog.dismiss();
         } catch (IOException e) {
             dialog.dismiss();

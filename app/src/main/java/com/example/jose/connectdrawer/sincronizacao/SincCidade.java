@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
@@ -14,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +38,7 @@ public class SincCidade {
         Retrofit retrofit = retRetrofit.retornaRetrofit();
 
         CidadeService cidadeService = retrofit.create(CidadeService.class);
-        Call<List<Cidade>> requestCidade= cidadeService.listCidade();
+        Call<List<Cidade>> requestCidade = cidadeService.listCidade();
         requestCidade.enqueue(new Callback<List<Cidade>>() {
             @Override
             public void onResponse(Call<List<Cidade>> call, Response<List<Cidade>> response) {
@@ -105,26 +107,55 @@ public class SincCidade {
     public void iniciaEnvio(Context context) throws IOException {
         Cidade cidade = new Cidade();
         List<Cidade> cidadeList = new ArrayList<>();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(Cidade.class.getDeclaredFields()));
         Cursor cursor = cidade.retornaCidadeAlteradaAndroid(context, "cadastroAndroid");
-        if (cursor.getCount() > 0){
-            for (long i = 0L ; cursor.getCount() != i; i++){
+        if (cursor.getCount() > 0) {
+            for (long i = 0L; cursor.getCount() != i; i++) {
                 Cidade cidade1 = new Cidade();
-                cidade1.setCodcidade(cursor.getLong(cursor.getColumnIndex("codCidade")));
-                cidade1.setNomecidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
-                cidade1.setUf(cursor.getString(cursor.getColumnIndex("uf")));
-                cidade1.setCodnacionaluf(cursor.getString(cursor.getColumnIndex("codNacionalUf")));
-                cidade1.setCodnacionalcidade(cursor.getString(cursor.getColumnIndex("codNacionalCidade")));
-                cidade1.setPais(cursor.getString(cursor.getColumnIndex("pais")));
-                cidade1.setCodnacionalpais(cursor.getString(cursor.getColumnIndex("codNacionalPais")));
-                cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")).replace("-",""));
-                cidadeList.add(cidade1);
+                for (int cid = 0; fieldListCidade.size() != cid; cid++) {
+                    if (fieldListCidade.get(cid).getName().toLowerCase().equals("$change") ||
+                            fieldListCidade.get(cid).getName().toLowerCase().equals("serialversionuid")) {
+                    } else {
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(cid));
+                        Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListCidade.get(cid).getName(), cursor);
+                        if (fieldListCidade.get(cid).getName().toLowerCase().equals("cep")) {
+                            retornoCursor = String.valueOf(retornoCursor).replace("-", "");
+                        }
+                        Object cidadeRetorno = getSetDinamico.insereField(fieldListCidade.get(cid), cidade, retornoCursor);
+                        cidade = (Cidade) cidadeRetorno;
+                    }
+                }
+//                cidade1.setCodcidade(cursor.getLong(cursor.getColumnIndex("codcidade")));
+//                cidade1.setNomecidade(cursor.getString(cursor.getColumnIndex("nomecidade")));
+//                cidade1.setUf(cursor.getString(cursor.getColumnIndex("uf")));
+//                cidade1.setCodnacionaluf(cursor.getString(cursor.getColumnIndex("codnacionaluf")));
+//                cidade1.setCodnacionalcidade(cursor.getString(cursor.getColumnIndex("codnacionalcidade")));
+//                cidade1.setPais(cursor.getString(cursor.getColumnIndex("pais")));
+//                cidade1.setCodnacionalpais(cursor.getString(cursor.getColumnIndex("codnacionalpais")));
+//                cidade1.setCep(cursor.getString(cursor.getColumnIndex("cep")).replace("-",""));
+                cidadeList.add(cidade);
 
                 cursor.moveToNext();
             }
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(cidadeList);
             EnviaJson enviaJson = new EnviaJson();
-            enviaJson.execute(gsonRetorno);
+            String url = "http://192.168.0.106:8080/ConnectServices/recebeCidade";
+            List<ControleCodigo> retorno = null;
+            String retornoEnvio = "";
+            try {
+                enviaJson.execute(gsonRetorno, url);
+                retornoEnvio = enviaJson.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if (retornoEnvio != null) {
+                gson.
+            }
+
         }
     }
 

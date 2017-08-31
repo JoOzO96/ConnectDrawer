@@ -1,26 +1,23 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
-import java.util.Date;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Jose on 22/05/2017.
@@ -129,5 +126,33 @@ public class SincCliente extends Activity {
                 Log.e("DEU ERRO Sinc", t.toString());
             }
         });
+    }
+
+
+    public void iniciaenvio(Context context) {
+        Cliente cliente = new Cliente();
+        List<Cliente> clienteList = new ArrayList<>();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+        Cursor cursor = cliente.retornaClienteAlteradaAndroid(context, "cadastroAndroid");
+
+        if (cursor.getCount() > 0) {
+            for (long i = 0L; cursor.getCount() != i; i++) {
+                cliente = new Cliente();
+                for (int cid = 0; fieldListCliente.size() != cid; cid++) {
+                    if (fieldListCliente.get(cid).getName().toLowerCase().equals("$change") ||
+                            fieldListCliente.get(cid).getName().toLowerCase().equals("serialversionuid")) {
+                    } else {
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(cid));
+                        Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListCliente.get(cid).getName(), cursor);
+                        Object clienteRetorno = getSetDinamico.insereField(fieldListCliente.get(cid), cliente, retornoCursor);
+                        cliente = (Cliente) clienteRetorno;
+                    }
+                }
+                clienteList.add(cliente);
+
+                cursor.moveToNext();
+            }
+        }
     }
 }

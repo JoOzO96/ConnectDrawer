@@ -1,20 +1,14 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
 import android.os.AsyncTask;
-import android.os.NetworkOnMainThreadException;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Scanner;
-
-import static android.R.attr.data;
 
 /**
  * Created by Jose on 30/05/2017.
@@ -53,10 +47,11 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        String jsonDeResposta = "";
         try {
             URL obj = null;
 
-            obj = new URL("http://192.168.0.103:8080/ConnectServices/recebeCidade");
+            obj = new URL(params[1]);
 
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();  //abre conexao
 
@@ -72,7 +67,7 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
 
             connection.connect(); //envia para o servidor
 
-            String jsonDeResposta = new Scanner(connection.getInputStream()).next();
+            jsonDeResposta = new Scanner(connection.getInputStream()).next();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {
@@ -81,6 +76,6 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
         }
 
-        return "";
+        return jsonDeResposta;
     }
 }
