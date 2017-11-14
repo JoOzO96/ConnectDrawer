@@ -136,7 +136,7 @@ public class SincCidade {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(cidadeList);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://192.168.0.106:8080/ConnectServices/recebeCidade";
+            String url = "http://192.168.0.103:8080/ConnectServices/recebeCidade";
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

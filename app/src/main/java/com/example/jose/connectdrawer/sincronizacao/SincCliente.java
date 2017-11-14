@@ -5,14 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -152,6 +155,32 @@ public class SincCliente extends Activity {
                 clienteList.add(cliente);
 
                 cursor.moveToNext();
+            }
+        }
+        if (clienteList.size() > 0) {
+            Gson gson = new Gson();
+            String gsonRetorno = gson.toJson(clienteList);
+            EnviaJson enviaJson = new EnviaJson();
+            String url = "http://192.168.0.103:8080/ConnectServices/recebeCliente";
+            List<ControleCodigo> retorno = null;
+            String retornoEnvio = "";
+            try {
+                enviaJson.execute(gsonRetorno, url);
+                retornoEnvio = enviaJson.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if (retornoEnvio != null) {
+                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                cliente = new Cliente();
+                for (int i = 0; controleCodigoList.size() != i; i++) {
+                    cliente.alteraPedidoCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    cliente.alteraCodCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
+                }
             }
         }
     }

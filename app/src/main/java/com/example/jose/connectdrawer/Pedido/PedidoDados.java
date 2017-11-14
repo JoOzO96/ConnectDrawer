@@ -31,6 +31,8 @@ import com.example.jose.connectdrawer.uteis.MostraToast;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -622,7 +624,7 @@ public class PedidoDados extends Fragment {
 
         }
         pedido.setNome(cliente.getNomecliente());
-
+        pedido.setData(new Date().getTime());
         boolean retorno = pedido.cadastraPedido(getContext(), pedido);
         if (retorno) {
             if (clique == 1) {

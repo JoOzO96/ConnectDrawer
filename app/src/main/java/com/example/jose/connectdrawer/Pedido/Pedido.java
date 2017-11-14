@@ -22,7 +22,7 @@ import java.util.List;
 public class Pedido {
     private Long pedido;
     private Long codcliente;
-    private Date data;
+    private Long data;
     private String codvendedor;
     private String formadepagamento;
     private Double frete;
@@ -71,11 +71,11 @@ public class Pedido {
         this.codcliente = codcliente;
     }
 
-    public Date getData() {
+    public Long getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(long data) {
         this.data = data;
     }
 
@@ -366,7 +366,6 @@ public class Pedido {
     }
 
 
-
     public boolean remover(Context context, Pedido pedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
@@ -382,14 +381,14 @@ public class Pedido {
     }
 
 
-    public Boolean cadastraPedido(Context context, Pedido pedido){
+    public Boolean cadastraPedido(Context context, Pedido pedido) {
         Banco myDb = new Banco(context);
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(pedido.getClass().getDeclaredFields()));
 
-        for (int i = 0 ; fieldList.size() != i ; i++){
+        for (int i = 0; fieldList.size() != i; i++) {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), pedido, valores);
         }
 
@@ -404,7 +403,7 @@ public class Pedido {
             db.close();
             valores.clear();
             return retorno != -1;
-        }else{
+        } else {
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
             long retorno = db.update("pedido", valores, "pedido= " + valores.get("pedido").toString(), null);
@@ -413,6 +412,7 @@ public class Pedido {
             return retorno != -1;
         }
     }
+
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
@@ -423,5 +423,23 @@ public class Pedido {
         } else {
             return 0L;
         }
+    }
+
+    public void alteraCodPedido(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("pedido", codigoServidor);
+        int retorno = db.update("pedido", values, "pedido = " + codigoAndroid, null);
+        values.clear();
+    }
+
+    public void alteraCodPedidoProduto(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("pedido", codigoServidor);
+        int retorno = db.update("pedidoproduto", values, "pedido = " + codigoAndroid, null);
+
     }
 }

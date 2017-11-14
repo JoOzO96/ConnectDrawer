@@ -19,24 +19,17 @@ public class Sincroniza {
         SincPedido sincPedido = new SincPedido();
         SincVendedor sincVendedor = new SincVendedor();
         SincProduto sincProduto = new SincProduto();
-//        SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
-//        dialog.setMessage("Aguarde... Sincronizando Clientes");
-//        dialog.show();
-//        sincCliente.iniciaSinc(context);
-//        dialog.dismiss();
-//        dialog.setMessage("Aguarde... Sincronizando Cidades");
-//        dialog.show();
-//        sincCidade.iniciaSinc(context);
-//        dialog.dismiss();
-//        dialog.setMessage("Aguarde... Sincronizando Pedidos");
-//        dialog.show();
+        SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
+        sincCliente.iniciaSinc(context);
+        sincCidade.iniciaSinc(context);
 //        sincPedido.iniciaSinc(context);
-//        sincFormaPagamento.iniciaSinc(context);
-//        sincVendedor.iniciaSinc(context);
-//        sincProduto.iniciaSinc(context);
+        sincFormaPagamento.iniciaSinc(context);
+        sincVendedor.iniciaSinc(context);
+        sincProduto.iniciaSinc(context);
         try {
             sincCidade.iniciaEnvio(context);
             sincCliente.iniciaenvio(context);
+            sincPedido.iniciaenvio(context);
             dialog.dismiss();
         } catch (IOException e) {
             dialog.dismiss();

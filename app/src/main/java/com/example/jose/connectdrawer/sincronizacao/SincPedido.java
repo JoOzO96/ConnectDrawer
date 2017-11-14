@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.Pedido.PedidoService;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
@@ -14,11 +15,13 @@ import com.example.jose.connectdrawer.cidade.CidadeDados;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,4 +131,58 @@ public class SincPedido {
         });
     }
 
+
+    public void iniciaenvio(Context context) {
+        Pedido pedido = new Pedido();
+        List<Pedido> pedidoList = new ArrayList<>();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+        Cursor cursor = pedido.retornaPedidoAlteradaAndroid(context, "cadastroAndroid");
+
+        if (cursor.getCount() > 0) {
+            for (long i = 0L; cursor.getCount() != i; i++) {
+                pedido = new Pedido();
+                for (int ped = 0; fieldListPedido.size() != ped; ped++) {
+                    if (fieldListPedido.get(ped).getName().toLowerCase().equals("$change") ||
+                            fieldListPedido.get(ped).getName().toLowerCase().equals("serialversionuid")) {
+                    } else {
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListPedido.get(ped));
+                        Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListPedido.get(ped).getName(), cursor);
+                        Object pedidoRetorno = getSetDinamico.insereField(fieldListPedido.get(ped), pedido, retornoCursor);
+                        pedido = (Pedido) pedidoRetorno;
+                    }
+                }
+                pedidoList.add(pedido);
+
+                cursor.moveToNext();
+            }
+        }
+        if (pedidoList.size() > 0) {
+            Gson gson = new Gson();
+            String gsonRetorno = gson.toJson(pedidoList);
+            Log.i("JSON", gsonRetorno);
+            EnviaJson enviaJson = new EnviaJson();
+            String url = "http://192.168.0.103:8080/ConnectServices/recebePedido";
+            List<ControleCodigo> retorno = null;
+            String retornoEnvio = "";
+            try {
+                enviaJson.execute(gsonRetorno, url);
+                retornoEnvio = enviaJson.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if (retornoEnvio != null) {
+                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                pedido = new Pedido();
+                for (int i = 0; controleCodigoList.size() != i; i++) {
+                    pedido.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    //cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
+                }
+            }
+        }
+    }
 }

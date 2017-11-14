@@ -731,4 +731,33 @@ public class Cliente {
         int retorno = db.update("cliente", values, "codcidade = " + codigoAndroid, null);
         values.clear();
     }
+
+
+    public void alteraPedidoCliente(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("codcliente", codigoServidor);
+        int retorno = db.update("pedido", values, "codcliente = " + codigoAndroid, null);
+        values.clear();
+    }
+
+    public void alteraCodCliente(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("codigo", codigoServidor);
+        int retorno = db.update("cliente", values, "codigo = " + codigoAndroid, null);
+
+    }
+
+
+    public void removeClienteAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo, "0");
+        int retorno = db.update("cliente", values, campo + " = 1", null);
+
+    }
 }

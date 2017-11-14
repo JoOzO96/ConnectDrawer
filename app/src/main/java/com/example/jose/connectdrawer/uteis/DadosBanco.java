@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.util.Log;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -31,8 +33,8 @@ public class DadosBanco {
                     } else if (tipo.toUpperCase().equals("LONG")) {
                         contentValues.put(field.getName().toString(), Long.parseLong(retorno.toString()));
                     } else if (tipo.toUpperCase().equals("DATE")) {
-                        Log.i("DATA", retorno.toString());
-                        contentValues.put(field.getName().toString(), 0);
+                        contentValues.put(field.getName().toString(), retorno.toString());
+                        Log.i("DATA",""+ retorno.toString());
                     } else if (tipo.toUpperCase().equals("DOUBLE")) {
                         contentValues.put(field.getName().toString(), Double.parseDouble(retorno.toString()));
                     }
