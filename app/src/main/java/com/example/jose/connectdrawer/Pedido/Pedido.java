@@ -380,6 +380,13 @@ public class Pedido {
         return retorno > 0;
     }
 
+    public boolean removerPedidoProduto(Context context, Long pedido) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        int retorno = db.delete("pedidoproduto", "pedido = " + pedido, null);
+        return retorno > 0;
+    }
+
 
     public Boolean cadastraPedido(Context context, Pedido pedido) {
         Banco myDb = new Banco(context);
@@ -440,6 +447,15 @@ public class Pedido {
         ContentValues values = new ContentValues();
         values.put("pedido", codigoServidor);
         int retorno = db.update("pedidoproduto", values, "pedido = " + codigoAndroid, null);
+
+    }
+
+    public void removePedidoAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo, "0");
+        int retorno = db.update("pedido", values, campo + " = 1", null);
 
     }
 }

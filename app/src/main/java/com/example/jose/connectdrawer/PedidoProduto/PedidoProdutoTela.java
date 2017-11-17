@@ -334,7 +334,7 @@ public class PedidoProdutoTela extends DialogFragment {
                             valorunitario = Double.parseDouble(txvalorunitario.getText().toString());
                             total = quantidade * valorunitario;
                             evitaLoop = true;
-                            DecimalFormat format = new DecimalFormat("0.000");
+                            DecimalFormat format = new DecimalFormat("0,000");
                             txvalortotal.setText(format.format(total).toString());
 
                         }

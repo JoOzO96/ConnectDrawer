@@ -17,6 +17,7 @@ public class Sincroniza {
         SincCliente sincCliente = new SincCliente();
         SincCidade sincCidade = new SincCidade();
         SincPedido sincPedido = new SincPedido();
+        SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
         SincVendedor sincVendedor = new SincVendedor();
         SincProduto sincProduto = new SincProduto();
         SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();

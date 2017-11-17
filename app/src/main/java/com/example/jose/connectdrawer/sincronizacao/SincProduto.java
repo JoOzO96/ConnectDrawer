@@ -2,6 +2,7 @@ package com.example.jose.connectdrawer.sincronizacao;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.Pedido.Pedido;
@@ -38,6 +39,8 @@ public class SincProduto {
         requestProduto.enqueue(new Callback<List<Produto>>() {
             @Override
             public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
+                Banco myDb = new Banco(context);
+                SQLiteDatabase db = myDb.getReadableDatabase();
                 List<Produto> produtoList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 for (int pro = 0; produtoList.size() != pro; pro++) {

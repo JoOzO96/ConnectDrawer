@@ -56,7 +56,7 @@ public class PedidoFragment extends Fragment {
                 pedidoList.add(pedidoListar);
                 try {
                     cursor.moveToNext();
-                }catch (IllegalStateException i){
+                } catch (IllegalStateException i) {
                 }
             }
             cursor.close();
@@ -93,10 +93,16 @@ public class PedidoFragment extends Fragment {
                             MostraToast toast = new MostraToast();
                             boolean retorno = pedido.removerPedido(getContext(), pedido.getPedido());
                             if (retorno == true) {
-                                toast.mostraToastShort(getContext(), "Pedido excluido com sucesso");
-                                PedidoFragment pedidoFragment = new PedidoFragment();
-                                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                                retorno = pedido.removerPedidoProduto(getContext(), pedido.getPedido());
+                                if (retorno == true) {
+                                    toast.mostraToastShort(getContext(), "Pedido excluido com sucesso");
+                                    PedidoFragment pedidoFragment = new PedidoFragment();
+                                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                    fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                                } else {
+                                    toast.mostraToastShort(getContext(), "Erro ao deletar pedido");
+                                }
+                                dialog.dismiss();
                             } else {
                                 toast.mostraToastShort(getContext(), "Erro ao deletar pedido");
                             }

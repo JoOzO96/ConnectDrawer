@@ -44,7 +44,7 @@ public class SincCliente extends Activity {
                 List<Cliente> loginList = response.body();
 
                 Cliente cliInsere = new Cliente();
-                for (int cli = 0; loginList.size() != cli + 1; cli++) {
+                for (int cli = 0; loginList.size() != cli ; cli++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
                     Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context1, loginList.get(cli).getCodigo());
@@ -161,7 +161,7 @@ public class SincCliente extends Activity {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://192.168.0.103:8080/ConnectServices/recebeCliente";
+            String url = "http://177.92.186.84:15101/ConnectServices/recebeCliente";
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

@@ -33,7 +33,7 @@ import retrofit2.Retrofit;
  */
 
 public class SincPedido {
-    public void iniciaSinc(Context context){
+    public void iniciaSinc(Context context) {
         final Context context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
@@ -46,7 +46,7 @@ public class SincPedido {
         requestPedido.enqueue(new Callback<List<Pedido>>() {
             @Override
             public void onResponse(Call<List<Pedido>> call, Response<List<Pedido>> response) {
-                List<Pedido> pedidoList= response.body();
+                List<Pedido> pedidoList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Pedido pedido = new Pedido();
                 PedidoProduto pedidoProduto = new PedidoProduto();
@@ -61,7 +61,7 @@ public class SincPedido {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
                         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
                         Pedido pedido1 = new Pedido();
-                        for (int i=0;fieldListClasse.size()!=i;i++){
+                        for (int i = 0; fieldListClasse.size() != i; i++) {
                             if (fieldListClasse.get(i).getName().toLowerCase().equals("$change") ||
                                     fieldListClasse.get(i).getName().toLowerCase().equals("serialversionuid")) {
                             } else {
@@ -92,11 +92,11 @@ public class SincPedido {
 
                     cursor = pedidoProduto.retornaItensPedido(context1, codPedido);
 
-                    if (cursor.getCount() > 0){
-                        if (cursor.getCount() != pedidoList.get(ped).getItensPedido().size()){
-                           cursor.close();
+                    if (cursor.getCount() > 0) {
+                        if (cursor.getCount() != pedidoList.get(ped).getItensPedido().size()) {
+                            cursor.close();
                         }
-                    }else {
+                    } else {
                         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
                         pedidoProduto = new PedidoProduto();
                         for (int itensPed = 0; pedidoList.get(ped).getItensPedido().size() != itensPed; itensPed++) {
@@ -162,7 +162,7 @@ public class SincPedido {
             String gsonRetorno = gson.toJson(pedidoList);
             Log.i("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://192.168.0.103:8080/ConnectServices/recebePedido";
+            String url = "http://177.92.186.84:15101/ConnectServices/recebePedido";
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {
@@ -174,14 +174,18 @@ public class SincPedido {
                 e.printStackTrace();
             }
             if (retornoEnvio != null) {
+
                 ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
                 List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
                 pedido = new Pedido();
                 for (int i = 0; controleCodigoList.size() != i; i++) {
                     pedido.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    //cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
+                    pedido.removePedidoAlteradaAndroid(context, "cadastroAndroid");
+                    SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
+                    sincPedidoProduto.iniciaenvio(context);
                 }
+
             }
         }
     }

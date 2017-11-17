@@ -17,7 +17,7 @@ public class RetRetrofit {
                 .setDateFormat("dd/MM/yyyy")
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.103:8080/ConnectServices/")
+                .baseUrl("http://177.92.186.84:15101/ConnectServices/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         return retrofit;

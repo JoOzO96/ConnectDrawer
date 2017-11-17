@@ -112,7 +112,7 @@ public class PedidoDados extends Fragment {
         // PEGA A LISTA DE CAMPOS QUE POSSUI A CLASSE
         final List<Field> fieldListPassar = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
 
-        if (codigoPedido > 1) {
+        if (codigoPedido >= 1) {
             // codigo do pedido e maior que um, no caso, veio da lista.
             Cursor cursor = pedido.retornaPedidoFiltradaCursor(getContext(), codigoPedido);
             //TESTA SE O CURSOR RETORNOU ALGUM DADO
@@ -627,7 +627,10 @@ public class PedidoDados extends Fragment {
         pedido.setData(new Date().getTime());
         boolean retorno = pedido.cadastraPedido(getContext(), pedido);
         if (retorno) {
-            if (clique == 1) {
+            if (clique == 1){
+                if (txPedido == null){
+                    pedido.setPedido(pedido.retornaMaiorCod(getContext()));
+                }
                 if (pedido.getPedido() > 0) {
                     PedidoFragment pedidoFragment = new PedidoFragment();
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

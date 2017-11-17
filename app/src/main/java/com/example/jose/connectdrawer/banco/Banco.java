@@ -190,12 +190,12 @@ public class Banco extends SQLiteOpenHelper {
                 "retirada double,"+
                 "saldoret double,"+
                 "tamanho text,"+
-                "totalimposto double,"+
-                "totalimpostoest double,"+
-                "valortotal double,"+//valor total
                 "valorunitario double,"+//valor unitário
                 "vcomi double,"+
                 "cadastroandroid boolean," +
+                "totalimposto double,"+
+                "totalimpostoest double,"+
+                "valortotal double,"+//valor total
                 "deletadoandroid boolean," +
                 "alteradoandroid boolean);";
         db.execSQL(sql);

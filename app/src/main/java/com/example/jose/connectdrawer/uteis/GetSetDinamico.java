@@ -68,21 +68,21 @@ public class GetSetDinamico {
         return tipo;
     }
 
-    public Object retornaValorCursor(String tipo, String nome, Cursor cursor) {
+    public Object retornaValorCursor(String tipo, String nome, Cursor cursor1) {
         Object objeto = null;
         if (nome.equals("$change") || nome.equals("serialversionuid") || nome.equals("context")) {
 
         } else {
             if (tipo.equals("STRING") || tipo.equals("EDITTEXT")) {
-                objeto = cursor.getString(cursor.getColumnIndex(nome));
+                objeto = cursor1.getString(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("LONG")) {
-                objeto = cursor.getLong(cursor.getColumnIndex(nome));
+                objeto = cursor1.getLong(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("INT")) {
-                objeto = cursor.getInt(cursor.getColumnIndex(nome));
+                objeto = cursor1.getInt(cursor1.getColumnIndex(nome));
             }else if (tipo.equals("DOUBLE")) {
-                objeto = cursor.getDouble(cursor.getColumnIndex(nome));
+                objeto = cursor1.getDouble(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("BOOLEAN")) {
-                objeto = cursor.getInt(cursor.getColumnIndex(nome)) == 0;
+                objeto = cursor1.getInt(cursor1.getColumnIndex(nome)) == 0;
             }
         }
         return objeto;
