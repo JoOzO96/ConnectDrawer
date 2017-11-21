@@ -29,7 +29,8 @@ import retrofit2.Retrofit;
 public class SincCliente extends Activity {
 
 
-    public void iniciaSinc(Context context) {
+    public void iniciaSinc(Context context)  {
+
         final Context context1;
         context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
@@ -38,9 +39,11 @@ public class SincCliente extends Activity {
 
         ClienteService clienteService = retrofit.create(ClienteService.class);
         Call<List<Cliente>> requestCliente = clienteService.listCliente();
+
         requestCliente.enqueue(new Callback<List<Cliente>>() {
             @Override
             public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
+
                 List<Cliente> loginList = response.body();
 
                 Cliente cliInsere = new Cliente();
@@ -184,4 +187,5 @@ public class SincCliente extends Activity {
             }
         }
     }
+
 }

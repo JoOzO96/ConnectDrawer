@@ -1,5 +1,6 @@
 package com.example.jose.connectdrawer.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -92,6 +93,7 @@ public class ConnectMain extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Long fechado = 0L;
         int id = item.getItemId();
 
         if (id == R.id.nav_cliente) {
@@ -124,8 +126,10 @@ public class ConnectMain extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container, produtoFragment, produtoFragment.getTag()).commit();
 
         } else if (id == R.id.nav_sync) {
+            fechado = 1L;
             Sincroniza sincroniza = new Sincroniza();
             sincroniza.iniciaSincronizacao(this);
+;
         } else if (id == R.id.nav_deleta) {
             Context context = this;
             context.deleteDatabase("connect.db");
@@ -138,8 +142,11 @@ public class ConnectMain extends AppCompatActivity
 //        } else if (id == R.id.nav_send) {
 
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (fechado<1L){
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+
         return true;
     }
 }

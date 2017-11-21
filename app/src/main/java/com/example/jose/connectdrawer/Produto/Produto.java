@@ -1235,6 +1235,14 @@ public class Produto {
         return cursor;
     }
 
+    public Cursor retornaProdutoFiltradaCursorSincro(SQLiteDatabase db, String codProduto) {
+        Cursor cursor = db.rawQuery("SELECT codproduto FROM produto where codproduto = '" + codProduto + "'", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
     public Cursor retornaProdutoAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
@@ -1269,6 +1277,50 @@ public class Produto {
         }
     }
 
+
+    public Boolean cadastraProdutoSincro(SQLiteDatabase db, Produto produto) {
+        DadosBanco dadosBanco = new DadosBanco();
+        ContentValues valores = new ContentValues();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(produto.getClass().getDeclaredFields()));
+
+        for (int i = 0; fieldList.size() != i; i++) {
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), produto, valores);
+        }
+        if (valores.containsKey("codproduto")) {
+            if (valores.get("codproduto") != null) {
+                Cursor cursor = produto.retornaProdutoFiltradaCursorSincro(db, valores.get("codproduto").toString());
+                if (cursor.getCount() == 0) {
+                    Long retorno = 0L;
+                    valores.remove("cadastroandroid");
+                    valores.put("cadastroandroid", true);
+                    retorno = db.insert("produto", null, valores);
+                    db.close();
+                    valores.clear();
+                    if (retorno == -1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+
+                    valores.remove("alteradoandroid");
+                    valores.put("alteradoandroid", true);
+                    long retorno = db.update("produto", valores, "codproduto= " + valores.get("codproduto").toString(), null);
+                    db.close();
+                    valores.clear();
+                    if (retorno == -1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     public Boolean cadastraProduto(Context context, Produto produto) {
         Banco myDb = new Banco(context);

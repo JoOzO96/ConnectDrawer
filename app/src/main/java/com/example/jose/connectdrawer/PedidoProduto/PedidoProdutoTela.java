@@ -218,7 +218,7 @@ public class PedidoProdutoTela extends DialogFragment {
 
                 pedidoProduto.setValorunitario(Double.parseDouble(txvalorunitario.getText().toString()));
                 pedidoProduto.setQuantidade(Double.parseDouble(txquantidade.getText().toString()));
-                pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString()));
+                pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString().replace(",",".")));
                 pedidoProduto.setCodproduto(produto1.getCodproduto());
                 pedidoProduto.setDescri(produto1.getMercadoria());
                 pedidoProduto.setPedido(Long.parseLong(codPedido));
@@ -301,7 +301,7 @@ public class PedidoProdutoTela extends DialogFragment {
                     txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                     txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
                     quantidade = Double.parseDouble(txquantidade.getText().toString());
-                    total = Double.parseDouble(txvalortotal.getText().toString());
+                    total = Double.parseDouble(txvalortotal.getText().toString().replace(",","."));
                     valorunitario = total / quantidade;
                     if (after != 0 || count != 0) {
                         evitaLoop = false;
@@ -334,7 +334,7 @@ public class PedidoProdutoTela extends DialogFragment {
                             valorunitario = Double.parseDouble(txvalorunitario.getText().toString());
                             total = quantidade * valorunitario;
                             evitaLoop = true;
-                            DecimalFormat format = new DecimalFormat("0,000");
+                            DecimalFormat format = new DecimalFormat("0.00");
                             txvalortotal.setText(format.format(total).toString());
 
                         }
@@ -357,7 +357,7 @@ public class PedidoProdutoTela extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                DecimalFormat format = new DecimalFormat("0.000");
+                DecimalFormat format = new DecimalFormat("0.00");
                 if (txquantidade.getText().toString().length() > 0) {
                     if (!(s.toString().lastIndexOf(".") == (s.toString().length() - 1))) {
                         Double quantidade;
@@ -386,9 +386,9 @@ public class PedidoProdutoTela extends DialogFragment {
                 txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                 txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
                 quantidade = Double.parseDouble(txquantidade.getText().toString());
-                valorunitario = Double.parseDouble(txvalorunitario.getText().toString());
+                valorunitario = Double.parseDouble(txvalorunitario.getText().toString().replace(",","."));
                 total = quantidade * valorunitario;
-                if (Double.parseDouble(s.toString()) == Double.parseDouble(total.toString())) {
+                if (Double.parseDouble(s.toString().replace(",",".")) == Double.parseDouble(total.toString().replace(",","."))) {
                     evitaLoop = false;
                     contaAcessos++;
                 } else {
@@ -417,11 +417,11 @@ public class PedidoProdutoTela extends DialogFragment {
                             Double total;
 
                             quantidade = Double.parseDouble(txquantidade.getText().toString());
-                            total = Double.parseDouble(txvalortotal.getText().toString());
+                            total = Double.parseDouble(txvalortotal.getText().toString().replace(",","."));
                             valorunitario = total / quantidade;
                             if (valorunitario > 0) {
                                 evitaLoop = true;
-                                DecimalFormat format = new DecimalFormat("0.000");
+                                DecimalFormat format = new DecimalFormat("0.00");
                                 txvalorunitario.setText(format.format(valorunitario).toString());
                             }
                         }

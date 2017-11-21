@@ -1,5 +1,6 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,8 @@ import retrofit2.Retrofit;
 public class SincProduto {
 
     public void iniciaSinc(final Context context){
+
+
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit();
@@ -35,18 +38,17 @@ public class SincProduto {
 
         ProdutoService produtoService = retrofit.create(ProdutoService.class);
         Call<List<Produto>> requestProduto = produtoService.listaProduto();
-
         requestProduto.enqueue(new Callback<List<Produto>>() {
             @Override
             public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
-                Banco myDb = new Banco(context);
-                SQLiteDatabase db = myDb.getReadableDatabase();
                 List<Produto> produtoList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 for (int pro = 0; produtoList.size() != pro; pro++) {
+                    Banco myDb = new Banco(context);
+                    SQLiteDatabase db = myDb.getReadableDatabase();
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
                     Produto produto = new Produto();
-                    Cursor cursor = produto.retornaProdutoFiltradaCursor(context, produtoList.get(pro).getCodproduto());
+                    Cursor cursor = produto.retornaProdutoFiltradaCursorSincro(db, produtoList.get(pro).getCodproduto());
 
                     if (cursor.getCount() > 0){
                         cursor.close();
@@ -70,9 +72,10 @@ public class SincProduto {
                                 }
                             }
                         }
-                        boolean retorno = produto.cadastraProduto(context, produto);
+                        boolean retorno = produto.cadastraProdutoSincro(db, produto);
 
                         cursor.close();
+                        db.close();
                     }
                 }
             }

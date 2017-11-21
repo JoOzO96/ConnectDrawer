@@ -73,20 +73,20 @@ public class SincPedidoProduto {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if (retornoEnvio != null) {
-                if (retornoEnvio.contains("nada")) {
-
-                } else {
-                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-                    pedidoProduto = new PedidoProduto();
-                    for (int i = 0; controleCodigoList.size() != i; i++) {
-//                    pedidoProduto.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-//                    pedidoProduto.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-//                    cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
-                    }
-                }
-            }
+//            if (retornoEnvio != null) {
+//                if (retornoEnvio.contains("nada")) {
+//
+//                } else {
+//                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+//                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+//                    pedidoProduto = new PedidoProduto();
+//                    for (int i = 0; controleCodigoList.size() != i; i++) {
+////                    pedidoProduto.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+////                    pedidoProduto.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+////                    cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
+//                    }
+//                }
+//            }
         }
     }
 }

@@ -46,6 +46,7 @@ public class SincCidade {
                 List<Cidade> cidadeList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Cidade cidade = new Cidade();
+
                 for (int cid = 0; cidadeList.size() != cid; cid++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
