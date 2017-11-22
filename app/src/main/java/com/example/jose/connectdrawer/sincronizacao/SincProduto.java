@@ -28,7 +28,7 @@ import retrofit2.Retrofit;
 
 public class SincProduto {
 
-    public void iniciaSinc(final Context context){
+    public void iniciaSinc(final Context context) {
 
 
         RetRetrofit retRetrofit = new RetRetrofit();
@@ -43,6 +43,7 @@ public class SincProduto {
             public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
                 List<Produto> produtoList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
+
                 for (int pro = 0; produtoList.size() != pro; pro++) {
                     Banco myDb = new Banco(context);
                     SQLiteDatabase db = myDb.getReadableDatabase();
@@ -50,20 +51,17 @@ public class SincProduto {
                     Produto produto = new Produto();
                     Cursor cursor = produto.retornaProdutoFiltradaCursorSincro(db, produtoList.get(pro).getCodproduto());
 
-                    if (cursor.getCount() > 0){
+                    if (cursor.getCount() > 0) {
                         cursor.close();
-                    }else{
+                    } else {
                         //PEGA OS DADOS QUE VIERAM DO SERVIDOR
                         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
 
                         produto = new Produto();
-                        for (int i=0;fieldListClasse.size()!=i;i++){
+                        for (int i = 0; fieldListClasse.size() != i; i++) {
                             if (fieldListClasse.get(i).getName().toLowerCase().equals("$change") ||
                                     fieldListClasse.get(i).getName().toLowerCase().equals("serialversionuid")) {
                             } else {
-                                String tipo = getSetDinamico.retornaTipoCampo(fieldListClasse.get(i));
-                                String nomecampo = "";
-                                nomecampo = fieldListClasse.get(i).getName().toLowerCase();
                                 Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(i), produtoList.get(pro));
                                 if (valorCampo != null) {
                                     Object produtoRetorno;
@@ -75,9 +73,11 @@ public class SincProduto {
                         boolean retorno = produto.cadastraProdutoSincro(db, produto);
 
                         cursor.close();
-                        db.close();
+
                     }
+                    db.close();
                 }
+
             }
 
             @Override

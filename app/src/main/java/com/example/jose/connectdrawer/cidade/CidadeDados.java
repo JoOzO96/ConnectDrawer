@@ -96,10 +96,14 @@ public class CidadeDados extends Fragment {
         if (bundle == null) {
             List<Field> fieldList = new ArrayList<>(Arrays.asList(cidadeDados.getClass().getDeclaredFields()));
             for (int i = 0; fieldList.size() != i; i++) {
-                if (fieldList.get(i).getName().toLowerCase().equals("txcep")){
-                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "#####-###");
-                } else if (fieldList.get(i).getName().toLowerCase().equals("tx")){
-                    getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", null);
+                String nomecampo = "";
+                nomecampo = fieldListPassar.get(i).getName().replace("tx", "").toLowerCase();
+                if (fieldList.get(i).getName().toLowerCase().substring(0, 2).equals("tx")) {
+                    if (nomecampo.equals("cep")) {
+                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "#####-###");
+                    } else {
+                        getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", null);
+                    }
                 }
             }
         } else {
@@ -118,19 +122,22 @@ public class CidadeDados extends Fragment {
                         if (fieldList.get(i).getName().substring(0, 2).equals("tx")) {
                             String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(i));
                             String nomecampo = "";
+                            String mascara = null;
+                            if (fieldList.get(i).getName().equals("txCep")) {
+                                mascara = "#####-###";
+                            }
                             nomecampo = fieldList.get(i).getName().replace("tx", "").toLowerCase();
                             Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
                             if (retorno != null) {
-                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, retorno.toString(), null);
+                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldList, retorno.toString(), mascara);
                             } else {
-                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", null);
+                                getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldList, "", mascara);
                             }
                         }
                     }
                 }
             }
         }
-
 
 
         // BOTAO SALVAR ON CLICK LISTNER

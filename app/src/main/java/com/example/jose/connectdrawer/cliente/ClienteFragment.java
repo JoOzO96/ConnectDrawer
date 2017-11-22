@@ -47,7 +47,7 @@ public class ClienteFragment extends Fragment {
         this.setHasOptionsMenu(true);
 
         final Cliente cliente = new Cliente();
-        Cursor cursor = cliente.retornaCliente(getContext());
+        final Cursor cursor = cliente.retornaCliente(getContext());
         List<Cliente> clienteList = new ArrayList<>();
 
         cursor.moveToFirst();
@@ -70,11 +70,23 @@ public class ClienteFragment extends Fragment {
                         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                             Cliente cliente1 = (Cliente) listaCliente.getItemAtPosition(position);
                             ClienteDados clienteDados = new ClienteDados();
-                            Bundle bundle = new Bundle();
-                            bundle.putLong("codigo", cliente1.getCodigo());
-                            clienteDados.setArguments(bundle);
-                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_container, clienteDados, clienteDados.getTag()).commit();
+
+                            //VERIFICA SE O CLIENTE FOI CADASTRADO E NAO SINCRONIZADO AINDA PARA NAO PODER EDITAR ANTES DE SINCRONIZAR
+
+                            Cursor cursor1 = cliente.retornaCursorRawQUery(getContext(), "SELECT * FROM CLIENTE WHERE codigo = " + cliente1.getCodigo() + " and cadastroandroid = 1");
+
+                            if (cursor1.getCount() > 0) {
+                                MostraToast mostraToast = new MostraToast();
+                                mostraToast.mostraToastLong(getContext(), "Não é possivel alterar um cliente que foi cadastrado no sistema, antes de sincronizar com o servidor.");
+
+                            } else {
+
+                                Bundle bundle = new Bundle();
+                                bundle.putLong("codigo", cliente1.getCodigo());
+                                clienteDados.setArguments(bundle);
+                                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, clienteDados, clienteDados.getTag()).commit();
+                            }
                         }
                     }
             );
@@ -133,12 +145,12 @@ public class ClienteFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-            // Handle action bar item clicks here. The action bar will
-            // automatically handle clicks on the Home/Up button, so long
-            // as you specify a parent activity in AndroidManifest.xml.
-            int id = item.getItemId();
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-            //noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatement
         if (id == R.id.cliente_opcoes) {
             ClienteDados clienteDados = new ClienteDados();
             Bundle bundle = new Bundle();

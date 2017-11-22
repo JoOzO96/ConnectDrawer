@@ -119,7 +119,7 @@ public class SincCliente extends Activity {
                         //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
                         //
 
-                        boolean status = cliInsere.insereDados(
+                        boolean status = cliInsere.cadastraCliente(
                                 context1, cliente
                         );
                         cursor.close();
@@ -140,7 +140,7 @@ public class SincCliente extends Activity {
         List<Cliente> clienteList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
-        Cursor cursor = cliente.retornaClienteAlteradaAndroid(context, "cadastroAndroid");
+        Cursor cursor = cliente.retornaClienteAlteradaAndroid(context, "cadastroandroid");
 
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
@@ -182,7 +182,7 @@ public class SincCliente extends Activity {
                 for (int i = 0; controleCodigoList.size() != i; i++) {
                     cliente.alteraPedidoCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     cliente.alteraCodCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
+                    cliente.removeClienteAlteradaAndroid(context, "cadastroandroid");
                 }
             }
         }

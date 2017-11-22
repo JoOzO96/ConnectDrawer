@@ -48,7 +48,7 @@ public class GetSetDinamico {
         } catch (IllegalAccessException e) {
             Log.i("IllegalAccessException", "ACESSO ILEGAL");
         } catch (NoSuchMethodException e) {
-            Log.i("NoSuchMethodException", "METODO NAO ENCONTRADO");
+            Log.i("NoSuchMethodException", "METODO NAO ENCONTRADO," + primeiro.toUpperCase() + nomeCampo);
         } catch (SecurityException e) {
 
         } catch (IllegalArgumentException e) {

@@ -36,6 +36,7 @@ public class ClienteDados extends Fragment {
     private EditText txIncest;
     private EditText txEndereco;
     private EditText txBairro;
+    private EditText txNume;
     private EditText txCep;
     private EditText txDataNasc;
     private EditText txTelefone;

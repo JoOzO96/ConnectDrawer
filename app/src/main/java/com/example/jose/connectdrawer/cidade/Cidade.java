@@ -170,25 +170,56 @@ public class Cidade {
     }
 
 
-    public boolean insereDados(Context context, Cidade cidade) {
-        Banco myDb = new Banco(context);
-        ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codcidade", cidade.getCodcidade());
-        valores.put("nomecidade", cidade.getNomecidade());
-        valores.put("uf", cidade.getUf());
-        valores.put("codnacionaluf", cidade.getCodnacionaluf());
-        valores.put("codnacionalcidade", cidade.getCodnacionalcidade());
-        valores.put("pais", cidade.getPais());
-        valores.put("codnacionalpais", cidade.getCodnacionalpais());
-        valores.put("cep", cidade.getCep());
-        valores.put("cadastroandroid", cidade.getCadastroandroid());
-
-        long result = db.insert("cidade", null, valores);
-        db.close();
-        valores.clear();
-        return result != -1;
-    }
+//    public boolean insereDados(Context context, Cidade cidade) {
+////        Banco myDb = new Banco(context);
+////        ContentValues valores = new ContentValues();
+////        SQLiteDatabase db = myDb.getWritableDatabase();
+////        valores.put("codcidade", cidade.getCodcidade());
+////        valores.put("nomecidade", cidade.getNomecidade());
+////        valores.put("uf", cidade.getUf());
+////        valores.put("codnacionaluf", cidade.getCodnacionaluf());
+////        valores.put("codnacionalcidade", cidade.getCodnacionalcidade());
+////        valores.put("pais", cidade.getPais());
+////        valores.put("codnacionalpais", cidade.getCodnacionalpais());
+////        valores.put("cep", cidade.getCep());
+////        valores.put("cadastroandroid", cidade.getCadastroandroid());
+////
+////        long result = db.insert("cidade", null, valores);
+////        db.close();
+////        valores.clear();
+////        return result != -1;
+//
+//        Banco myDb = new Banco(context);
+//        Long retorno = 0L;
+//        DadosBanco dadosBanco = new DadosBanco();
+//        ContentValues valores = new ContentValues();
+//        SQLiteDatabase db = myDb.getWritableDatabase();
+//        List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+//
+//        for (int i = 0; fieldList.size() != i; i++) {
+//            valores = dadosBanco.insereValoresContent(fieldList.get(i), cidade, valores);
+//        }
+//
+//        if (valores.get("codcidade") == null) {
+//            retorno = retornaMaiorCod(context);
+//            retorno = retorno + 1;
+//            valores.remove("codcidade");
+//            valores.remove("cadastroandroid");
+//            valores.put("codcidade", retorno);
+//            valores.put("cadastroandroid", true);
+//            retorno =db.insert("cidade", null, valores);
+//            db.close();
+//            valores.clear();
+//            return retorno != -1;
+//        } else {
+//            valores.remove("alteradoandroid");
+//            valores.put("alteradoandroid", true);
+//            int ret = db.update("cidade", valores, "codcidade= " + valores.get("codcidade").toString(), null);
+//            db.close();
+//            valores.clear();
+//            return ret != -1;
+//        }
+//    }
 
 
     public boolean remover(Context context, Cidade cidade) {
@@ -216,18 +247,32 @@ public class Cidade {
             valores.remove("codcidade");
             valores.remove("cadastroandroid");
             valores.put("codcidade", retorno);
-            valores.put("cadastroandroid", true);
             retorno = db.insert("cidade", null, valores);
             db.close();
             valores.clear();
             return retorno != -1;
         }else{
-            valores.remove("alteradoandroid");
-            valores.put("alteradoandroid", true);
-            long retorno = db.update("cidade", valores, "codcidade= " + valores.get("codcidade").toString(), null);
-            db.close();
-            valores.clear();
-            return retorno != -1;
+            Cursor cursor = cidade.retornaCidadeFiltradaCursor(context, Long.parseLong(valores.get("codcidade").toString()));
+
+            if (cursor.getCount() > 0){
+                valores.remove("alteradoandroid");
+                valores.put("alteradoandroid", true);
+                long retorno = db.update("cidade", valores, "codcidade= " + valores.get("codcidade").toString(), null);
+                db.close();
+                valores.clear();
+                return retorno != -1;
+            }else{
+                long retorno = retornaMaiorCod(context);
+                retorno = retorno + 1;
+                valores.remove("codcidade");
+                valores.remove("cadastroandroid");
+                valores.put("codcidade", retorno);
+                retorno = db.insert("cidade", null, valores);
+                db.close();
+                valores.clear();
+                return retorno != -1;
+            }
+
         }
     }
     public Long retornaMaiorCod(Context context) {

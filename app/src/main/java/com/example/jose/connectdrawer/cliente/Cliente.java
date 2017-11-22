@@ -543,76 +543,103 @@ public class Cliente {
         return codigo + " - " + nomecliente;
     }
 
-    public boolean insereDados(Context context, Cliente cliente) {
-        Banco myDb = new Banco(context);
-        ContentValues valores = new ContentValues();
-        SQLiteDatabase db = myDb.getWritableDatabase();
-        valores.put("codigo", cliente.getCodigo());
-        valores.put("nomecliente", cliente.getNomecliente());
-        valores.put("cpf", cliente.getCpf());
-        if (cliente.getDatanasc() != null) {
-            valores.put("datanasc", cliente.getDatanasc().getTime());
-        }
-        valores.put("endereco", cliente.getEndereco());
-        valores.put("posicao", cliente.getPosicao());
-        valores.put("pai", cliente.getPai());
-        valores.put("mae", cliente.getMae());
-        valores.put("bairro", cliente.getBairro());
-        valores.put("cep", cliente.getCep());
-        valores.put("identidade", cliente.getIdentidade());
-        valores.put("trabalho", cliente.getTrabalho());
-        valores.put("telefone", cliente.getTelefone());
-        valores.put("fonetrab", cliente.getFonetrab());
-        valores.put("cgc", cliente.getCgc());
-        valores.put("incest", cliente.getIncest());
-        valores.put("enderecotrab", cliente.getEnderecotrab());
-        valores.put("codprofissao", cliente.getCodprofissao());
-        valores.put("codcidade", cliente.getCodcidade());
-        valores.put("responsavel", cliente.getResponsavel());
-        valores.put("fone", cliente.getFone());
-        valores.put("obs", cliente.getObs());
-        valores.put("nume", cliente.getNume());
-        valores.put("email", cliente.getEmail());
-        valores.put("pessoaauto", cliente.getPessoaauto());
-        valores.put("limitecredito", cliente.getLimitecredito());
-        valores.put("pessoaauto1", cliente.getPessoaauto1());
-        valores.put("limitecredito1", cliente.getLimitecredito1());
-        valores.put("pessoaauto2", cliente.getPessoaauto2());
-        valores.put("limitecredito2", cliente.getLimitecredito2());
-        valores.put("limitepessoal", cliente.getLimitepessoal());
-        valores.put("tipocliente", cliente.getTipocliente());
-        valores.put("codvendedor", cliente.getCodvendedor());
-        valores.put("simples", cliente.getSimples());
-        valores.put("celular", cliente.getCelular());
-        valores.put("fisju", cliente.getFisju());
-        valores.put("conjuge", cliente.getConjuge());
-        valores.put("fretecli", cliente.getFretecli());
-        valores.put("antecipacao", cliente.getAntecipacao());
-        valores.put("etiquetas", cliente.getEtiquetas());
-        valores.put("sistema", cliente.getSistema());
-        valores.put("vmanu", cliente.getVmanu());
-        valores.put("recibo", cliente.getRecibo());
-        valores.put("codigopgto", cliente.getCodigopgto());
-        valores.put("codrepresentante", cliente.getCodrepresentante());
-        if (cliente.getDatacadastro() != null) {
-            valores.put("datacadastro", cliente.getDatacadastro().getTime());
-        }
-        if (cliente.getDataalteracao() != null) {
-            valores.put("dataalteracao", cliente.getDataalteracao().getTime());
-        }
-        valores.put("liberalimite", cliente.getLiberalimite());
-        valores.put("fantasia",cliente.getFantasia());
-        valores.put("contatocobranca", cliente.getContatocobranca());
-        valores.put("inativo",cliente.getInativo());
-        valores.put("clientetipo", cliente.getClientetipo());
-        valores.put("diacobranca",cliente.getDiacobranca());
-        valores.put("diaparavencimento", cliente.getDiaparavencimento());
-
-        long result = db.insert("cliente", null, valores);
-        db.close();
-        valores.clear();
-        return result != -1;
-    }
+//    public boolean insereDados(Context context, Cliente cliente) {
+////        Banco myDb = new Banco(context);
+////        ContentValues valores = new ContentValues();
+////        SQLiteDatabase db = myDb.getWritableDatabase();
+////        valores.put("codigo", cliente.getCodigo());
+////        valores.put("nomecliente", cliente.getNomecliente());
+////        valores.put("cpf", cliente.getCpf());
+////        if (cliente.getDatanasc() != null) {
+////            valores.put("datanasc", cliente.getDatanasc().getTime());
+////        }
+////        valores.put("endereco", cliente.getEndereco());
+////        valores.put("posicao", cliente.getPosicao());
+////        valores.put("pai", cliente.getPai());
+////        valores.put("mae", cliente.getMae());
+////        valores.put("bairro", cliente.getBairro());
+////        valores.put("cep", cliente.getCep());
+////        valores.put("identidade", cliente.getIdentidade());
+////        valores.put("trabalho", cliente.getTrabalho());
+////        valores.put("telefone", cliente.getTelefone());
+////        valores.put("fonetrab", cliente.getFonetrab());
+////        valores.put("cgc", cliente.getCgc());
+////        valores.put("incest", cliente.getIncest());
+////        valores.put("enderecotrab", cliente.getEnderecotrab());
+////        valores.put("codprofissao", cliente.getCodprofissao());
+////        valores.put("codcidade", cliente.getCodcidade());
+////        valores.put("responsavel", cliente.getResponsavel());
+////        valores.put("fone", cliente.getFone());
+////        valores.put("obs", cliente.getObs());
+////        valores.put("nume", cliente.getNume());
+////        valores.put("email", cliente.getEmail());
+////        valores.put("pessoaauto", cliente.getPessoaauto());
+////        valores.put("limitecredito", cliente.getLimitecredito());
+////        valores.put("pessoaauto1", cliente.getPessoaauto1());
+////        valores.put("limitecredito1", cliente.getLimitecredito1());
+////        valores.put("pessoaauto2", cliente.getPessoaauto2());
+////        valores.put("limitecredito2", cliente.getLimitecredito2());
+////        valores.put("limitepessoal", cliente.getLimitepessoal());
+////        valores.put("tipocliente", cliente.getTipocliente());
+////        valores.put("codvendedor", cliente.getCodvendedor());
+////        valores.put("simples", cliente.getSimples());
+////        valores.put("celular", cliente.getCelular());
+////        valores.put("fisju", cliente.getFisju());
+////        valores.put("conjuge", cliente.getConjuge());
+////        valores.put("fretecli", cliente.getFretecli());
+////        valores.put("antecipacao", cliente.getAntecipacao());
+////        valores.put("etiquetas", cliente.getEtiquetas());
+////        valores.put("sistema", cliente.getSistema());
+////        valores.put("vmanu", cliente.getVmanu());
+////        valores.put("recibo", cliente.getRecibo());
+////        valores.put("codigopgto", cliente.getCodigopgto());
+////        valores.put("codrepresentante", cliente.getCodrepresentante());
+////        if (cliente.getDatacadastro() != null) {
+////            valores.put("datacadastro", cliente.getDatacadastro().getTime());
+////        }
+////        if (cliente.getDataalteracao() != null) {
+////            valores.put("dataalteracao", cliente.getDataalteracao().getTime());
+////        }
+////        valores.put("liberalimite", cliente.getLiberalimite());
+////        valores.put("fantasia",cliente.getFantasia());
+////        valores.put("contatocobranca", cliente.getContatocobranca());
+////        valores.put("inativo",cliente.getInativo());
+////        valores.put("clientetipo", cliente.getClientetipo());
+////        valores.put("diacobranca",cliente.getDiacobranca());
+////        valores.put("diaparavencimento", cliente.getDiaparavencimento());
+//
+//
+//        Banco myDb = new Banco(context);
+//        Long retorno = 0L;
+//        DadosBanco dadosBanco = new DadosBanco();
+//        ContentValues valores = new ContentValues();
+//        SQLiteDatabase db = myDb.getWritableDatabase();
+//        List<Field> fieldList = new ArrayList<>(Arrays.asList(cliente.getClass().getDeclaredFields()));
+//
+//        for (int i = 0; fieldList.size() != i; i++) {
+//            valores = dadosBanco.insereValoresContent(fieldList.get(i), cliente, valores);
+//        }
+//
+//        if (valores.get("codigo") == null) {
+//            retorno = retornaMaiorCod(context);
+//            retorno = retorno + 1;
+//            valores.remove("codigo");
+//            valores.remove("cadastroandroid");
+//            valores.put("pedido", retorno);
+//            valores.put("cadastroandroid", true);
+//            retorno =db.insert("cliente", null, valores);
+//            db.close();
+//            valores.clear();
+//            return retorno != -1;
+//        } else {
+//            valores.remove("alteradoandroid");
+//            valores.put("alteradoandroid", true);
+//            int ret = db.update("cliente", valores, "codigo= " + valores.get("codigo").toString(), null);
+//            db.close();
+//            valores.clear();
+//            return ret != -1;
+//        }
+//    }
 
     public Cursor retornaClienteFiltrado(Context context, Long codigo) {
         Banco myDb = new Banco(context);
@@ -650,7 +677,7 @@ public class Cliente {
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,max(codigo) from cliente", null);
+        Cursor cursor = db.rawQuery("SELECT  rowid _id,  max(codigo) from cliente", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getLong(1);
@@ -682,12 +709,26 @@ public class Cliente {
             valores.clear();
             return retorno != -1;
         }else{
-            valores.remove("alteradoandroid");
-            valores.put("alteradoandroid", true);
-            long retorno = db.update("cliente", valores, "codigo= " + valores.get("codigo").toString(), null);
-            db.close();
-            valores.clear();
-            return retorno != -1;
+            Cursor cursor = cliente.retornaClienteFiltradaCursor(context, Long.parseLong(valores.get("codigo").toString()));
+
+            if (cursor.getCount() > 0){
+                valores.remove("alteradoandroid");
+                valores.put("alteradoandroid", true);
+                long retorno = db.update("cliente", valores, "codigo= " + valores.get("codigo").toString(), null);
+                db.close();
+                valores.clear();
+                return retorno != -1;
+            }else{
+                long retorno = retornaMaiorCod(context);
+                retorno = retorno + 1;
+                valores.remove("codigo");
+                valores.remove("cadastroandroid");
+                valores.put("codigo", retorno);
+                retorno = db.insert("cliente", null, valores);
+                db.close();
+                valores.clear();
+                return retorno != -1;
+            }
         }
     }
 
@@ -701,10 +742,10 @@ public class Cliente {
 
     //                           CUIDADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    public Cursor retornaClienteFiltradaCursor(Context context, Long codPedido) {
+    public Cursor retornaClienteFiltradaCursor(Context context, Long codigo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM cliente where codcliente = " + codPedido, null);
+        Cursor cursor = db.rawQuery("SELECT codigo FROM cliente where codigo = " + codigo, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -716,6 +757,17 @@ public class Cliente {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM cliente where " + tipo + " = 1", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
+    public Cursor retornaCursorRawQUery(Context context, String query) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -756,7 +808,7 @@ public class Cliente {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         ContentValues values = new ContentValues();
-        values.put(campo, "0");
+        values.put(campo,"0");
         int retorno = db.update("cliente", values, campo + " = 1", null);
 
     }

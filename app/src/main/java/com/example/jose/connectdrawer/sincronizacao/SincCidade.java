@@ -91,8 +91,7 @@ public class SincCidade {
                         //
                         //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
                         //
-
-                        boolean retorno = cidade.insereDados(context, cidade1);
+                        boolean retorno = cidade.cadastraCidade(context, cidade1);
 
                         cursor.close();
                     }
@@ -107,6 +106,15 @@ public class SincCidade {
     }
 
     public void iniciaEnvio(Context context) throws IOException {
+
+        //
+        //
+        //
+        //           PARTE DAS CIDADES NOVAS QUE FORAM INSERIDAS NO ANDROID
+        //
+        //
+        //
+
         Cidade cidade = new Cidade();
         List<Cidade> cidadeList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -160,6 +168,74 @@ public class SincCidade {
             }
 
         }
+
+
+
+
+        //
+        //
+        //
+        //           PARTE DAS CIDADES QUE FORAM ATUALIZADAS NO ANDROID
+        //
+        //
+        //
+
+
+        cidade = new Cidade();
+        cidadeList = new ArrayList<>();
+        getSetDinamico = new GetSetDinamico();
+        fieldListCidade = new ArrayList<>(Arrays.asList(Cidade.class.getDeclaredFields()));
+        cursor = cidade.retornaCidadeAlteradaAndroid(context, "alteradoandroid");
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (long i = 0L; cursor.getCount() != i; i++) {
+                Cidade cidade1 = new Cidade();
+                for (int cid = 0; fieldListCidade.size() != cid; cid++) {
+                    if (fieldListCidade.get(cid).getName().toLowerCase().equals("$change") ||
+                            fieldListCidade.get(cid).getName().toLowerCase().equals("serialversionuid")) {
+                    } else {
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(cid));
+                        Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListCidade.get(cid).getName(), cursor);
+                        if (fieldListCidade.get(cid).getName().toLowerCase().equals("cep")) {
+                            retornoCursor = String.valueOf(retornoCursor).replace("-", "");
+                        }
+                        Object cidadeRetorno = getSetDinamico.insereField(fieldListCidade.get(cid), cidade1, retornoCursor);
+                        cidade1 = (Cidade) cidadeRetorno;
+                    }
+                }
+                cidadeList.add(cidade1);
+
+                cursor.moveToNext();
+            }
+            Gson gson = new Gson();
+            String gsonRetorno = gson.toJson(cidadeList);
+            Log.i("JSON", gsonRetorno);
+            EnviaJson enviaJson = new EnviaJson();
+            String url = "http://177.92.186.84:15101/ConnectServices/recebeCidadeAlterada";
+            List<ControleCodigo> retorno = null;
+            String retornoEnvio = "";
+            try {
+                enviaJson.execute(gsonRetorno, url);
+                retornoEnvio = enviaJson.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if (retornoEnvio != null) {
+                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                Cliente cliente = new Cliente();
+                for (int i = 0; controleCodigoList.size() != i; i++) {
+                    cliente.alteraCidadeCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    cidade.alteraCodCidade(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                    cidade.removeCidadeAlteradaAndroid(context, "alteradoandroid");
+                }
+            }
+
+        }
+
     }
 
 
