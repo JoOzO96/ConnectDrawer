@@ -212,7 +212,7 @@ public class SincCidade {
             String gsonRetorno = gson.toJson(cidadeList);
             Log.i("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://177.92.186.84:15101/ConnectServices/recebeCidadeAlterada";
+            String url = "http://177.92.186.84:15101/ConnectServices/recebeCidadeAtualizada";
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {
