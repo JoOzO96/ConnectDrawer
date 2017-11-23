@@ -223,16 +223,16 @@ public class SincCidade {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if (retornoEnvio != null) {
-                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-                Cliente cliente = new Cliente();
-                for (int i = 0; controleCodigoList.size() != i; i++) {
-                    cliente.alteraCidadeCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    cidade.alteraCodCidade(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    cidade.removeCidadeAlteradaAndroid(context, "alteradoandroid");
-                }
-            }
+//            if (retornoEnvio != null) {
+//                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+//                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+//                Cliente cliente = new Cliente();
+//                for (int i = 0; controleCodigoList.size() != i; i++) {
+//                    cliente.alteraCidadeCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+//                    cidade.alteraCodCidade(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+//                    cidade.removeCidadeAlteradaAndroid(context, "alteradoandroid");
+//                }
+//            }
 
         }
 
