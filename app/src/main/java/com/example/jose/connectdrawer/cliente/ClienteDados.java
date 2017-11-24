@@ -42,6 +42,7 @@ public class ClienteDados extends Fragment {
     private EditText txTelefone;
     private EditText txCelular;
     private EditText txFonetrab;
+    private EditText txEmail;
     private Spinner spCidade;
     private Button btSalvar;
     private Button btCancelar;
@@ -326,7 +327,12 @@ public class ClienteDados extends Fragment {
                     boolean status = cliente.cadastraCliente(getContext(), cliente1);
                     if (status == true) {
                         btCancelar.performClick();
-                        new MostraToast().mostraToastShort(getContext(), "O cliente foi cadastrado com sucesso");
+                        if (cliente1.getCodigo() != null){
+                            new MostraToast().mostraToastShort(getContext(), "O cliente foi atualizado com sucesso");
+                        }else{
+                            new MostraToast().mostraToastShort(getContext(), "O cliente foi cadastrado com sucesso");
+                        }
+
 
                     } else {
                         new MostraToast().mostraToastShort(getContext(), "Erro ao cadastrar cliente");

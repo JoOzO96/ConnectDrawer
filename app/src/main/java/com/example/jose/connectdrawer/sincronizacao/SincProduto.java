@@ -43,12 +43,13 @@ public class SincProduto {
             public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
                 List<Produto> produtoList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
-
+                Produto produto = new Produto();
+                produto.removeProdutos(context);
                 for (int pro = 0; produtoList.size() != pro; pro++) {
                     Banco myDb = new Banco(context);
                     SQLiteDatabase db = myDb.getReadableDatabase();
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
-                    Produto produto = new Produto();
+                    produto = new Produto();
                     Cursor cursor = produto.retornaProdutoFiltradaCursorSincro(db, produtoList.get(pro).getCodproduto());
 
                     if (cursor.getCount() > 0) {

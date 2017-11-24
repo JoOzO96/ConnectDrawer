@@ -181,7 +181,7 @@ public class SincPedido {
                 for (int i = 0; controleCodigoList.size() != i; i++) {
                     pedido.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    pedido.removePedidoAlteradaAndroid(context, "cadastroAndroid");
+                    pedido.removePedidoAlteradaAndroid(context, "cadastroandroid");
                     SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
                     sincPedidoProduto.iniciaenvio(context);
                 }

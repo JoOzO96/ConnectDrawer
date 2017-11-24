@@ -721,9 +721,7 @@ public class Cliente {
             }else{
                 long retorno = retornaMaiorCod(context);
                 retorno = retorno + 1;
-                valores.remove("codigo");
                 valores.remove("cadastroandroid");
-                valores.put("codigo", retorno);
                 retorno = db.insert("cliente", null, valores);
                 db.close();
                 valores.clear();

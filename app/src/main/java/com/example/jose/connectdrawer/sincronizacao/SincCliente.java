@@ -29,7 +29,7 @@ import retrofit2.Retrofit;
 public class SincCliente extends Activity {
 
 
-    public void iniciaSinc(Context context)  {
+    public void iniciaSinc(Context context) {
 
         final Context context1;
         context1 = context;
@@ -47,7 +47,7 @@ public class SincCliente extends Activity {
                 List<Cliente> loginList = response.body();
 
                 Cliente cliInsere = new Cliente();
-                for (int cli = 0; loginList.size() != cli ; cli++) {
+                for (int cli = 0; loginList.size() != cli; cli++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
                     Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context1, loginList.get(cli).getCodigo());
@@ -185,6 +185,56 @@ public class SincCliente extends Activity {
                     cliente.removeClienteAlteradaAndroid(context, "cadastroandroid");
                 }
             }
+        }
+
+
+        //
+        //
+        //    INICIA O ENVIO DOS CLIENTES QUE FORAM ATUALIZADOS NO ANDORID
+        //
+        //
+
+
+        cliente = new Cliente();
+        clienteList = new ArrayList<>();
+        getSetDinamico = new GetSetDinamico();
+        fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+        cursor = cliente.retornaClienteAlteradaAndroid(context, "alteradoandroid");
+
+        if (cursor.getCount() > 0) {
+            for (long i = 0L; cursor.getCount() != i; i++) {
+                cliente = new Cliente();
+                for (int cid = 0; fieldListCliente.size() != cid; cid++) {
+                    if (fieldListCliente.get(cid).getName().toLowerCase().equals("$change") ||
+                            fieldListCliente.get(cid).getName().toLowerCase().equals("serialversionuid")) {
+                    } else {
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(cid));
+                        Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListCliente.get(cid).getName(), cursor);
+                        Object clienteRetorno = getSetDinamico.insereField(fieldListCliente.get(cid), cliente, retornoCursor);
+                        cliente = (Cliente) clienteRetorno;
+                    }
+                }
+                clienteList.add(cliente);
+
+                cursor.moveToNext();
+            }
+        }
+        if (clienteList.size() > 0) {
+            Gson gson = new Gson();
+            String gsonRetorno = gson.toJson(clienteList);
+            EnviaJson enviaJson = new EnviaJson();
+            String url = "http://177.92.186.84:15101/ConnectServices/recebeClienteAtualizado";
+            List<ControleCodigo> retorno = null;
+            String retornoEnvio = "";
+            try {
+                enviaJson.execute(gsonRetorno, url);
+                retornoEnvio = enviaJson.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            cliente.removeClienteAlteradaAndroid(context, "alteradoandroid");
         }
     }
 

@@ -1379,4 +1379,11 @@ public class Produto {
             return 0L;
         }
     }
+
+    public void removeProdutos(Context context){
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        db.delete("Produto", null,null);
+
+    }
 }
