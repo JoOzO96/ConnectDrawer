@@ -69,6 +69,7 @@ public class PedidoProdutoTela extends DialogFragment {
 
         Bundle bundle = this.getArguments();
         final String codItem = bundle.getString("codigoClicado");
+        final Double comissaoVendedor = bundle.getDouble("comissaoVendedor");
         final String codPedido = bundle.getString("codigoPedido");
         final Long codCliente = bundle.getLong("codigocliente");
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
@@ -227,6 +228,7 @@ public class PedidoProdutoTela extends DialogFragment {
                 pedidoProduto.setDescri(produto1.getMercadoria());
                 pedidoProduto.setPedido(Long.parseLong(codPedido));
                 pedidoProduto.setCusto(produto1.getCusto());
+                pedidoProduto.setComip(comissaoVendedor);
 
                 if (idPedidoProduto > 0) {
                     pedidoProduto.setIdPedidoProduto(idPedidoProduto);
