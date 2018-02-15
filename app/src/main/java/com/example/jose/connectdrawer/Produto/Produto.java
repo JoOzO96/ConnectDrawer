@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.banco.Banco;
@@ -1232,6 +1233,19 @@ public class Produto {
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
+        return cursor;
+    }
+
+    public Cursor retornaProdutoUltimaCompraCursor(Context context, Long codcliente, String codProduto) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT idpedidoproduto, valorunitario FROM pedidoproduto pp " +
+                "inner join pedido p on p.pedido = pp.pedido where p.codcliente = " + codcliente + " " +
+                "and pp.codproduto = '" + codProduto + "' order by idpedidoproduto desc LIMIT 1", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+
         return cursor;
     }
 

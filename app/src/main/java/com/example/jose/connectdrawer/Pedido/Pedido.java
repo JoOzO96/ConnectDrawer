@@ -403,8 +403,12 @@ public class Pedido {
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
             valores.remove("pedido");
+            valores.remove("orpedi");
+            valores.remove("simnao");
             valores.remove("cadastroandroid");
             valores.put("pedido", retorno);
+            valores.put("orpedi", 1);
+            valores.put("simnao", false);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedido", null, valores);
             db.close();

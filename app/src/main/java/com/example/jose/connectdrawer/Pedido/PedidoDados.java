@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
@@ -47,6 +48,8 @@ public class PedidoDados extends Fragment {
     private Spinner spFormadepagamento;
     private Button btAdicionarItens;
     private ListView listItenspedido;
+    private TextView porc_lucro;
+    private Long codClienteTela;
     //    private EditText txcodvendedor;
 //    private EditText txformadepagamento;
 //    private EditText txfrete;
@@ -93,12 +96,14 @@ public class PedidoDados extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
+        porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
         List<String> vendedorList = new ArrayList<>();
         List<String> formaPagamentoList = new ArrayList<>();
         final Pedido pedido = new Pedido();
+        Double porcentagem_lucro = 0D;
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
@@ -273,7 +278,8 @@ public class PedidoDados extends Fragment {
                 // AQUI TESTA SE O PEDIDO TEM PRODUTOS, SE TIVER PRODUTOS ELE IRA POPULAR A LISTA
 
                 PedidoProduto pedidoProduto = new PedidoProduto();
-
+                Double custo = 0D;
+                Double valorVenda = 0D;
                 Cursor cursorPedidoProduto = pedidoProduto.retornaItensPedido(getContext(), codigoPedido);
                 List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
                 if (cursorPedidoProduto.getCount() > 0) {
@@ -283,17 +289,22 @@ public class PedidoDados extends Fragment {
                         pedidoProdutoListar.setCodproduto(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("codproduto")));
                         pedidoProdutoListar.setDescri(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("descri")));
                         pedidoProdutoListar.setIdPedidoProduto(cursorPedidoProduto.getLong(cursorPedidoProduto.getColumnIndex("idPedidoProduto")));
+                        pedidoProdutoListar.setCusto(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo")));
+                        custo += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo"));
+                        valorVenda += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("valorunitario"));
                         pedidoProdutoList.add(pedidoProdutoListar);
                         try {
                             cursorPedidoProduto.moveToNext();
                         } catch (IllegalStateException i) {
                         }
                     }
-
+                    porcentagem_lucro = valorVenda * 100 / custo - 100;
+                    porc_lucro.setText(porcentagem_lucro.shortValue() + "%");
                     ArrayAdapter<PedidoProduto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, pedidoProdutoList);
                     listItenspedido.setAdapter(adapter);
                 } else {
                     //O PEDIDO NAO TEM NENHUM ITEM
+                    porc_lucro.setText(porcentagem_lucro + "%");
                 }
 
 
@@ -433,14 +444,17 @@ public class PedidoDados extends Fragment {
                     bundle.putString("codigo", "0");
                     bundle.putString("codigoClicado", "");
                     bundle.putLong("idPedidoProduto", -1L);
+                    bundle.putLong("codigocliente", codClienteTela);
                     bundle.putString("codigoPedido", String.valueOf(pedido.retornaMaiorCod(getContext())));
                     pedidoProdutoTela.setArguments(bundle);
                     pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
                 } else {
+                    SalvaPedido(view, 1L);
                     Bundle bundle = new Bundle();
                     bundle.putString("codigo", "0");
                     bundle.putString("codigoClicado", "");
                     bundle.putLong("idPedidoProduto", -1L);
+                    bundle.putLong("codigocliente", codClienteTela);
                     bundle.putString("codigoPedido", txPedido.getText().toString());
                     pedidoProdutoTela.setArguments(bundle);
                     pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
@@ -551,107 +565,168 @@ public class PedidoDados extends Fragment {
 
 
     public void SalvaPedido(View view, Long clique) {
+        if (clique == 1L) {
+            //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
+            List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
+            //fieldListPedido CONTEM OS DADOS DO OBJETO PEDIDO QUE SERA SALVO NO BANCO
+            List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+            GetSetDinamico getSetDinamico = new GetSetDinamico();
+            GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+            Pedido pedido = new Pedido();
+            for (int f = 0; fieldListPedidoDados.size() != f; f++) {
 
-        //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
-        List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
-        //fieldListPedido CONTEM OS DADOS DO OBJETO PEDIDO QUE SERA SALVO NO BANCO
-        List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
-        GetSetDinamico getSetDinamico = new GetSetDinamico();
-        GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
-        Pedido pedido = new Pedido();
-        for (int f = 0; fieldListPedidoDados.size() != f; f++) {
-
-            if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
-                String nomeCampo = "";
-                nomeCampo = fieldListPedidoDados.get(f).getName();
-                if (nomeCampo.equals("spCodcliente")) {
-                    nomeCampo = "codcliente";
-                } else if (nomeCampo.equals("spFormadepagamento")) {
-                    nomeCampo = "formadepagamento";
-                } else if (nomeCampo.equals("spCodvendedor")) {
-                    nomeCampo = "codvendedor";
-                }
-                if (!nomeCampo.equals("")) {
-
-                    for (int p = 0; fieldListPedido.size() != p; p++) {
-
-                        if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
-                            Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().replace("sp", ""));
-                            Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
-                            pedido = (Pedido) retornoPedido;
-                            break;
-                        }
+                if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
+                    String nomeCampo = "";
+                    nomeCampo = fieldListPedidoDados.get(f).getName();
+                    if (nomeCampo.equals("spCodcliente")) {
+                        nomeCampo = "codcliente";
+                    } else if (nomeCampo.equals("spFormadepagamento")) {
+                        nomeCampo = "formadepagamento";
+                    } else if (nomeCampo.equals("spCodvendedor")) {
+                        nomeCampo = "codvendedor";
                     }
+                    if (!nomeCampo.equals("")) {
 
-                } else {
-                    MostraToast mostraToast = new MostraToast();
-                    mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
-                }
-            } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("tx")) {
+                        for (int p = 0; fieldListPedido.size() != p; p++) {
 
-                String nomeCampo = "";
-                nomeCampo = fieldListPedidoDados.get(f).getName();
-                String valorCampo = "";
-                if (!nomeCampo.equals("")) {
-
-                    for (int p = 0; fieldListPedido.size() != p; p++) {
-                        if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("tx", "").toLowerCase())) {
-                            valorCampo = getSetDinamicoTelas.retornaValorEditText(view, fieldListPedido.get(p).getName());
-                            Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
-                            pedido = (Pedido) retorno;
-                            break;
+                            if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
+                                Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().replace("sp", ""));
+                                Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
+                                pedido = (Pedido) retornoPedido;
+                                break;
+                            }
                         }
+
+                    } else {
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
                     }
+                } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("tx")) {
 
+                    String nomeCampo = "";
+                    nomeCampo = fieldListPedidoDados.get(f).getName();
+                    String valorCampo = "";
+                    if (!nomeCampo.equals("")) {
+
+                        for (int p = 0; fieldListPedido.size() != p; p++) {
+                            if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("tx", "").toLowerCase())) {
+                                valorCampo = getSetDinamicoTelas.retornaValorEditText(view, fieldListPedido.get(p).getName());
+                                Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
+                                pedido = (Pedido) retorno;
+                                break;
+                            }
+                        }
+
+                    }
                 }
             }
-        }
-        Cliente cliente = new Cliente();
-        Cursor cursorCliente = cliente.retornaClienteFiltradoCursor(getContext(), pedido.getCodcliente());
-        List<Field> clienteFieldList = new ArrayList<Field>(Arrays.asList(cliente.getClass().getDeclaredFields()));
-        if (cursorCliente.getCount() > 0) {
-
-            for (int f = 0; clienteFieldList.size() != f; f++) {
-
-                String tipo = getSetDinamico.retornaTipoCampo(clienteFieldList.get(f));
-                String nomeCampo = clienteFieldList.get(f).getName().toLowerCase();
-                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
-                if (retorno != null) {
-                    Object retCliente = getSetDinamico.insereField(clienteFieldList.get(f), cliente, retorno);
-                    cliente = (Cliente) retCliente;
-                }
-            }
-
-        }
-        pedido.setNome(cliente.getNomecliente());
-        pedido.setData(new Date().getTime());
-        boolean retorno = pedido.cadastraPedido(getContext(), pedido);
-        if (retorno) {
-            if (clique == 1){
-                if (txPedido == null){
-                    pedido.setPedido(pedido.retornaMaiorCod(getContext()));
-                }
-                if (pedido.getPedido() > 0) {
-                    PedidoFragment pedidoFragment = new PedidoFragment();
-                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
-                    MostraToast mostraToast = new MostraToast();
-                    mostraToast.mostraToastShort(getContext(), "Pedido atualizado com sucesso.");
-
-                } else {
-                    PedidoFragment pedidoFragment = new PedidoFragment();
-                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
-                    MostraToast mostraToast = new MostraToast();
-                    mostraToast.mostraToastShort(getContext(), "Pedido salvo com sucesso.");
-                }
-            }
+            Cliente cliente = new Cliente();
+            codClienteTela = pedido.getCodcliente();
         } else {
-            PedidoFragment pedidoFragment = new PedidoFragment();
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
-            MostraToast mostraToast = new MostraToast();
-            mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar o pedido.");
+
+
+            //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
+            List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
+            //fieldListPedido CONTEM OS DADOS DO OBJETO PEDIDO QUE SERA SALVO NO BANCO
+            List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+            GetSetDinamico getSetDinamico = new GetSetDinamico();
+            GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
+            Pedido pedido = new Pedido();
+            for (int f = 0; fieldListPedidoDados.size() != f; f++) {
+
+                if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
+                    String nomeCampo = "";
+                    nomeCampo = fieldListPedidoDados.get(f).getName();
+                    if (nomeCampo.equals("spCodcliente")) {
+                        nomeCampo = "codcliente";
+                    } else if (nomeCampo.equals("spFormadepagamento")) {
+                        nomeCampo = "formadepagamento";
+                    } else if (nomeCampo.equals("spCodvendedor")) {
+                        nomeCampo = "codvendedor";
+                    }
+                    if (!nomeCampo.equals("")) {
+
+                        for (int p = 0; fieldListPedido.size() != p; p++) {
+
+                            if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
+                                Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().replace("sp", ""));
+                                Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
+                                pedido = (Pedido) retornoPedido;
+                                break;
+                            }
+                        }
+
+                    } else {
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
+                    }
+                } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("tx")) {
+
+                    String nomeCampo = "";
+                    nomeCampo = fieldListPedidoDados.get(f).getName();
+                    String valorCampo = "";
+                    if (!nomeCampo.equals("")) {
+
+                        for (int p = 0; fieldListPedido.size() != p; p++) {
+                            if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("tx", "").toLowerCase())) {
+                                valorCampo = getSetDinamicoTelas.retornaValorEditText(view, fieldListPedido.get(p).getName());
+                                Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
+                                pedido = (Pedido) retorno;
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+            Cliente cliente = new Cliente();
+            codClienteTela = pedido.getCodcliente();
+            Cursor cursorCliente = cliente.retornaClienteFiltradoCursor(getContext(), pedido.getCodcliente());
+            List<Field> clienteFieldList = new ArrayList<Field>(Arrays.asList(cliente.getClass().getDeclaredFields()));
+            if (cursorCliente.getCount() > 0) {
+
+                for (int f = 0; clienteFieldList.size() != f; f++) {
+
+                    String tipo = getSetDinamico.retornaTipoCampo(clienteFieldList.get(f));
+                    String nomeCampo = clienteFieldList.get(f).getName().toLowerCase();
+                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
+                    if (retorno != null) {
+                        Object retCliente = getSetDinamico.insereField(clienteFieldList.get(f), cliente, retorno);
+                        cliente = (Cliente) retCliente;
+                    }
+                }
+
+            }
+            pedido.setNome(cliente.getNomecliente());
+            pedido.setData(new Date().getTime());
+            boolean retorno = pedido.cadastraPedido(getContext(), pedido);
+            if (retorno) {
+                if (clique == 1) {
+                    if (txPedido == null) {
+                        pedido.setPedido(pedido.retornaMaiorCod(getContext()));
+                    }
+                    if (pedido.getPedido() > 0) {
+                        PedidoFragment pedidoFragment = new PedidoFragment();
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Pedido atualizado com sucesso.");
+
+                    } else {
+                        PedidoFragment pedidoFragment = new PedidoFragment();
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Pedido salvo com sucesso.");
+                    }
+                }
+            } else {
+                PedidoFragment pedidoFragment = new PedidoFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+                MostraToast mostraToast = new MostraToast();
+                mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar o pedido.");
+            }
         }
     }
 

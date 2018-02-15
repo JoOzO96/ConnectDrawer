@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.jose.connectdrawer.Pedido.PedidoDados;
 import com.example.jose.connectdrawer.Produto.Produto;
@@ -42,6 +43,7 @@ public class PedidoProdutoTela extends DialogFragment {
     private Spinner spProduto;
     private Long contaAcessos;
     private Boolean evitaLoop;
+    private TextView ultimo_valor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class PedidoProdutoTela extends DialogFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate(R.layout.popuppedidoproduto, container);
         contaAcessos = 0L;
+        ultimo_valor = (TextView) view.findViewById(R.id.ultimo_valor);
         final Banco myDb = new Banco(getContext());
         List<String> produtoList = new ArrayList<>();
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
@@ -67,6 +70,7 @@ public class PedidoProdutoTela extends DialogFragment {
         Bundle bundle = this.getArguments();
         final String codItem = bundle.getString("codigoClicado");
         final String codPedido = bundle.getString("codigoPedido");
+        final Long codCliente = bundle.getLong("codigocliente");
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
 
@@ -154,7 +158,7 @@ public class PedidoProdutoTela extends DialogFragment {
             for (int i = 0; fieldListPassar.size() != i; i++) {
                 if (fieldListPassar.get(i).getName().toLowerCase().equals("spproduto")) {
                     for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
-                        if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
+                        if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria") || fieldListProduto.get(f).getName().toLowerCase().equals("custo")) {
                         } else {
                             fieldListProduto.remove(f);
                         }
@@ -222,6 +226,7 @@ public class PedidoProdutoTela extends DialogFragment {
                 pedidoProduto.setCodproduto(produto1.getCodproduto());
                 pedidoProduto.setDescri(produto1.getMercadoria());
                 pedidoProduto.setPedido(Long.parseLong(codPedido));
+                pedidoProduto.setCusto(produto1.getCusto());
 
                 if (idPedidoProduto > 0) {
                     pedidoProduto.setIdPedidoProduto(idPedidoProduto);
@@ -276,6 +281,15 @@ public class PedidoProdutoTela extends DialogFragment {
 
                         txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
                         txvalorunitario.setText(String.valueOf(produtoClicado.getValoravista()));
+
+
+
+                        Cursor ultimacompra = produtoClicado.retornaProdutoUltimaCompraCursor(getContext(), codCliente, produtoClicado.getCodproduto());
+                        if (ultimacompra.getCount() > 0){
+                            ultimo_valor.setText("R$ " + Double.parseDouble(String.valueOf(getSetDinamico.retornaValorCursor("STRING", "valorunitario", ultimacompra))));
+                        }else{
+                            ultimo_valor.setText("RS 0,0");
+                        }
                     } else {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastShort(getContext(), "Não foi possivel buscar dados do produto.");

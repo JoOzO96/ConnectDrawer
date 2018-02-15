@@ -4,10 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -389,8 +392,9 @@ public class PedidoProduto {
             valores.put("idPedidoProduto", retorno);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedidoproduto", null, valores);
-
+            Log.e("CACETE", "" + valores.get("custo"));
             valores.clear();
+
             if (retorno == -1) {
                 return false;
             } else {

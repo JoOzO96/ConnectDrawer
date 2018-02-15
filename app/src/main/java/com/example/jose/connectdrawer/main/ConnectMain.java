@@ -2,6 +2,7 @@ package com.example.jose.connectdrawer.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.VendedorFragment;
 import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.cliente.ClienteFragment;
+import com.example.jose.connectdrawer.login.LoginActivity;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
 import com.example.jose.connectdrawer.sincronizacao.Sincroniza;
 
@@ -55,6 +57,9 @@ public class ConnectMain extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        startActivity(intent);
+
     }
 
     @Override
@@ -133,6 +138,9 @@ public class ConnectMain extends AppCompatActivity
         } else if (id == R.id.nav_deleta) {
             Context context = this;
             context.deleteDatabase("connect.db");
+        } else if (id == R.id.nav_login) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
 //        } else if (id == R.id.nav_slideshow) {
 //
 //        } else if (id == R.id.nav_manage) {
