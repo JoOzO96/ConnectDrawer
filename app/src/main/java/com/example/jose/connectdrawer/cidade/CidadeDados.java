@@ -97,7 +97,7 @@ public class CidadeDados extends Fragment {
             List<Field> fieldList = new ArrayList<>(Arrays.asList(cidadeDados.getClass().getDeclaredFields()));
             for (int i = 0; fieldList.size() != i; i++) {
                 String nomecampo = "";
-                nomecampo = fieldListPassar.get(i).getName().replace("tx", "").toLowerCase();
+                nomecampo = fieldList.get(i).getName().replace("tx", "").toLowerCase();
                 if (fieldList.get(i).getName().toLowerCase().substring(0, 2).equals("tx")) {
                     if (nomecampo.equals("cep")) {
                         getSetDinamicoTelas.colocaValorEditText(fieldList.get(i), view, fieldListPassar, "", "#####-###");
