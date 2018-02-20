@@ -384,7 +384,7 @@ public class Pedido {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getWritableDatabase();
         int retorno = db.delete("pedidoproduto", "pedido = " + pedido, null);
-        return retorno > 0;
+        return retorno > -1;
     }
 
 

@@ -196,10 +196,15 @@ public class ClienteDados extends Fragment {
                                 fieldListPosicao.add("2 - Bom");
                                 fieldListPosicao.add("3 - Regular");
                                 fieldListPosicao.add("4 - Ruim");
-                                if (cursor.getString(cursor.getColumnIndex("posicao")).equals("")){
+                                String posicaoBanco = cursor.getString(cursor.getColumnIndex("posicao"));
+                                if (posicaoBanco == null){
                                     posicao = 0;
                                 }else {
-                                    posicao = Integer.parseInt(cursor.getString(cursor.getColumnIndex("posicao"))) - 1;
+                                    if (posicaoBanco.equals("")){
+                                        posicao = 0;
+                                    }else {
+                                        posicao = Integer.parseInt(cursor.getString(cursor.getColumnIndex("posicao"))) - 1;
+                                    }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, fieldListPosicao, getContext(), posicao);
                             }
@@ -228,7 +233,7 @@ public class ClienteDados extends Fragment {
                 } else {
                     if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
                         getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", mascara);
-                    } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
+                    } else if (fieldListPassar.get(i).getName().equals("spCidade")) {
                         Cursor cursorCidade = cidade.retornaCidade(getContext());
 
                         int posicao = 0;
@@ -255,6 +260,17 @@ public class ClienteDados extends Fragment {
                             }
                         }
                         getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, cidadeList, getContext(), posicao);
+                    } else if (fieldListPassar.get(i).getName().equals("spPosicao")) {
+
+                        int posicao = 0;
+
+                        List<String> fieldListPosicao = new ArrayList<>();
+                        fieldListPosicao.add("1 - Ótimo");
+                        fieldListPosicao.add("2 - Bom");
+                        fieldListPosicao.add("3 - Regular");
+                        fieldListPosicao.add("4 - Ruim");
+                        posicao = 0;
+                        getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, fieldListPosicao, getContext(), posicao);
                     }
                 }
             }

@@ -189,16 +189,19 @@ public class GetSetDinamicoTelas extends Fragment {
         primeiro += nomeCampo1;
         Spinner valorId = (Spinner) retornaIDCampo(view, primeiro);
         if (valorId != null) {
-            String string = valorId.getSelectedItem().toString();
-            String valor = "";
-            for (int i = 0; string.length() != i; i++) {
-                if (String.valueOf(string.charAt(i + 1)).equals("-")) {
-                    return valor;
-                } else {
-                    valor += string.charAt(i);
+            if (valorId.getCount() > 0) {
+                String string = valorId.getSelectedItem().toString();
+                String valor = "";
+                for (int i = 0; string.length() != i; i++) {
+                    if (String.valueOf(string.charAt(i + 1)).equals("-")) {
+                        return valor;
+                    } else {
+                        valor += string.charAt(i);
+                    }
                 }
+            }else{
+                return "ERRO";
             }
-            Log.i("sdf", "asd");
         }
         return "";
     }

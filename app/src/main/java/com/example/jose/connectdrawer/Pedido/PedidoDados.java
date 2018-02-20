@@ -440,26 +440,37 @@ public class PedidoDados extends Fragment {
                 txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
 
                 if (txPedido.length() == 0) {
-                    SalvaPedido(view, -1L);
-                    Bundle bundle = new Bundle();
-                    bundle.putDouble("comissaoVendedor", comissaoVendedor);
-                    bundle.putString("codigoClicado", "");
-                    bundle.putLong("idPedidoProduto", -1L);
-                    bundle.putLong("codigocliente", codClienteTela);
-                    bundle.putString("codigoPedido", String.valueOf(pedido.retornaMaiorCod(getContext())));
-                    pedidoProdutoTela.setArguments(bundle);
-                    pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
-                } else {
-                    SalvaPedido(view, 1L);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("codigo", "0");
-                    bundle.putDouble("comissaoVendedor", comissaoVendedor);
-                    bundle.putString("codigoClicado", "");
-                    bundle.putLong("idPedidoProduto", -1L);
-                    bundle.putLong("codigocliente", codClienteTela);
-                    bundle.putString("codigoPedido", txPedido.getText().toString());
-                    pedidoProdutoTela.setArguments(bundle);
-                    pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+
+                    Integer retorno = SalvaPedido(view, -1L);
+                    if (retorno < 0){
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
+                    }else {
+                        Bundle bundle = new Bundle();
+                        bundle.putDouble("comissaoVendedor", comissaoVendedor);
+                        bundle.putString("codigoClicado", "");
+                        bundle.putLong("idPedidoProduto", -1L);
+                        bundle.putLong("codigocliente", codClienteTela);
+                        bundle.putString("codigoPedido", String.valueOf(pedido.retornaMaiorCod(getContext())));
+                        pedidoProdutoTela.setArguments(bundle);
+                        pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+                    }
+                } else {Integer retorno = SalvaPedido(view, 1L);
+                    if (retorno < 0){
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
+                    }else {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("codigo", "0");
+                        bundle.putDouble("comissaoVendedor", comissaoVendedor);
+                        bundle.putString("codigoClicado", "");
+                        bundle.putLong("idPedidoProduto", -1L);
+                        bundle.putLong("codigocliente", codClienteTela);
+                        bundle.putString("codigoPedido", txPedido.getText().toString());
+                        pedidoProdutoTela.setArguments(bundle);
+                        pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
+                    }
                 }
             }
         });
@@ -558,7 +569,11 @@ public class PedidoDados extends Fragment {
         {
             @Override
             public void onClick(View v) {
-                SalvaPedido(view, 1L);
+               Integer retorno = SalvaPedido(view, 1L);
+               if (retorno < 0){
+                   MostraToast mostraToast = new MostraToast();
+                   mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
+               }
             }
         });
 
@@ -566,7 +581,7 @@ public class PedidoDados extends Fragment {
     }
 
 
-    public void SalvaPedido(View view, Long clique) {
+    public Integer SalvaPedido(View view, Long clique) {
         if (clique == 1L) {
             //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
             List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
@@ -593,9 +608,13 @@ public class PedidoDados extends Fragment {
 
                             if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
                                 Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().replace("sp", ""));
-                                Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
-                                pedido = (Pedido) retornoPedido;
-                                break;
+                                if (retorno.toString().equals("ERRO")){
+                                    return -1;
+                                }else {
+                                    Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
+                                    pedido = (Pedido) retornoPedido;
+                                    break;
+                                }
                             }
                         }
 
@@ -625,6 +644,7 @@ public class PedidoDados extends Fragment {
             Cliente cliente = new Cliente();
             codClienteTela = pedido.getCodcliente();
             Cursor cursorCliente = cliente.retornaClienteFiltradoCursor(getContext(), pedido.getCodcliente());
+
             List<Field> clienteFieldList = new ArrayList<Field>(Arrays.asList(cliente.getClass().getDeclaredFields()));
             if (cursorCliente.getCount() > 0) {
 
@@ -639,16 +659,26 @@ public class PedidoDados extends Fragment {
                     }
                 }
 
+            }else{
+                return -1;
             }
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date().getTime());
-            boolean retorno = pedido.cadastraPedido(getContext(), pedido);
+
 
             Vendedor vendedor = new Vendedor();
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
             if (cursorVendedor.getCount() > 0){
                 comissaoVendedor = cursorVendedor.getDouble(cursorVendedor.getColumnIndex("comi"));
+            }else{
+                return -1;
             }
+
+
+
+            boolean retorno = pedido.cadastraPedido(getContext(), pedido);
+
+
             if (retorno) {
                 if (clique == 1) {
                     if (txPedido == null) {
@@ -675,8 +705,8 @@ public class PedidoDados extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
                 MostraToast mostraToast = new MostraToast();
                 mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar o pedido.");
+                return -1;
             }
-            comissaoVendedor = cursorVendedor.getDouble(cursorVendedor.getColumnIndex("comi"));
 
         } else {
 
@@ -715,6 +745,7 @@ public class PedidoDados extends Fragment {
                     } else {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastShort(getContext(), "Erro ao recuperar dados do pedido.");
+                        return -1;
                     }
                 } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("tx")) {
 
@@ -752,6 +783,8 @@ public class PedidoDados extends Fragment {
                     }
                 }
 
+            }else{
+                return -1;
             }
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date().getTime());
@@ -761,6 +794,8 @@ public class PedidoDados extends Fragment {
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
             if (cursorVendedor.getCount() > 0){
                 comissaoVendedor = cursorVendedor.getDouble(cursorVendedor.getColumnIndex("comi"));
+            }else{
+                return -1;
             }
             if (retorno) {
                 if (clique == 1) {
@@ -788,10 +823,12 @@ public class PedidoDados extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
                 MostraToast mostraToast = new MostraToast();
                 mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar o pedido.");
+                return -1;
             }
 
 
         }
+        return 1;
     }
 
 }
