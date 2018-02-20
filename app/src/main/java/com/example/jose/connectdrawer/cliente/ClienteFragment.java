@@ -62,6 +62,7 @@ public class ClienteFragment extends Fragment {
 
             }
             ArrayAdapter<Cliente> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, clienteList);
+            listaCliente.setEmptyView(view.findViewById(R.id.semdados));
             listaCliente.setAdapter(adapter);
             listaCliente.setOnItemClickListener(
                     new AdapterView.OnItemClickListener() {

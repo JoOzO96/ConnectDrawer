@@ -54,6 +54,7 @@ public class ProdutoFragment extends Fragment {
             cursor.close();
             ArrayAdapter<Produto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, produtoList);
             listaProduto.setAdapter(adapter);
+            listaProduto.setEmptyView(view.findViewById(R.id.semdados));
 
 //            listaProduto.setOnClickListener(new View.OnClickListener() {
 //                @Override

@@ -55,6 +55,7 @@ public class FormaPagamentoFragment extends Fragment {
         }
         ArrayAdapter<FormaPagamento> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, formaPagamentoList);
         listFormaPagamento.setAdapter(adapter);
+        listFormaPagamento.setEmptyView(view.findViewById(R.id.semdados));
         return view;
     }
 

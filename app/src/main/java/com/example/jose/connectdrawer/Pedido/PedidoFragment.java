@@ -60,6 +60,7 @@ public class PedidoFragment extends Fragment {
                 }
             }
             cursor.close();
+            listaPedido.setEmptyView(view.findViewById(R.id.semdados));
             ArrayAdapter<Pedido> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, pedidoList);
             listaPedido.setAdapter(adapter);
             listaPedido.setOnItemClickListener(

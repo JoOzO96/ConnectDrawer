@@ -67,6 +67,7 @@ public class VendedorFragment extends Fragment {
             cursor.close();
             ArrayAdapter<Vendedor> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, vendedorList);
             listaVendedor.setAdapter(adapter);
+            listaVendedor.setEmptyView(view.findViewById(R.id.semdados));
             listaVendedor.setOnItemClickListener(
                     new AdapterView.OnItemClickListener() {
 

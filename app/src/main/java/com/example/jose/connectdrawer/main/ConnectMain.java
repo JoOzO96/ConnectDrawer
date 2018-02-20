@@ -138,9 +138,9 @@ public class ConnectMain extends AppCompatActivity
         } else if (id == R.id.nav_deleta) {
             Context context = this;
             context.deleteDatabase("connect.db");
-        } else if (id == R.id.nav_login) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+//        } else if (id == R.id.nav_login) {
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivity(intent);
 //        } else if (id == R.id.nav_slideshow) {
 //
 //        } else if (id == R.id.nav_manage) {

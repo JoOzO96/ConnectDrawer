@@ -8,5 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listFormaPagamento"></ListView>
+    <TextView android:id="@+id/semdados"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Não há dados para serem exibidos." />
 
 </FrameLayout>

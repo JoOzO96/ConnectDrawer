@@ -78,6 +78,7 @@ public class CidadeFragment extends Fragment {
                 cursor.moveToNext();
             }
             ArrayAdapter<Cidade> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, cidadeList);
+            listCidade.setEmptyView(view.findViewById(R.id.semdados));
             listCidade.setAdapter(adapter);
             listCidade.setOnItemClickListener(
                     new AdapterView.OnItemClickListener() {
