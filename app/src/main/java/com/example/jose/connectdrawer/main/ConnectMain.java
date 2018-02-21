@@ -3,7 +3,15 @@ package com.example.jose.connectdrawer.main;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
+import android.os.ParcelFileDescriptor;
+import android.print.PageRange;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -94,6 +102,7 @@ public class ConnectMain extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -143,6 +152,20 @@ public class ConnectMain extends AppCompatActivity
 //            startActivity(intent);
 //        } else if (id == R.id.nav_slideshow) {
 //
+//
+//            PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+//            printManager.print("SAIUDHASUDH", new PrintDocumentAdapter() {
+//                @Override
+//                public void onLayout(PrintAttributes printAttributes, PrintAttributes printAttributes1, CancellationSignal cancellationSignal, LayoutResultCallback layoutResultCallback, Bundle bundle) {
+//
+//                }
+//
+//                @Override
+//                public void onWrite(PageRange[] pageRanges, ParcelFileDescriptor parcelFileDescriptor, CancellationSignal cancellationSignal, WriteResultCallback writeResultCallback) {
+//
+//                }
+//            }, null);
+
 //        } else if (id == R.id.nav_manage) {
 //
 //        } else if (id == R.id.nav_share) {
