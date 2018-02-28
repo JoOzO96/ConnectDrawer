@@ -26,6 +26,7 @@ import android.widget.ListView;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamentoFragment;
 import com.example.jose.connectdrawer.Impressora.ImpressaoActibity;
+import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.Pedido.PedidoFragment;
 import com.example.jose.connectdrawer.Produto.ProdutoFragment;
 import com.example.jose.connectdrawer.R;
@@ -141,7 +142,9 @@ public class ConnectMain extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container, produtoFragment, produtoFragment.getTag()).commit();
 
         } else if (id == R.id.nav_impressao) {
-            Intent intent = new Intent(this, ImpressaoActibity.class);
+//            Intent intent = new Intent(this, ImpressaoActibity.class);
+//            startActivity(intent);
+            Intent intent = new Intent(this, ImprimirTexto.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_sync) {

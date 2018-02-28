@@ -165,176 +165,6 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			{ 0x1b, 0x40 },// 复位打印机
 			{ 0x1b, 0x40 },// 复位打印机
 	};
-/******************************************************************************************************/
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (DEBUG)
-			Log.e(TAG, "+++ ON CREATE +++");
-
-		// Set up the window layout
-		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.impressaomain);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-				R.layout.impressao_custom_title);
-
-
-		// Get local Bluetooth adapter
-		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		// If the adapter is null, then Bluetooth is not supported
-		if (mBluetoothAdapter == null) {
-			Toast.makeText(this, "Bluetooth is not available",
-					Toast.LENGTH_LONG).show();
-			finish();
-		}
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		
-		// If Bluetooth is not on, request that it be enabled.
-		// setupChat() will then be called during onActivityResult
-		if (!mBluetoothAdapter.isEnabled()) {
-			Intent enableIntent = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-			// Otherwise, setup the session
-		} else {
-			if (mService == null)
-				KeyListenerInit();//监听
-		}
-	}
-
-	@Override
-	public synchronized void onResume() {
-		super.onResume();
-		
-		if (mService != null) {
-			
-			if (mService.getState() == BluetoothService.STATE_NONE) {
-				// Start the Bluetooth services
-				mService.start();
-			}
-		}
-	}
-
-	@Override
-	public synchronized void onPause() {
-		super.onPause();
-		if (DEBUG)
-			Log.e(TAG, "- ON PAUSE -");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		if (DEBUG)
-			Log.e(TAG, "-- ON STOP --");
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// Stop the Bluetooth services
-		if (mService != null)
-			mService.stop();
-		if (DEBUG)
-			Log.e(TAG, "--- ON DESTROY ---");
-	}
-
-/*****************************************************************************************************/	
-	private void KeyListenerInit() {
-		
-		editText = (EditText) findViewById(R.id.edit_text_out);
-
-		sendButton = (Button) findViewById(R.id.Send_Button);
-		sendButton.setOnClickListener(this);
-		
-		testButton = (Button) findViewById(R.id.btn_test);
-		testButton.setOnClickListener(this);
-
-		printbmpButton = (Button) findViewById(R.id.btn_printpicture);
-		printbmpButton.setOnClickListener(this);
-
-		btnScanButton = (Button)findViewById(R.id.button_scan);
-		btnScanButton.setOnClickListener(this);
-		
-		hexBox = (CheckBox)findViewById(R.id.checkBoxHEX);
-		hexBox.setOnClickListener(this);
-		
-		width_58mm = (RadioButton)findViewById(R.id.width_58mm);
-		width_58mm.setOnClickListener(this);
-		
-		width_80 = (RadioButton)findViewById(R.id.width_80mm);
-		width_80.setOnClickListener(this);
-		
-		imageViewPicture = (ImageView) findViewById(R.id.imageViewPictureUSB);
-		imageViewPicture.setOnClickListener(this);
-	
-		btnClose = (Button)findViewById(R.id.btn_close);
-		btnClose.setOnClickListener(this);
-		
-		btn_BMP = (Button)findViewById(R.id.btn_prtbmp);
-		btn_BMP.setOnClickListener(this);
-		
-		btn_ChoseCommand = (Button)findViewById(R.id.btn_prtcommand);
-		btn_ChoseCommand.setOnClickListener(this);
-		
-		btn_prtsma = (Button)findViewById(R.id.btn_prtsma);
-		btn_prtsma.setOnClickListener(this);
-		
-		btn_prttableButton = (Button)findViewById(R.id.btn_prttable);
-		btn_prttableButton.setOnClickListener(this);
-		
-		btn_prtcodeButton = (Button)findViewById(R.id.btn_prtbarcode);
-		btn_prtcodeButton.setOnClickListener(this);
-		
-		btn_camer = (Button)findViewById(R.id.btn_dyca);
-		btn_camer.setOnClickListener(this);
-		
-		btn_scqrcode = (Button)findViewById(R.id.btn_scqr);
-		btn_scqrcode.setOnClickListener(this);
-		
-		Simplified = (RadioButton)findViewById(R.id.gbk12);
-		Simplified.setOnClickListener(this);
-		big5 = (RadioButton)findViewById(R.id.big5);
-		big5.setOnClickListener(this);
-		thai = (RadioButton)findViewById(R.id.thai);
-		thai.setOnClickListener(this);
-		Korean = (RadioButton)findViewById(R.id.kor);
-		Korean.setOnClickListener(this);
-		
-		Bitmap bm = getImageFromAssetsFile("demo.bmp");
-		if (null != bm) {
-			imageViewPicture.setImageBitmap(bm);
-		}
-		
-		editText.setEnabled(false);
-		imageViewPicture.setEnabled(false);
-		width_58mm.setEnabled(false);
-		width_80.setEnabled(false);
-		hexBox.setEnabled(false);
-		sendButton.setEnabled(false);
-		testButton.setEnabled(false);
-		printbmpButton.setEnabled(false);
-		btnClose.setEnabled(false);	
-		btn_BMP.setEnabled(false);
-		btn_ChoseCommand.setEnabled(false);
-		btn_prtcodeButton.setEnabled(false);
-		btn_prtsma.setEnabled(false);
-		btn_prttableButton.setEnabled(false);
-		btn_camer.setEnabled(false);
-		btn_scqrcode.setEnabled(false);
-		Simplified.setEnabled(false);
-		Korean.setEnabled(false);
-		big5.setEnabled(false);
-		thai.setEnabled(false);
-		
-		mService = new BluetoothService(this, mHandler);
-	}
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -467,19 +297,19 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-		
+
 /*****************************************************************************************************/
 	/*
 	 * SendDataString
 	 */
 	private void SendDataString(String data) {
-		
+
 		if (mService.getState() != BluetoothService.STATE_CONNECTED) {
 			Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
 					.show();
 			return;
 		}
-		if (data.length() > 0) {				
+		if (data.length() > 0) {
 			try {
 				mService.write(data.getBytes("GBK"));
 			} catch (UnsupportedEncodingException e) {
@@ -488,22 +318,22 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	/*
-	 *SendDataByte 
+	 *SendDataByte
 	 */
 	private void SendDataByte(byte[] data) {
-		
+
 		if (mService.getState() != BluetoothService.STATE_CONNECTED) {
 			Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
 					.show();
 			return;
-		}			
+		}
 		mService.write(data);
 	}
 
 	/****************************************************************************************************/
-	@SuppressLint("HandlerLeak") 
+	@SuppressLint("HandlerLeak")
 	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -513,8 +343,8 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 					Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
 				switch (msg.arg1) {
 				case BluetoothService.STATE_CONNECTED:
-					mTitle.setText(R.string.title_connected_to);
-					mTitle.append(mConnectedDeviceName);
+//					mTitle.setText(R.string.title_connected_to);
+//					mTitle.append(mConnectedDeviceName);
 					btnScanButton.setText(getText(R.string.Connecting));
 					Print_Test();//
 					btnScanButton.setEnabled(false);
@@ -540,19 +370,19 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 					thai.setEnabled(true);
 					break;
 				case BluetoothService.STATE_CONNECTING:
-					mTitle.setText(R.string.title_connecting);
+					//mTitle.setText(R.string.title_connecting);
 					break;
 				case BluetoothService.STATE_LISTEN:
 				case BluetoothService.STATE_NONE:
-					mTitle.setText(R.string.title_not_connected);
+					//mTitle.setText(R.string.title_not_connected);
 					break;
 				}
 				break;
 			case MESSAGE_WRITE:
-				
+
 				break;
 			case MESSAGE_READ:
-				
+
 				break;
 			case MESSAGE_DEVICE_NAME:
 				// save the connected device's name
@@ -637,15 +467,15 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 	        	if (resultCode == Activity.RESULT_OK){
 					Uri selectedImage = data.getData();
 					String[] filePathColumn = { MediaColumns.DATA };
-		
+
 					Cursor cursor = getContentResolver().query(selectedImage,
 							filePathColumn, null, null, null);
 					cursor.moveToFirst();
-		
+
 					int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 					String picturePath = cursor.getString(columnIndex);
 					cursor.close();
-		
+
 					BitmapFactory.Options opts = new BitmapFactory.Options();
 					opts.inJustDecodeBounds = true;
 					BitmapFactory.decodeFile(picturePath, opts);
@@ -674,6 +504,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 	}
 
 /****************************************************************************************************/
+
 	/**
 	 * 连接成功后打印测试页
 	 */
@@ -718,7 +549,6 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			SendDataByte(PrinterCommand.POS_Set_PrtInit());
 		}
   	}
-	
 	/**
 	 * 打印测试页
 	 */
@@ -742,7 +572,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			SendDataByte(PrinterCommand.POS_Print_Text(msg, THAI, 255, 0, 0, 0));
 		}
 	}
-	
+
 	/*
 	 * 打印图片
 	 */
@@ -774,13 +604,13 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			SendDataByte(PrinterCommand.POS_Set_PrtAndFeedPaper(30));
 			SendDataByte(PrinterCommand.POS_Set_Cut(1));
 			SendDataByte(PrinterCommand.POS_Set_PrtInit());
-		}		
+		}
 	}
 
 	/**
 	 * 打印自定义表格
 	 */
-	@SuppressLint("SimpleDateFormat") 
+	@SuppressLint("SimpleDateFormat")
 	private void PrintTable(){
 
 		String lang = getString(R.string.strLang);
@@ -788,7 +618,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss ");
 		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
 		String str = formatter.format(curDate);
-		String date = str + "\n\n\n\n\n\n";	
+		String date = str + "\n\n\n\n\n\n";
 		if(is58mm){
 
 			Command.ESC_Align[2] = 0x02;
@@ -848,7 +678,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd/ HH:mm:ss ");
 			Date curDate = new Date(System.currentTimeMillis());//获取当前时间
 			String str = formatter.format(curDate);
-			String date = str + "\n\n\n\n\n\n";	
+			String date = str + "\n\n\n\n\n\n";
 			if(is58mm){
 
 				Command.ESC_Align[2] = 0x02;
@@ -910,7 +740,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 	/**
 	 * 打印自定义小票
 	 */
-	@SuppressLint("SimpleDateFormat") 
+	@SuppressLint("SimpleDateFormat")
 	private void Print_Ex(){
 
 		String lang = getString(R.string.strLang);
@@ -918,7 +748,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss ");
 		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
 		String str = formatter.format(curDate);
-		String date = str + "\n\n\n\n\n\n";	
+		String date = str + "\n\n\n\n\n\n";
 		if (is58mm) {
 
 			try {
@@ -948,7 +778,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 				SendDataByte(Command.ESC_Align);
 				Command.GS_ExclamationMark[2] = 0x00;
 				SendDataByte(Command.GS_ExclamationMark);
-				
+
 				SendDataByte("(以上信息为测试模板,如有苟同，纯属巧合!)\n".getBytes("GBK"));
 				Command.ESC_Align[2] = 0x02;
 				SendDataByte(Command.ESC_Align);
@@ -1003,7 +833,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd/ HH:mm:ss ");
 			Date curDate = new Date(System.currentTimeMillis());//获取当前时间
 			String str = formatter.format(curDate);
-			String date = str + "\n\n\n\n\n\n";	
+			String date = str + "\n\n\n\n\n\n";
 			if (is58mm) {
 
 				try {
@@ -1033,7 +863,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 					SendDataByte(Command.ESC_Align);
 					Command.GS_ExclamationMark[2] = 0x00;
 					SendDataByte(Command.GS_ExclamationMark);
-					
+
 					SendDataByte("(The above information is for testing template, if agree, is purely coincidental!)\n".getBytes("GBK"));
 					Command.ESC_Align[2] = 0x02;
 					SendDataByte(Command.ESC_Align);
@@ -1091,7 +921,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 	 * 打印条码、二维码
 	 */
 	private void printBarCode() {
-		
+
 		new AlertDialog.Builder(ImpressaoActibity.this).setTitle(getText(R.string.btn_prtcode))
 		.setItems(codebar, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -1240,30 +1070,30 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 					}
 				}
 			}
-		}).create().show();	
+		}).create().show();
 	}
 
 	/**
 	 * public static Bitmap createAppIconText(Bitmap icon, String txt, boolean is58mm, int hight)
 	 * Bitmap  icon     源图
-	 * String txt       要转换的字符串  
+	 * String txt       要转换的字符串
 	 * boolean is58mm   打印宽度(58和80)
 	 * int hight        转换后的图片高度
 	 */
 	private void GraphicalPrint(){
 
-		String txt_msg = editText.getText().toString(); 
+		String txt_msg = editText.getText().toString();
 		if(txt_msg.length() == 0){
 			Toast.makeText(ImpressaoActibity.this, getText(R.string.empty1), Toast.LENGTH_SHORT).show();
 			return;
 		}else{
 			Bitmap bm1 = getImageFromAssetsFile("demo.jpg");
 			if(width_58mm.isChecked()){
-				
+
 				Bitmap bmp = Other.createAppIconText(bm1,txt_msg,25,is58mm,200);
 				int nMode = 0;
 				int nPaperWidth = 384;
-				
+
 				if(bmp != null)
 				{
 					byte[] data = PrintPicture.POS_PrintBMP(bmp, nPaperWidth, nMode);
@@ -1278,7 +1108,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			else if (width_80.isChecked()){
 				Bitmap bmp = Other.createAppIconText(bm1,txt_msg,25,false,200);
 				int nMode = 0;
-				
+
 				int nPaperWidth = 576;
 				if(bmp != null)
 				{
@@ -1293,7 +1123,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * 打印指令测试
 	 */
@@ -1312,13 +1142,13 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 					}else {
 						SendDataByte("热敏票据打印机ABCDEFGabcdefg123456,.;'/[{}]!\n热敏票据打印机ABCDEFGabcdefg123456,.;'/[{}]!\n热敏票据打印机ABCDEFGabcdefg123456,.;'/[{}]!\n热敏票据打印机ABCDEFGabcdefg123456,.;'/[{}]!\n热敏票据打印机ABCDEFGabcdefg123456,.;'/[{}]!\n热敏票据打印机ABCDEFGabcdefg123456,.;'/[{}]!\n".getBytes("GBK"));
 					}
-					
+
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}).create().show();	
+		}).create().show();
 		}else if((lang.compareTo("en")) == 0){
 			new AlertDialog.Builder(ImpressaoActibity.this).setTitle(getText(R.string.chosecommand))
 			.setItems(itemsen, new DialogInterface.OnClickListener() {
@@ -1331,18 +1161,19 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 						}else {
 							SendDataByte("Thermal Receipt Printer ABCDEFGabcdefg123456,.;'/[{}]!\nThermal Receipt PrinterABCDEFGabcdefg123456,.;'/[{}]!\nThermal Receipt PrinterABCDEFGabcdefg123456,.;'/[{}]!\nThermal Receipt PrinterABCDEFGabcdefg123456,.;'/[{}]!\nThermal Receipt PrinterABCDEFGabcdefg123456,.;'/[{}]!\nThermal Receipt PrinterABCDEFGabcdefg123456,.;'/[{}]!\n".getBytes("GBK"));
 						}
-						
+
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-			}).create().show();	
+			}).create().show();
 			}
 	}
-/************************************************************************************************/	
-	/* 
-	 * 生成QR图 
+
+	/************************************************************************************************/
+	/*
+	 * 生成QR图
 	 */
     private void createImage() {
 	        try {
@@ -1389,7 +1220,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 	                    Bitmap.Config.ARGB_8888);
 
 	            bitmap.setPixels(pixels, 0, QR_WIDTH, 0, 0, QR_WIDTH, QR_HEIGHT);
-	            
+
 	            byte[] data = PrintPicture.POS_PrintBMP(bitmap, 384, 0);
 	            SendDataByte(data);
 	            SendDataByte(PrinterCommand.POS_Set_PrtAndFeedPaper(30));
@@ -1399,7 +1230,7 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 	            e.printStackTrace();
 	        }
 	    }
-//************************************************************************************************//
+	//************************************************************************************************//
   	/*
   	 * 调用系统相机
   	 */
@@ -1407,14 +1238,14 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
   	    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
   	    startActivityForResult(takePictureIntent, actionCode);
   	}
-  	
   	private void handleSmallCameraPhoto(Intent intent) {
   	    Bundle extras = intent.getExtras();
   	    Bitmap mImageBitmap = (Bitmap) extras.get("data");
   	    imageViewPicture.setImageBitmap(mImageBitmap);
   	}
+
 /****************************************************************************************************/
-	 /**
+	/**
 	 * 加载assets文件资源
 	 */
 	private Bitmap getImageFromAssetsFile(String fileName) {
@@ -1431,5 +1262,174 @@ public class ImpressaoActibity extends Activity implements OnClickListener {
 			return image;
 
 		}
+	/******************************************************************************************************/
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (DEBUG)
+			Log.e(TAG, "+++ ON CREATE +++");
+
+		// Set up the window layout
+		//requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		setContentView(R.layout.impressaomain);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.impressao_custom_title);
+
+
+		// Get local Bluetooth adapter
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+		// If the adapter is null, then Bluetooth is not supported
+		if (mBluetoothAdapter == null) {
+			Toast.makeText(this, "Bluetooth is not available",
+					Toast.LENGTH_LONG).show();
+			finish();
+		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// If Bluetooth is not on, request that it be enabled.
+		// setupChat() will then be called during onActivityResult
+		if (!mBluetoothAdapter.isEnabled()) {
+			Intent enableIntent = new Intent(
+					BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			// Otherwise, setup the session
+		} else {
+			if (mService == null)
+				KeyListenerInit();//监听
+		}
+	}
+
+	@Override
+	public synchronized void onResume() {
+		super.onResume();
+
+		if (mService != null) {
+
+			if (mService.getState() == BluetoothService.STATE_NONE) {
+				// Start the Bluetooth services
+				mService.start();
+			}
+		}
+	}
+
+	@Override
+	public synchronized void onPause() {
+		super.onPause();
+		if (DEBUG)
+			Log.e(TAG, "- ON PAUSE -");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (DEBUG)
+			Log.e(TAG, "-- ON STOP --");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// Stop the Bluetooth services
+		if (mService != null)
+			mService.stop();
+		if (DEBUG)
+			Log.e(TAG, "--- ON DESTROY ---");
+	}
+
+	/*****************************************************************************************************/
+	private void KeyListenerInit() {
+
+		editText = (EditText) findViewById(R.id.edit_text_out);
+
+		sendButton = (Button) findViewById(R.id.Send_Button);
+		sendButton.setOnClickListener(this);
+
+		testButton = (Button) findViewById(R.id.btn_test);
+		testButton.setOnClickListener(this);
+
+		printbmpButton = (Button) findViewById(R.id.btn_printpicture);
+		printbmpButton.setOnClickListener(this);
+
+		btnScanButton = (Button)findViewById(R.id.button_scan);
+		btnScanButton.setOnClickListener(this);
+
+		hexBox = (CheckBox)findViewById(R.id.checkBoxHEX);
+		hexBox.setOnClickListener(this);
+
+		width_58mm = (RadioButton)findViewById(R.id.width_58mm);
+		width_58mm.setOnClickListener(this);
+
+		width_80 = (RadioButton)findViewById(R.id.width_80mm);
+		width_80.setOnClickListener(this);
+
+		imageViewPicture = (ImageView) findViewById(R.id.imageViewPictureUSB);
+		imageViewPicture.setOnClickListener(this);
+
+		btnClose = (Button)findViewById(R.id.btn_close);
+		btnClose.setOnClickListener(this);
+
+		btn_BMP = (Button)findViewById(R.id.btn_prtbmp);
+		btn_BMP.setOnClickListener(this);
+
+		btn_ChoseCommand = (Button)findViewById(R.id.btn_prtcommand);
+		btn_ChoseCommand.setOnClickListener(this);
+
+		btn_prtsma = (Button)findViewById(R.id.btn_prtsma);
+		btn_prtsma.setOnClickListener(this);
+
+		btn_prttableButton = (Button)findViewById(R.id.btn_prttable);
+		btn_prttableButton.setOnClickListener(this);
+
+		btn_prtcodeButton = (Button)findViewById(R.id.btn_prtbarcode);
+		btn_prtcodeButton.setOnClickListener(this);
+
+		btn_camer = (Button)findViewById(R.id.btn_dyca);
+		btn_camer.setOnClickListener(this);
+
+		btn_scqrcode = (Button)findViewById(R.id.btn_scqr);
+		btn_scqrcode.setOnClickListener(this);
+
+		Simplified = (RadioButton)findViewById(R.id.gbk12);
+		Simplified.setOnClickListener(this);
+		big5 = (RadioButton)findViewById(R.id.big5);
+		big5.setOnClickListener(this);
+		thai = (RadioButton)findViewById(R.id.thai);
+		thai.setOnClickListener(this);
+		Korean = (RadioButton)findViewById(R.id.kor);
+		Korean.setOnClickListener(this);
+
+		Bitmap bm = getImageFromAssetsFile("demo.bmp");
+		if (null != bm) {
+			imageViewPicture.setImageBitmap(bm);
+		}
+
+		editText.setEnabled(false);
+		imageViewPicture.setEnabled(false);
+		width_58mm.setEnabled(false);
+		width_80.setEnabled(false);
+		hexBox.setEnabled(false);
+		sendButton.setEnabled(false);
+		testButton.setEnabled(false);
+		printbmpButton.setEnabled(false);
+		btnClose.setEnabled(false);
+		btn_BMP.setEnabled(false);
+		btn_ChoseCommand.setEnabled(false);
+		btn_prtcodeButton.setEnabled(false);
+		btn_prtsma.setEnabled(false);
+		btn_prttableButton.setEnabled(false);
+		btn_camer.setEnabled(false);
+		btn_scqrcode.setEnabled(false);
+		Simplified.setEnabled(false);
+		Korean.setEnabled(false);
+		big5.setEnabled(false);
+		thai.setEnabled(false);
+
+		mService = new BluetoothService(this, mHandler);
+	}
 
 }

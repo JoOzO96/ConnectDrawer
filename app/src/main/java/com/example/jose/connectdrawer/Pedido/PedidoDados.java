@@ -1,7 +1,9 @@
 package com.example.jose.connectdrawer.Pedido;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,11 +22,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
+import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.main.ConnectMain;
+import com.example.jose.connectdrawer.uteis.CriaLinhaImpressao;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
@@ -108,7 +113,7 @@ public class PedidoDados extends Fragment {
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
-
+        final Context context = getContext();
 
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
         Bundle bundle = this.getArguments();
@@ -573,6 +578,42 @@ public class PedidoDados extends Fragment {
                if (retorno < 0){
                    MostraToast mostraToast = new MostraToast();
                    mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
+               }else{
+                   AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                   builder.setTitle("Confirma");
+                   builder.setMessage("Deseja imprimir o pedido?");
+
+                   builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+                       public void onClick(DialogInterface dialog, int which) {
+                           CriaLinhaImpressao linhaImpressao = new CriaLinhaImpressao();
+                           Intent intent = new Intent();
+                           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                           String texto = "";
+                           texto += linhaImpressao.linha("KADINI E KADINI LTDA");
+                           texto += linhaImpressao.linha("DEVE TA NA SEGUNDA LINHA");
+                           texto += linhaImpressao.linha("DEVE TA NA TERCEIRA LINHA");
+
+                           intent.putExtra("texto", texto);
+                           startActivity(intent);
+                           dialog.dismiss();
+                       }
+                   });
+
+                   builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+
+                           // Do nothing
+                           dialog.dismiss();
+                       }
+                   });
+
+                   AlertDialog alert = builder.create();
+                   alert.show();
                }
             }
         });
