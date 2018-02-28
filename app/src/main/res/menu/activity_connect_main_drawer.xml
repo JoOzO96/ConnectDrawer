@@ -26,6 +26,11 @@
             android:id="@+id/nav_formapagamento"
             android:icon="@drawable/ic_payment_black"
             android:title="Forma Pagamento" />
+        android:title="Vendedor" />
+        <item
+            android:id="@+id/nav_impressao"
+            android:icon="@drawable/ic_payment_black"
+            android:title="Impressao" />
     </group>
 
     <item android:title="Sincronizar">
