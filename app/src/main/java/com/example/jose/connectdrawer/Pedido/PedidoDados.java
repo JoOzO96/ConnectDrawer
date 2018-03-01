@@ -1,15 +1,25 @@
 package com.example.jose.connectdrawer.Pedido;
 
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +30,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
+import com.example.jose.connectdrawer.Impressora.BluetoothService;
+import com.example.jose.connectdrawer.Impressora.Command;
+import com.example.jose.connectdrawer.Impressora.ImpressaoTeste;
+import com.example.jose.connectdrawer.Impressora.PrinterCommand;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
@@ -45,7 +60,18 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class PedidoDados extends Fragment {
-
+    // Message types sent from the BluetoothService Handler
+    public static final int MESSAGE_STATE_CHANGE = 1;
+    public static final int MESSAGE_READ = 2;
+    public static final int MESSAGE_WRITE = 3;
+    public static final int MESSAGE_DEVICE_NAME = 4;
+    public static final int MESSAGE_TOAST = 5;
+    public static final int MESSAGE_CONNECTION_LOST = 6;
+    public static final int MESSAGE_UNABLE_CONNECT = 7;
+    String address = "0F:02:17:70:78:22";
+    private static final String THAI = "CP874";
+    private BluetoothService mService = null;
+    private BluetoothAdapter mBluetoothAdapter = null;
     private EditText txPedido;
     private Spinner spCodcliente;
     //    private EditText txdata;
@@ -89,7 +115,6 @@ public class PedidoDados extends Fragment {
     private Button btSalvar;
     private Button btCancelar;
 
-
     public PedidoDados() {
         // Required empty public constructor
     }
@@ -99,6 +124,8 @@ public class PedidoDados extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        MostraToast mostraToast = new MostraToast();
+
         final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
@@ -114,9 +141,10 @@ public class PedidoDados extends Fragment {
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
         final Context context = getContext();
+        final Intent abreTelaImpressao = new Intent(getContext(), ImprimirTexto.class);
 
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
-        Bundle bundle = this.getArguments();
+        final Bundle bundle = this.getArguments();
         Long codigoPedido = bundle.getLong("codigo");
 
 
@@ -447,10 +475,10 @@ public class PedidoDados extends Fragment {
                 if (txPedido.length() == 0) {
 
                     Integer retorno = SalvaPedido(view, -1L);
-                    if (retorno < 0){
+                    if (retorno < 0) {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
-                    }else {
+                    } else {
                         Bundle bundle = new Bundle();
                         bundle.putDouble("comissaoVendedor", comissaoVendedor);
                         bundle.putString("codigoClicado", "");
@@ -460,11 +488,12 @@ public class PedidoDados extends Fragment {
                         pedidoProdutoTela.setArguments(bundle);
                         pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
                     }
-                } else {Integer retorno = SalvaPedido(view, 1L);
-                    if (retorno < 0){
+                } else {
+                    Integer retorno = SalvaPedido(view, 1L);
+                    if (retorno < 0) {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
-                    }else {
+                    } else {
 
                         Bundle bundle = new Bundle();
                         bundle.putString("codigo", "0");
@@ -574,47 +603,79 @@ public class PedidoDados extends Fragment {
         {
             @Override
             public void onClick(View v) {
-               Integer retorno = SalvaPedido(view, 1L);
-               if (retorno < 0){
-                   MostraToast mostraToast = new MostraToast();
-                   mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
-               }else{
-                   AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                Integer retorno = SalvaPedido(view, 1L);
+                if (retorno < 0) {
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                   builder.setTitle("Confirma");
-                   builder.setMessage("Deseja imprimir o pedido?");
+                    builder.setTitle("Confirma");
+                    builder.setMessage("Deseja imprimir o pedido?");
 
-                   builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 
-                       public void onClick(DialogInterface dialog, int which) {
-                           CriaLinhaImpressao linhaImpressao = new CriaLinhaImpressao();
-                           Intent intent = new Intent();
-                           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        public void onClick(DialogInterface dialog, int which) {
+                            CriaLinhaImpressao linhaImpressao = new CriaLinhaImpressao();
 
-                           String texto = "";
-                           texto += linhaImpressao.linha("KADINI E KADINI LTDA");
-                           texto += linhaImpressao.linha("DEVE TA NA SEGUNDA LINHA");
-                           texto += linhaImpressao.linha("DEVE TA NA TERCEIRA LINHA");
+                            try {
+                                conectaImpressora();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+//                    }
 
-                           intent.putExtra("texto", texto);
-                           startActivity(intent);
-                           dialog.dismiss();
-                       }
-                   });
+//                           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                   builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                            String texto = "";
+//                            texto += linhaImpressao.adicionaCaracter("KADINI E KADINI LTDA", " ", 48L);
+//                            texto += linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L);
+//                            texto += linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L);
+                            try {
+                                Thread.sleep(1500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+//                           intent.putExtra("texto", texto);
+                            try {
+                                SendDataByte(PrinterCommand.POS_Print_Text(
+                                        linhaImpressao.adicionaCaracter("KADINI E KADINI", " ", 48L),
+                                        THAI, 255, 0, 0, 0));
+                                SendDataByte(Command.LF);
+                                SendDataByte(PrinterCommand.POS_Print_Text(
+                                        linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L),
+                                        THAI, 255, 0, 0, 0));
+                                SendDataByte(Command.LF);
+                                SendDataByte(PrinterCommand.POS_Print_Text(
+                                        linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L),
+                                        THAI, 255, 0, 0, 0));
+                                SendDataByte(Command.LF);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            dialog.dismiss();
 
-                       @Override
-                       public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                desconectaImpressora();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
-                           // Do nothing
-                           dialog.dismiss();
-                       }
-                   });
+                    builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
 
-                   AlertDialog alert = builder.create();
-                   alert.show();
-               }
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
 
@@ -649,9 +710,9 @@ public class PedidoDados extends Fragment {
 
                             if (fieldListPedido.get(p).getName().toLowerCase().equals(nomeCampo)) {
                                 Object retorno = getSetDinamicoTelas.retornaValorSpinner(view, fieldListPedido.get(p).getName().replace("sp", ""));
-                                if (retorno.toString().equals("ERRO")){
+                                if (retorno.toString().equals("ERRO")) {
                                     return -1;
-                                }else {
+                                } else {
                                     Object retornoPedido = getSetDinamico.insereField(fieldListPedido.get(p), pedido, retorno);
                                     pedido = (Pedido) retornoPedido;
                                     break;
@@ -700,7 +761,7 @@ public class PedidoDados extends Fragment {
                     }
                 }
 
-            }else{
+            } else {
                 return -1;
             }
             pedido.setNome(cliente.getNomecliente());
@@ -709,12 +770,11 @@ public class PedidoDados extends Fragment {
 
             Vendedor vendedor = new Vendedor();
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
-            if (cursorVendedor.getCount() > 0){
+            if (cursorVendedor.getCount() > 0) {
                 comissaoVendedor = cursorVendedor.getDouble(cursorVendedor.getColumnIndex("comi"));
-            }else{
+            } else {
                 return -1;
             }
-
 
 
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
@@ -824,7 +884,7 @@ public class PedidoDados extends Fragment {
                     }
                 }
 
-            }else{
+            } else {
                 return -1;
             }
             pedido.setNome(cliente.getNomecliente());
@@ -833,9 +893,9 @@ public class PedidoDados extends Fragment {
 
             Vendedor vendedor = new Vendedor();
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
-            if (cursorVendedor.getCount() > 0){
+            if (cursorVendedor.getCount() > 0) {
                 comissaoVendedor = cursorVendedor.getDouble(cursorVendedor.getColumnIndex("comi"));
-            }else{
+            } else {
                 return -1;
             }
             if (retorno) {
@@ -871,5 +931,72 @@ public class PedidoDados extends Fragment {
         }
         return 1;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void SendDataByte(byte[] data) throws InterruptedException {
+
+        mService.write(data);
+
+    }
+    private void conectaImpressora() throws InterruptedException {
+        mService = new BluetoothService(getContext(), mHandler);
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothDevice device = mBluetoothAdapter
+                .getRemoteDevice(address);
+        //mService.start();
+        // Attempt to connect to the device
+        mService.connect(device);
+        // If the adapter is null, then Bluetooth is not supported
+        Thread.sleep(2000);
+    }
+
+    private void desconectaImpressora() throws InterruptedException {
+        mService.stop();
+    }
+
+
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothService.STATE_CONNECTED:
+//					mTitle.setText(R.string.title_connected_to);
+//					mTitle.append(mConnectedDeviceName);
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+                            //mTitle.setText(R.string.title_connecting);
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+                        case BluetoothService.STATE_NONE:
+                            //mTitle.setText(R.string.title_not_connected);
+                            break;
+                    }
+                    break;
+                case MESSAGE_WRITE:
+
+                    break;
+                case MESSAGE_READ:
+
+                    break;
+                case MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    break;
+                case MESSAGE_TOAST:
+                    break;
+                case MESSAGE_CONNECTION_LOST:    //蓝牙已断开连接
+                    break;
+                case MESSAGE_UNABLE_CONNECT:     //无法连接设备
+                    break;
+            }
+        }
+    };
 
 }

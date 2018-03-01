@@ -183,7 +183,7 @@ public class BluetoothService {
      */
     private void connectionFailed() {
         setState(STATE_LISTEN);
-        
+
         // Send a failure message back to the Activity
         Message msg = mHandler.obtainMessage(ImpressaoActibity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();

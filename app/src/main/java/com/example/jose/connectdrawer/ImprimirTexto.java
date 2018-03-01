@@ -3,6 +3,7 @@ package com.example.jose.connectdrawer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
@@ -82,6 +83,7 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
     private Button sendButton = null;
     EditText editText;
     ImageView imageViewPicture;
+    String address = "0F:02:17:70:78:22";
 
     private Button btnScanButton = null;
 
@@ -146,13 +148,11 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-            case R.id.button_scan: {
-                Intent serverIntent = new Intent(ImprimirTexto.this, DeviceListActivity.class);
-                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-                break;
-            }
-            case R.id.Send_Button: {
 
+
+
+            case R.id.Send_Button: {
+                
                 String msg = editText.getText().toString();
                 if (msg.length() > 0) {
 
@@ -175,11 +175,11 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
 	 */
     private void SendDataString(String data) {
 
-        if (mService.getState() != BluetoothService.STATE_CONNECTED) {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
-                    .show();
-            return;
-        }
+//        if (mService.getState() != BluetoothService.STATE_CONNECTED) {
+//            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
+//                    .show();
+//            return;
+//        }
         if (data.length() > 0) {
             try {
                 mService.write(data.getBytes("GBK"));
@@ -216,7 +216,6 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
                         case BluetoothService.STATE_CONNECTED:
 //					mTitle.setText(R.string.title_connected_to);
 //					mTitle.append(mConnectedDeviceName);
-                            btnScanButton.setText(getText(R.string.Connecting));
                             break;
                         case BluetoothService.STATE_CONNECTING:
                             //mTitle.setText(R.string.title_connecting);
@@ -235,10 +234,6 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
                     break;
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
-                    mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
-                    Toast.makeText(getApplicationContext(),
-                            "Connected to " + mConnectedDeviceName,
-                            Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
                     Toast.makeText(getApplicationContext(),
@@ -246,14 +241,8 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
                             .show();
                     break;
                 case MESSAGE_CONNECTION_LOST:    //蓝牙已断开连接
-                    Toast.makeText(getApplicationContext(), "Device connection was lost",
-                            Toast.LENGTH_SHORT).show();
-                    editText.setEnabled(false);
-                    imageViewPicture.setEnabled(false);
                     break;
                 case MESSAGE_UNABLE_CONNECT:     //无法连接设备
-                    Toast.makeText(getApplicationContext(), "Unable to connect device",
-                            Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -266,17 +255,16 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE: {
                 // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    // Get the device MAC address
-                    String address = data.getExtras().getString(
-                            DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                    // Get the BLuetoothDevice object
+//                if (resultCode == Activity.RESULT_OK) {
+//                    // Get the device MAC address
+//
+//                    // Get the BLuetoothDevice object
                     if (BluetoothAdapter.checkBluetoothAddress(address)) {
                         BluetoothDevice device = mBluetoothAdapter
                                 .getRemoteDevice(address);
                         // Attempt to connect to the device
                         mService.connect(device);
-                    }
+//                    }
                 }
                 break;
             }
@@ -311,14 +299,18 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_imprimir_texto);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
                 R.layout.impressao_custom_title);
-
-        String texto = savedInstanceState.getString("texto");
-
-        editText.setText(texto);
-
+        if (savedInstanceState != null) {
+            String texto = savedInstanceState.getString("texto");
+            editText.setText(texto);
+        }
+        if (mService == null)
+            KeyListenerInit();//监听
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
+        BluetoothDevice device = mBluetoothAdapter
+                .getRemoteDevice(address);
+        // Attempt to connect to the device
+        mService.connect(device);
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available",
@@ -387,8 +379,6 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
         editText = (EditText) findViewById(R.id.edit_text_out);
 
         editText.setEnabled(true);
-        btnScanButton = (Button)findViewById(R.id.button_scan);
-        btnScanButton.setOnClickListener(this);
         sendButton = (Button) findViewById(R.id.Send_Button);
         sendButton.setOnClickListener(this);
         mService = new BluetoothService(this, mHandler);
