@@ -44,12 +44,15 @@ import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.main.ConnectMain;
-import com.example.jose.connectdrawer.uteis.CriaLinhaImpressao;
+import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -60,18 +63,18 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class PedidoDados extends Fragment {
-    // Message types sent from the BluetoothService Handler
-    public static final int MESSAGE_STATE_CHANGE = 1;
-    public static final int MESSAGE_READ = 2;
-    public static final int MESSAGE_WRITE = 3;
-    public static final int MESSAGE_DEVICE_NAME = 4;
-    public static final int MESSAGE_TOAST = 5;
-    public static final int MESSAGE_CONNECTION_LOST = 6;
-    public static final int MESSAGE_UNABLE_CONNECT = 7;
-    String address = "0F:02:17:70:78:22";
-    private static final String THAI = "CP874";
-    private BluetoothService mService = null;
-    private BluetoothAdapter mBluetoothAdapter = null;
+    //    // Message types sent from the BluetoothService Handler
+//    public static final int MESSAGE_STATE_CHANGE = 1;
+//    public static final int MESSAGE_READ = 2;
+//    public static final int MESSAGE_WRITE = 3;
+//    public static final int MESSAGE_DEVICE_NAME = 4;
+//    public static final int MESSAGE_TOAST = 5;
+//    public static final int MESSAGE_CONNECTION_LOST = 6;
+//    public static final int MESSAGE_UNABLE_CONNECT = 7;
+//    String address = "0F:02:17:70:78:22";
+//    private static final String THAI = "CP874";
+//    private BluetoothService mService = null;
+//    private BluetoothAdapter mBluetoothAdapter = null;
     private EditText txPedido;
     private Spinner spCodcliente;
     //    private EditText txdata;
@@ -616,50 +619,55 @@ public class PedidoDados extends Fragment {
                     builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int which) {
-                            CriaLinhaImpressao linhaImpressao = new CriaLinhaImpressao();
+                            CriaImpressao impressao = new CriaImpressao();
 
                             try {
-                                conectaImpressora();
+                                impressao.conectaImpressora(getContext());
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-//                    }
+//                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date d = new Date();
+                            Calendar t = Calendar.getInstance();
+                            DateFormat.getDateInstance().format(t.getTime());
+                            impressao.imprime("KADINI E KADINI LTDA", 0, 0, 0, 0, 1);
+                            impressao.imprime("RUA MANOEL TEIXEIRA, 108", 0, 0, 0, 0, 1);
+                            impressao.imprime("TAPEJARA - RS - CEP:99950-000", 0, 0, 0, 0, 1);
+                            impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, 1);
 
-//                           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            impressao.imprime("DATA:" + t.get(Calendar.DATE) + t.get(Calendar.MONTH) + t.get(Calendar.YEAR) + " FECH:" + t.get(Calendar.DATE) + t.get(Calendar.MONTH) + t.get(Calendar.YEAR), 0, 0, 0, 0, 3);
 
-                            String texto = "";
+                            impressao.avanco(2);
+
+                            try {
+                                impressao.desconectaImpressora();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+
 //                            texto += linhaImpressao.adicionaCaracter("KADINI E KADINI LTDA", " ", 48L);
 //                            texto += linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L);
 //                            texto += linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L);
-                            try {
-                                Thread.sleep(1500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+
 //                           intent.putExtra("texto", texto);
-                            try {
-                                SendDataByte(PrinterCommand.POS_Print_Text(
-                                        linhaImpressao.adicionaCaracter("KADINI E KADINI", " ", 48L),
-                                        THAI, 255, 0, 0, 0));
-                                SendDataByte(Command.LF);
-                                SendDataByte(PrinterCommand.POS_Print_Text(
-                                        linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L),
-                                        THAI, 255, 0, 0, 0));
-                                SendDataByte(Command.LF);
-                                SendDataByte(PrinterCommand.POS_Print_Text(
-                                        linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L),
-                                        THAI, 255, 0, 0, 0));
-                                SendDataByte(Command.LF);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+
+//                                SendDataByte(PrinterCommand.POS_Print_Text(
+//                                        linhaImpressao.adicionaCaracter("KADINI E KADINI", " ", 48L),
+//                                        THAI, 255, 0, 0, 0));
+//                                SendDataByte(Command.LF);
+//                                SendDataByte(PrinterCommand.POS_Print_Text(
+//                                        linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L),
+//                                        THAI, 255, 0, 0, 0));
+//                                SendDataByte(Command.LF);
+//                                SendDataByte(PrinterCommand.POS_Print_Text(
+//                                        linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L),
+//                                        THAI, 255, 0, 0, 0));
+//                                SendDataByte(Command.LF);
+
                             dialog.dismiss();
 
-                            try {
-                                desconectaImpressora();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+
                         }
                     });
 
@@ -937,66 +945,62 @@ public class PedidoDados extends Fragment {
         super.onDestroy();
     }
 
-    private void SendDataByte(byte[] data) throws InterruptedException {
 
-        mService.write(data);
+//    private void conectaImpressora() throws InterruptedException {
+//        mService = new BluetoothService(getContext(), mHandler);
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        BluetoothDevice device = mBluetoothAdapter
+//                .getRemoteDevice(address);
+//        //mService.start();
+//        // Attempt to connect to the device
+//        mService.connect(device);
+//        // If the adapter is null, then Bluetooth is not supported
+//        Thread.sleep(2000);
+//    }
 
-    }
-    private void conectaImpressora() throws InterruptedException {
-        mService = new BluetoothService(getContext(), mHandler);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        BluetoothDevice device = mBluetoothAdapter
-                .getRemoteDevice(address);
-        //mService.start();
-        // Attempt to connect to the device
-        mService.connect(device);
-        // If the adapter is null, then Bluetooth is not supported
-        Thread.sleep(2000);
-    }
-
-    private void desconectaImpressora() throws InterruptedException {
-        mService.stop();
-    }
+//    private void desconectaImpressora() throws InterruptedException {
+//        mService.stop();
+//    }
 
 
-    @SuppressLint("HandlerLeak")
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothService.STATE_CONNECTED:
-//					mTitle.setText(R.string.title_connected_to);
-//					mTitle.append(mConnectedDeviceName);
-                            break;
-                        case BluetoothService.STATE_CONNECTING:
-                            //mTitle.setText(R.string.title_connecting);
-                            break;
-                        case BluetoothService.STATE_LISTEN:
-                        case BluetoothService.STATE_NONE:
-                            //mTitle.setText(R.string.title_not_connected);
-                            break;
-                    }
-                    break;
-                case MESSAGE_WRITE:
-
-                    break;
-                case MESSAGE_READ:
-
-                    break;
-                case MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    break;
-                case MESSAGE_TOAST:
-                    break;
-                case MESSAGE_CONNECTION_LOST:    //蓝牙已断开连接
-                    break;
-                case MESSAGE_UNABLE_CONNECT:     //无法连接设备
-                    break;
-            }
-        }
-    };
+//    @SuppressLint("HandlerLeak")
+//    private final Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case MESSAGE_STATE_CHANGE:
+//                    switch (msg.arg1) {
+//                        case BluetoothService.STATE_CONNECTED:
+////					mTitle.setText(R.string.title_connected_to);
+////					mTitle.append(mConnectedDeviceName);
+//                            break;
+//                        case BluetoothService.STATE_CONNECTING:
+//                            //mTitle.setText(R.string.title_connecting);
+//                            break;
+//                        case BluetoothService.STATE_LISTEN:
+//                        case BluetoothService.STATE_NONE:
+//                            //mTitle.setText(R.string.title_not_connected);
+//                            break;
+//                    }
+//                    break;
+//                case MESSAGE_WRITE:
+//
+//                    break;
+//                case MESSAGE_READ:
+//
+//                    break;
+//                case MESSAGE_DEVICE_NAME:
+//                    // save the connected device's name
+//                    break;
+//                case MESSAGE_TOAST:
+//                    break;
+//                case MESSAGE_CONNECTION_LOST:    //蓝牙已断开连接
+//                    break;
+//                case MESSAGE_UNABLE_CONNECT:     //无法连接设备
+//                    break;
+//            }
+//        }
+//    };
 
 }

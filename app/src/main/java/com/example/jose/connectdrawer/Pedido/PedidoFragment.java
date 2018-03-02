@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.example.jose.connectdrawer.Impressora.BluetoothService;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.R;
-import com.example.jose.connectdrawer.uteis.CriaLinhaImpressao;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.util.ArrayList;
