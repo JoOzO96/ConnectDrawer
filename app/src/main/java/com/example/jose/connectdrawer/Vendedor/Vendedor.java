@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -83,6 +84,37 @@ public class Vendedor {
         }
         db.close();
         return cursor;
+    }
+
+    public Vendedor retornaVendedorObjeto(Context context, String codigo) {
+        Banco myDb = new Banco(context);
+        Vendedor vendedor = new Vendedor();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM vendedor where codvendedor = '" + codigo + "'", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+
+        List<Field> fieldListVendedor = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+
+        for (int j = 0; cursor.getCount() != j; j++) {
+            Vendedor vendedor1 = new Vendedor();
+
+            for (int f = 0; fieldListVendedor.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListVendedor.get(f));
+                String nomeCampo = fieldListVendedor.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retVendedor = getSetDinamico.insereField(fieldListVendedor.get(f), vendedor1, retorno);
+                    vendedor1 = (Vendedor) retVendedor;
+                }
+            }
+            vendedor = vendedor1;
+        }
+        db.close();
+        return vendedor;
     }
 
     public Cursor retornaVendedorAlteradaAndroid(Context context, String tipo) {

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.lang.reflect.Field;
@@ -352,6 +353,38 @@ public class PedidoProduto {
         return cursor;
     }
 
+    public List<PedidoProduto> retornaPedidoProdutoObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto where pedido = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+
+        List<Field> fieldListPedidoProduto = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
+        fieldListPedidoProduto.remove(14);
+        for (int j = 0; cursor.getCount() != j; j++) {
+            PedidoProduto pedidoProduto = new PedidoProduto();
+
+            for (int f = 0; fieldListPedidoProduto.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListPedidoProduto.get(f));
+                String nomeCampo = fieldListPedidoProduto.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retPedidoProduto = getSetDinamico.insereField(fieldListPedidoProduto.get(f), pedidoProduto, retorno);
+                    pedidoProduto = (PedidoProduto) retPedidoProduto;
+                }
+            }
+            cursor.moveToNext();
+            pedidoProdutoList.add(pedidoProduto);
+        }
+//        db.close();
+        return pedidoProdutoList;
+    }
+
     public Cursor retornaPedidoProdutoAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
@@ -392,7 +425,6 @@ public class PedidoProduto {
             valores.put("idPedidoProduto", retorno);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedidoproduto", null, valores);
-            Log.e("CACETE", "" + valores.get("custo"));
             valores.clear();
 
             if (retorno == -1) {

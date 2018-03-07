@@ -116,25 +116,66 @@ public class CriaImpressao {
                     Integer tamanhoTexto = texto.length();
                     String array[] = null;
 
-                    array = texto.split(" ");
+                    array = texto.split("@");
+                    texto = "";
+                    Integer contatexto = 0;
+                    for (int i = 0; array.length > i; i++) {
+                        contatexto += array[i].length();
+                    }
+                    if (contatexto < 48) {
+                        String textoMeio = "";
+                        Integer numerodeespacos = 48 - contatexto;
 
+                        if ((numerodeespacos + contatexto) <= 48) {
+                            if (array.length > 2) {
+                                numerodeespacos = Integer.parseInt(String.valueOf(numerodeespacos / array.length));
+                            }
+                            textoMeio = adicionaCaracter("", " ", Long.parseLong(numerodeespacos.toString()));
+                        }
 
+//                        for (int i = 0 ; array.length > i ; i++){
+//                            if (i%2 != 0){
+//                                texto += array[i];
+//                            }else{
+//                                texto +=  array[i]+ textoMeio;
+//                            }
+//                        }
 
-                    if (tamanhoTexto < 48){
-                        tamanhoTexto = 48 - tamanhoTexto;
-                        texto = "";
-                        String textoMeio = adicionaCaracter("", " ", Long.parseLong(tamanhoTexto.toString()));
-
-                        for (int i = 0; array.length > i ; i++) {
-                            texto += array[i];
-                            if (i==0){
-                                texto += textoMeio;
+                        if (array.length == 2) {
+                            texto = array[0] + textoMeio + array[1];
+                        } else {
+                            for (int i = 0; array.length > i; i++) {
+                                if (i % 2 != 0) {
+                                    texto += array[i];
+                                } else if (i>0){
+                                    texto += textoMeio + array[i] + textoMeio;
+                                }else{
+                                    texto += array[i]+textoMeio;
+                                }
                             }
                         }
+
                         return texto;
-                    }else{
-                        return "";
+
+                    } else {
+                        return texto;
                     }
+
+//                    if (tamanhoTexto < 48){
+//                        tamanhoTexto = 48 - tamanhoTexto;
+//                        texto = "";
+//                        String textoMeio = adicionaCaracter("", " ", Long.parseLong(tamanhoTexto.toString()));
+//
+//                        for (int i = 0; array.length > i ; i++) {
+//                            texto += array[i];
+//                            if (i==array.length-1){
+//                                texto += textoMeio;
+//                            }
+//                        }
+//                        return texto;
+//                    }else{
+//                        return "";
+//                    }
                 } else {
                     return texto;
                 }

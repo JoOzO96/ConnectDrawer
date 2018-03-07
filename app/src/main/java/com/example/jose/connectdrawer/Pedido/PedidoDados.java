@@ -42,6 +42,7 @@ import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
+import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.main.ConnectMain;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
@@ -71,7 +72,11 @@ public class PedidoDados extends Fragment {
 //    public static final int MESSAGE_TOAST = 5;
 //    public static final int MESSAGE_CONNECTION_LOST = 6;
 //    public static final int MESSAGE_UNABLE_CONNECT = 7;
-//    String address = "0F:02:17:70:78:22";
+    public static final int CENTRALIZADO = 1;
+    public static final int ESQUERDA = 0;
+    public static final int DIREITA = 2;
+    public static final int BORDAS = 3;
+    //    String address = "0F:02:17:70:78:22";
 //    private static final String THAI = "CP874";
 //    private BluetoothService mService = null;
 //    private BluetoothAdapter mBluetoothAdapter = null;
@@ -477,7 +482,7 @@ public class PedidoDados extends Fragment {
 
                 if (txPedido.length() == 0) {
 
-                    Integer retorno = SalvaPedido(view, -1L);
+                    Integer retorno = SalvaPedido(view, -1L, false);
                     if (retorno < 0) {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
@@ -492,7 +497,7 @@ public class PedidoDados extends Fragment {
                         pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
                     }
                 } else {
-                    Integer retorno = SalvaPedido(view, 1L);
+                    Integer retorno = SalvaPedido(view, 1L, false);
                     if (retorno < 0) {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
@@ -606,83 +611,12 @@ public class PedidoDados extends Fragment {
         {
             @Override
             public void onClick(View v) {
-                Integer retorno = SalvaPedido(view, 1L);
+                Integer retorno = SalvaPedido(view, 1L, true);
                 if (retorno < 0) {
                     MostraToast mostraToast = new MostraToast();
                     mostraToast.mostraToastShort(getContext(), "Erro ao salvar dados do pedido.");
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                    builder.setTitle("Confirma");
-                    builder.setMessage("Deseja imprimir o pedido?");
-
-                    builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int which) {
-                            CriaImpressao impressao = new CriaImpressao();
-
-                            try {
-                                impressao.conectaImpressora(getContext());
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-//                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                            Date d = new Date();
-                            Calendar t = Calendar.getInstance();
-                            DateFormat.getDateInstance().format(t.getTime());
-                            impressao.imprime("KADINI E KADINI LTDA", 0, 0, 0, 0, 1);
-                            impressao.imprime("RUA MANOEL TEIXEIRA, 108", 0, 0, 0, 0, 1);
-                            impressao.imprime("TAPEJARA - RS - CEP:99950-000", 0, 0, 0, 0, 1);
-                            impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, 1);
-
-                            impressao.imprime("DATA:" + t.get(Calendar.DATE) + t.get(Calendar.MONTH) + t.get(Calendar.YEAR) + " FECH:" + t.get(Calendar.DATE) + t.get(Calendar.MONTH) + t.get(Calendar.YEAR), 0, 0, 0, 0, 3);
-
-                            impressao.avanco(2);
-
-                            try {
-                                impressao.desconectaImpressora();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-
-//                            texto += linhaImpressao.adicionaCaracter("KADINI E KADINI LTDA", " ", 48L);
-//                            texto += linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L);
-//                            texto += linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L);
-
-//                           intent.putExtra("texto", texto);
-
-//                                SendDataByte(PrinterCommand.POS_Print_Text(
-//                                        linhaImpressao.adicionaCaracter("KADINI E KADINI", " ", 48L),
-//                                        THAI, 255, 0, 0, 0));
-//                                SendDataByte(Command.LF);
-//                                SendDataByte(PrinterCommand.POS_Print_Text(
-//                                        linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L),
-//                                        THAI, 255, 0, 0, 0));
-//                                SendDataByte(Command.LF);
-//                                SendDataByte(PrinterCommand.POS_Print_Text(
-//                                        linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L),
-//                                        THAI, 255, 0, 0, 0));
-//                                SendDataByte(Command.LF);
-
-                            dialog.dismiss();
-
-
-                        }
-                    });
-
-                    builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            // Do nothing
-                            dialog.dismiss();
-                        }
-                    });
-
-                    AlertDialog alert = builder.create();
-                    alert.show();
                 }
             }
         });
@@ -691,7 +625,7 @@ public class PedidoDados extends Fragment {
     }
 
 
-    public Integer SalvaPedido(View view, Long clique) {
+    public Integer SalvaPedido(View view, Long clique, Boolean imprime) {
         if (clique == 1L) {
             //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
             List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
@@ -794,18 +728,20 @@ public class PedidoDados extends Fragment {
                         pedido.setPedido(pedido.retornaMaiorCod(getContext()));
                     }
                     if (pedido.getPedido() > 0) {
-                        PedidoFragment pedidoFragment = new PedidoFragment();
-                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
-                        MostraToast mostraToast = new MostraToast();
-                        mostraToast.mostraToastShort(getContext(), "Pedido atualizado com sucesso.");
+                        if (imprime) {
+                            imprimePedido(1L, pedido);
+                        }else{
+                            montaTelaPedido(1L);
+                        }
+
 
                     } else {
-                        PedidoFragment pedidoFragment = new PedidoFragment();
-                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
-                        MostraToast mostraToast = new MostraToast();
-                        mostraToast.mostraToastShort(getContext(), "Pedido salvo com sucesso.");
+                        if (imprime) {
+                            imprimePedido(2L, pedido);
+                        }else{
+                            montaTelaPedido(2L);
+                        }
+
                     }
                 }
             } else {
@@ -912,6 +848,8 @@ public class PedidoDados extends Fragment {
                         pedido.setPedido(pedido.retornaMaiorCod(getContext()));
                     }
                     if (pedido.getPedido() > 0) {
+
+
                         PedidoFragment pedidoFragment = new PedidoFragment();
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
@@ -946,61 +884,137 @@ public class PedidoDados extends Fragment {
     }
 
 
-//    private void conectaImpressora() throws InterruptedException {
-//        mService = new BluetoothService(getContext(), mHandler);
-//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        BluetoothDevice device = mBluetoothAdapter
-//                .getRemoteDevice(address);
-//        //mService.start();
-//        // Attempt to connect to the device
-//        mService.connect(device);
-//        // If the adapter is null, then Bluetooth is not supported
-//        Thread.sleep(2000);
-//    }
+    public void imprimePedido(final Long status, final Pedido pedido) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-//    private void desconectaImpressora() throws InterruptedException {
-//        mService.stop();
-//    }
+        builder.setTitle("Confirma");
+        builder.setMessage("Deseja imprimir o pedido?");
+
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                CriaImpressao impressao = new CriaImpressao();
+
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                Date d = new Date();
+                Cliente cliente = new Cliente();
+                Cidade cidade = new Cidade();
+                Vendedor vendedor = new Vendedor();
+                PedidoProduto pedidoProduto = new PedidoProduto();
+                List<PedidoProduto> pedidoProdutoLista = new ArrayList<>();
+                cliente = cliente.retornaClienteObjeto(getContext(), pedido.getCodcliente());
+                cidade = cidade.retornaCidadeObjeto(getContext(), cliente.getCodcidade());
+                vendedor = vendedor.retornaVendedorObjeto(getContext(),pedido.getCodvendedor());
+                pedidoProdutoLista = pedidoProduto.retornaPedidoProdutoObjeto(getContext(), pedido.getPedido());
+                try {
+                    impressao.conectaImpressora(getContext());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                impressao.imprime("KADINI E KADINI LTDA", 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("RUA MANOEL TEIXEIRA, 108", 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("TAPEJARA - RS - CEP:99950-000", 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+
+                impressao.imprime("DATA:" + format.format(pedido.getData()) + "@ FECH:" + format.format(pedido.getData()), 0, 0, 0, 0, BORDAS);
+
+                if (pedido.getCodcliente() != 1L) {
+                    impressao.imprime("CLI.:" + pedido.getCodcliente() + " - " + pedido.getNome(), 0, 0, 0, 0, ESQUERDA);
+                    if (cliente.getCpf().length() > 0) {
+                        impressao.imprime("CNPJ: " + "@ CPF:" + cliente.getCpf(), 0, 0, 0, 0, BORDAS);
+                    } else {
+                        impressao.imprime("CNPJ:" + cliente.getCgc() + "@ CPF: ", 0, 0, 0, 0, BORDAS);
+                    }
+                    impressao.imprime("IE..:" + cliente.getIncest() + "@RG: " + cliente.getIdentidade(), 0, 0, 0, 0, BORDAS);
+                    impressao.imprime("CID.:" + cidade.getNomecidade() + " - " + cidade.getUf(), 0, 0, 0, 0, ESQUERDA);
+                    impressao.imprime("BAIR:" + cliente.getBairro() + "@CEP: " + cliente.getCep(), 0, 0, 0, 0, BORDAS);
+                    impressao.imprime("END.:" + cliente.getEndereco(), 0, 0, 0, 0, ESQUERDA);
+                    impressao.imprime("FONE:" + cliente.getTelefone(), 0, 0, 0, 0, ESQUERDA);
+                }
+                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("PEDIDO " + pedido.getPedido(), 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("NAO E DOCUMENTO FISCAL", 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("VEND:" + vendedor.getCodvendedor() + "-" + vendedor.getNomevendedor() + "@ NR. ITENS:" + pedidoProdutoLista.size(), 0, 0, 0, 0, BORDAS);
+                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("       ITEM           DESCRICAO           UN", 0, 0, 0, 0, ESQUERDA);
+                impressao.imprime("    QNT.     V. UNIT.       DESC.        TOTAL", 0, 0, 0, 0, ESQUERDA);
+                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
 
 
-//    @SuppressLint("HandlerLeak")
-//    private final Handler mHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case MESSAGE_STATE_CHANGE:
-//                    switch (msg.arg1) {
-//                        case BluetoothService.STATE_CONNECTED:
-////					mTitle.setText(R.string.title_connected_to);
-////					mTitle.append(mConnectedDeviceName);
-//                            break;
-//                        case BluetoothService.STATE_CONNECTING:
-//                            //mTitle.setText(R.string.title_connecting);
-//                            break;
-//                        case BluetoothService.STATE_LISTEN:
-//                        case BluetoothService.STATE_NONE:
-//                            //mTitle.setText(R.string.title_not_connected);
-//                            break;
-//                    }
-//                    break;
-//                case MESSAGE_WRITE:
-//
-//                    break;
-//                case MESSAGE_READ:
-//
-//                    break;
-//                case MESSAGE_DEVICE_NAME:
-//                    // save the connected device's name
-//                    break;
-//                case MESSAGE_TOAST:
-//                    break;
-//                case MESSAGE_CONNECTION_LOST:    //蓝牙已断开连接
-//                    break;
-//                case MESSAGE_UNABLE_CONNECT:     //无法连接设备
-//                    break;
-//            }
-//        }
-//    };
+                for (int i = 0; pedidoProdutoLista.size() > i; i++) {
+                    impressao.imprime(1 + i + "@" + pedidoProdutoLista.get(i).getCodproduto() + "-" + pedidoProdutoLista.get(i).getDescri() + "@UN", 0, 0, 0, 0, BORDAS);
+                    impressao.imprime("      " + pedidoProdutoLista.get(i).getQuantidade() + "     " + pedidoProdutoLista.get(i).getValorunitario() + "   " + pedidoProdutoLista.get(i).getDesvalor() + "    " + +pedidoProdutoLista.get(i).getValortotal(), 0, 0, 0, 0, ESQUERDA);
+                }
+
+
+                impressao.avanco(2);
+
+                try {
+                    impressao.desconectaImpressora();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+//                            texto += linhaImpressao.adicionaCaracter("KADINI E KADINI LTDA", " ", 48L);
+//                            texto += linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L);
+//                            texto += linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L);
+
+//                           intent.putExtra("texto", texto);
+
+//                                SendDataByte(PrinterCommand.POS_Print_Text(
+//                                        linhaImpressao.adicionaCaracter("KADINI E KADINI", " ", 48L),
+//                                        THAI, 255, 0, 0, 0));
+//                                SendDataByte(Command.LF);
+//                                SendDataByte(PrinterCommand.POS_Print_Text(
+//                                        linhaImpressao.adicionaCaracter("SEGUNDA LINHA", " ", 48L),
+//                                        THAI, 255, 0, 0, 0));
+//                                SendDataByte(Command.LF);
+//                                SendDataByte(PrinterCommand.POS_Print_Text(
+//                                        linhaImpressao.adicionaCaracter("TERCEIRA LINHA", " ", 48L),
+//                                        THAI, 255, 0, 0, 0));
+//                                SendDataByte(Command.LF);
+
+                dialog.dismiss();
+                if (status < 3) {
+                    montaTelaPedido(status);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Do nothing
+                dialog.dismiss();
+                montaTelaPedido(status);
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
+
+    }
+
+
+    public void montaTelaPedido(Long status) {
+        if (status == 1) {
+            PedidoFragment pedidoFragment = new PedidoFragment();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastShort(getContext(), "Pedido atualizado com sucesso.");
+        } else {
+            PedidoFragment pedidoFragment = new PedidoFragment();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastShort(getContext(), "Pedido salvo com sucesso.");
+        }
+    }
+
 
 }

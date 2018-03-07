@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -156,6 +157,37 @@ public class Cidade {
         }
         db.close();
         return cursor;
+    }
+
+    public Cidade retornaCidadeObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        Cidade cidade = new Cidade();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cidade where codCidade = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+
+        List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(Cidade.class.getDeclaredFields()));
+
+        for (int j = 0; cursor.getCount() != j; j++) {
+            Cidade cidade1 = new Cidade();
+
+            for (int f = 0; fieldListCidade.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(f));
+                String nomeCampo = fieldListCidade.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCidade = getSetDinamico.insereField(fieldListCidade.get(f), cidade1, retorno);
+                    cidade1 = (Cidade) retCidade;
+                }
+            }
+            cidade = cidade1;
+        }
+        db.close();
+        return cidade;
     }
 
     public Cursor retornaCidadeAlteradaAndroid(Context context, String tipo) {
