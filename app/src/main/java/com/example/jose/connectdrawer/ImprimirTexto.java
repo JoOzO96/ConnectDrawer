@@ -307,10 +307,14 @@ public class ImprimirTexto extends Activity implements View.OnClickListener {
             KeyListenerInit();//监听
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        BluetoothDevice device = mBluetoothAdapter
-                .getRemoteDevice(address);
-        // Attempt to connect to the device
-        mService.connect(device);
+        try {
+            BluetoothDevice device = mBluetoothAdapter
+                    .getRemoteDevice(address);
+            // Attempt to connect to the device
+            mService.connect(device);
+        }catch (Exception e){
+
+        }
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available",

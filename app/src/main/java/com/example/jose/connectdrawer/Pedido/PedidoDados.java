@@ -940,12 +940,14 @@ public class PedidoDados extends Fragment {
                 impressao.imprime("    QNT.     V. UNIT.       DESC.        TOTAL", 0, 0, 0, 0, ESQUERDA);
                 impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
 
-
+                Double somaitem = 0D;
                 for (int i = 0; pedidoProdutoLista.size() > i; i++) {
                     impressao.imprime(1 + i + "@" + pedidoProdutoLista.get(i).getCodproduto() + "-" + pedidoProdutoLista.get(i).getDescri() + "@UN", 0, 0, 0, 0, BORDAS);
                     impressao.imprime("      " + pedidoProdutoLista.get(i).getQuantidade() + "     " + pedidoProdutoLista.get(i).getValorunitario() + "   " + pedidoProdutoLista.get(i).getDesvalor() + "    " + +pedidoProdutoLista.get(i).getValortotal(), 0, 0, 0, 0, ESQUERDA);
-                }
 
+                    somaitem += pedidoProdutoLista.get(i).getValortotal();
+                }
+                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, DIREITA);
 
                 impressao.avanco(2);
 

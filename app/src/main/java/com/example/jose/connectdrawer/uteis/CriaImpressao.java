@@ -208,11 +208,15 @@ public class CriaImpressao {
         mService = new BluetoothService(context, mHandler);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        try{
         BluetoothDevice device = mBluetoothAdapter
                 .getRemoteDevice(address);
         //mService.start();
         // Attempt to connect to the device
         mService.connect(device);
+        } catch (Exception c){
+
+        }
         // If the adapter is null, then Bluetooth is not supported
         Thread.sleep(1500);
     }
