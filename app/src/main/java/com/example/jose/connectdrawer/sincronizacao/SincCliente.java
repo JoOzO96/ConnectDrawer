@@ -164,8 +164,8 @@ public class SincCliente extends Activity {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://177.92.186.84:15101/ConnectServices/recebeCliente";
-//            String url = "http://192.168.0.199:8081/ConnectServices/recebeCliente";
+//            String url = "http://177.92.186.84:15101/ConnectServices/recebeCliente";
+            String url = "http://192.168.0.199:8080/ConnectServices/recebeCliente";
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

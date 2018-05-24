@@ -82,6 +82,13 @@ public class PedidoProdutoTela extends DialogFragment {
         final Long idPedidoProduto = bundle.getLong("idPedidoProduto");
         Produto produto = new Produto();
         final List<Field> fieldListProduto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
+//        final List<Field> fieldListProduto = new ArrayList<>();
+        for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
+            if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
+            } else {
+                fieldListProduto.remove(f);
+            }
+        }
         if (codigoProduto > 0) {
 
 
@@ -102,12 +109,12 @@ public class PedidoProdutoTela extends DialogFragment {
                         //COLOCA VALOR NO SPINNER DO PRODUTO
                         if (fieldListPassar.get(i).getName().toLowerCase().equals("spproduto")) {
 
-                            for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
-                                if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
-                                } else {
-                                    fieldListProduto.remove(f);
-                                }
-                            }
+//                            for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
+//                                if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
+//                                } else {
+//                                    fieldListProduto.remove(f);
+//                                }
+//                            }
                             cursorProduto.moveToFirst();
                             for (int j = 0; cursorProduto.getCount() != j; j++) {
                                 produto = new Produto();
@@ -223,7 +230,7 @@ public class PedidoProdutoTela extends DialogFragment {
 
                 pedidoProduto.setValorunitario(Double.parseDouble(txvalorunitario.getText().toString()));
                 pedidoProduto.setQuantidade(Double.parseDouble(txquantidade.getText().toString()));
-                pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString().replace(",",".")));
+                pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString().replace(",", ".")));
                 pedidoProduto.setCodproduto(produto1.getCodproduto());
                 pedidoProduto.setDescri(produto1.getMercadoria());
                 pedidoProduto.setPedido(Long.parseLong(codPedido));
@@ -285,11 +292,10 @@ public class PedidoProdutoTela extends DialogFragment {
                         txvalorunitario.setText(String.valueOf(produtoClicado.getValoravista()));
 
 
-
                         Cursor ultimacompra = produtoClicado.retornaProdutoUltimaCompraCursor(getContext(), codCliente, produtoClicado.getCodproduto());
-                        if (ultimacompra.getCount() > 0){
+                        if (ultimacompra.getCount() > 0) {
                             ultimo_valor.setText("R$ " + Double.parseDouble(String.valueOf(getSetDinamico.retornaValorCursor("STRING", "valorunitario", ultimacompra))));
-                        }else{
+                        } else {
                             ultimo_valor.setText("RS 0,0");
                         }
                     } else {
@@ -317,7 +323,7 @@ public class PedidoProdutoTela extends DialogFragment {
                     txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                     txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
                     quantidade = Double.parseDouble(txquantidade.getText().toString());
-                    total = Double.parseDouble(txvalortotal.getText().toString().replace(",","."));
+                    total = Double.parseDouble(txvalortotal.getText().toString().replace(",", "."));
                     valorunitario = total / quantidade;
                     if (after != 0 || count != 0) {
                         evitaLoop = false;
@@ -402,9 +408,9 @@ public class PedidoProdutoTela extends DialogFragment {
                 txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                 txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
                 quantidade = Double.parseDouble(txquantidade.getText().toString());
-                valorunitario = Double.parseDouble(txvalorunitario.getText().toString().replace(",","."));
+                valorunitario = Double.parseDouble(txvalorunitario.getText().toString().replace(",", "."));
                 total = quantidade * valorunitario;
-                if (Double.parseDouble(s.toString().replace(",",".")) == Double.parseDouble(total.toString().replace(",","."))) {
+                if (Double.parseDouble(s.toString().replace(",", ".")) == Double.parseDouble(total.toString().replace(",", "."))) {
                     evitaLoop = false;
                     contaAcessos++;
                 } else {
@@ -433,7 +439,7 @@ public class PedidoProdutoTela extends DialogFragment {
                             Double total;
 
                             quantidade = Double.parseDouble(txquantidade.getText().toString());
-                            total = Double.parseDouble(txvalortotal.getText().toString().replace(",","."));
+                            total = Double.parseDouble(txvalortotal.getText().toString().replace(",", "."));
                             valorunitario = total / quantidade;
                             if (valorunitario > 0) {
                                 evitaLoop = true;

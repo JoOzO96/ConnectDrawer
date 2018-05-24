@@ -27,14 +27,14 @@ public class Sincroniza {
         sincFormaPagamento.iniciaSinc(context);
         sincVendedor.iniciaSinc(context);
         sincProduto.iniciaSinc(context);
-        try {
-            sincCidade.iniciaEnvio(context);
-            sincCliente.iniciaenvio(context);
-            sincPedido.iniciaenvio(context);
-            dialog.dismiss();
-        } catch (IOException e) {
-            dialog.dismiss();
-            e.printStackTrace();
-        }
+//        try {
+////            sincCidade.iniciaEnvio(context);
+////            sincCliente.iniciaenvio(context);
+////            sincPedido.iniciaenvio(context);
+//            dialog.dismiss();
+//        } catch (IOException e) {
+//            dialog.dismiss();
+//            e.printStackTrace();
+//        }
     }
 }

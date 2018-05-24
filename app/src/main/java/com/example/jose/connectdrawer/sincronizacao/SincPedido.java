@@ -162,8 +162,8 @@ public class SincPedido {
             String gsonRetorno = gson.toJson(pedidoList);
             Log.i("JSONPEDIDO", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://177.92.186.84:15101/ConnectServices/recebePedido";
-//            String url = "http://192.168.0.199:8081/ConnectServices/recebePedido";
+//            String url = "http://177.92.186.84:15101/ConnectServices/recebePedido";
+            String url = "http://092.168.0.199:8080/ConnectServices/recebePedido";
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

@@ -731,7 +731,7 @@ public class PedidoDados extends Fragment {
                         if (imprime) {
                             imprimePedido(1L, pedido);
                         }else{
-                            montaTelaPedido(1L);
+                            //montaTelaPedido(1L);
                         }
 
 
@@ -947,7 +947,8 @@ public class PedidoDados extends Fragment {
 
                     somaitem += pedidoProdutoLista.get(i).getValortotal();
                 }
-                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, DIREITA);
+                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO );
 
                 impressao.avanco(2);
 
