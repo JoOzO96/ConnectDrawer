@@ -24,4 +24,22 @@ public class RetRetrofit {
         return retrofit;
     }
 
+    public String retornaSring(String tipo){
+        String url = "";
+        if (tipo.equals("cidade")){
+//          url = "http://177.92.186.84:15101/ConnectServices/recebeCidade";
+            url = "http://192.168.0.199:8080/ConnectServices/recebeCidade";
+        }else if (tipo.equals("cliente")){
+//            url = "http://177.92.186.84:15101/ConnectServices/recebeCliente";
+            url = "http://192.168.0.199:8080/ConnectServices/recebeCliente";
+        }
+        else if (tipo.equals("pedido")){
+//          url = "http://177.92.186.84:15101/ConnectServices/recebePedido";
+            url = "http://092.168.0.199:8080/ConnectServices/recebePedido";
+        }
+
+        return url;
+    }
+
+
 }
