@@ -1,12 +1,10 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.Produto.Produto;
 import com.example.jose.connectdrawer.Produto.ProdutoService;
 import com.example.jose.connectdrawer.banco.Banco;
@@ -28,12 +26,12 @@ import retrofit2.Retrofit;
 
 public class SincProduto {
 
-    public void iniciaSinc(final Context context) {
+    public void iniciaSinc(final Context context, String ip) {
 
 
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
 
         ProdutoService produtoService = retrofit.create(ProdutoService.class);

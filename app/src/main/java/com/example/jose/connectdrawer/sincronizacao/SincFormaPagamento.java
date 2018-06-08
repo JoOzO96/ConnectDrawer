@@ -6,8 +6,6 @@ import android.util.Log;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamentoService;
-import com.example.jose.connectdrawer.Vendedor.Vendedor;
-import com.example.jose.connectdrawer.Vendedor.VendedorService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
@@ -26,11 +24,11 @@ import retrofit2.Retrofit;
 
 public class SincFormaPagamento {
 
-    public void iniciaSinc(Context context) {
+    public void iniciaSinc(Context context, String ip) {
         final Context context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
         FormaPagamentoService formaPagamentoService = retrofit.create(FormaPagamentoService.class);
         Call<List<FormaPagamento>> requestFormaPagamento = formaPagamentoService.listFormaPagamento();

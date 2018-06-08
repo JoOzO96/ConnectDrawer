@@ -10,10 +10,6 @@ import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.Pedido.PedidoService;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
-import com.example.jose.connectdrawer.cidade.Cidade;
-import com.example.jose.connectdrawer.cidade.CidadeDados;
-import com.example.jose.connectdrawer.cliente.Cliente;
-import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.google.gson.Gson;
 
@@ -33,11 +29,11 @@ import retrofit2.Retrofit;
  */
 
 public class SincPedido {
-    public void iniciaSinc(Context context) {
+    public void iniciaSinc(Context context, String ip) {
         final Context context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
         PedidoService pedidoService = retrofit.create(PedidoService.class);
         Call<List<Pedido>> requestPedido = pedidoService.listPedido();
@@ -132,7 +128,7 @@ public class SincPedido {
     }
 
 
-    public void iniciaenvio(Context context) {
+    public void iniciaenvio(Context context, String ip) {
         Pedido pedido = new Pedido();
         List<Pedido> pedidoList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -163,7 +159,7 @@ public class SincPedido {
             Log.i("JSONPEDIDO", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
             RetRetrofit retRetrofit = new RetRetrofit();
-            String url = retRetrofit.retornaSring("pedido");
+            String url = retRetrofit.retornaSring("pedido", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

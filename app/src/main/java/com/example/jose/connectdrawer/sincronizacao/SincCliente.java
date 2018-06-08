@@ -29,13 +29,13 @@ import retrofit2.Retrofit;
 public class SincCliente extends Activity {
 
 
-    public void iniciaSinc(Context context) {
+    public void iniciaSinc(Context context, String ip) {
 
         final Context context1;
         context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
         ClienteService clienteService = retrofit.create(ClienteService.class);
         Call<List<Cliente>> requestCliente = clienteService.listCliente();
@@ -135,7 +135,7 @@ public class SincCliente extends Activity {
     }
 
 
-    public void iniciaenvio(Context context) {
+    public void iniciaenvio(Context context, String ip) {
         Cliente cliente = new Cliente();
         List<Cliente> clienteList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -165,7 +165,7 @@ public class SincCliente extends Activity {
             String gsonRetorno = gson.toJson(clienteList);
             EnviaJson enviaJson = new EnviaJson();
             RetRetrofit retRetrofit = new RetRetrofit();
-            String url = retRetrofit.retornaSring("cliente");
+            String url = retRetrofit.retornaSring("cliente", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

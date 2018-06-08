@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.example.jose.connectdrawer.Pedido.Pedido;
-import com.example.jose.connectdrawer.Pedido.PedidoService;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.Vendedor.VendedorService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
@@ -26,11 +24,11 @@ import retrofit2.Retrofit;
 
 public class SincVendedor {
 
-    public void iniciaSinc(Context context) {
+    public void iniciaSinc(Context context, String ip) {
         final Context context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
         VendedorService vendedorService = retrofit.create(VendedorService.class);
         Call<List<Vendedor>> requestVendedor = vendedorService.listVendedor();

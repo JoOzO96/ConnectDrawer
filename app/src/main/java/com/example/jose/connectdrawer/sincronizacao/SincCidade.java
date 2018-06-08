@@ -29,14 +29,14 @@ import retrofit2.Retrofit;
 
 public class SincCidade {
 
-    public void iniciaSinc(final Context context) {
+    public void iniciaSinc(final Context context, String ip) {
         final Context context1;
         context1 = context;
 
         //CLASSE QUE MANTEM OS DADOS DO RETROFIR
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
         CidadeService cidadeService = retrofit.create(CidadeService.class);
         Call<List<Cidade>> requestCidade = cidadeService.listCidade();
@@ -105,7 +105,7 @@ public class SincCidade {
         });
     }
 
-    public void iniciaEnvio(Context context) throws IOException {
+    public void iniciaEnvio(Context context, String ip) throws IOException {
 
         //
         //
@@ -146,7 +146,7 @@ public class SincCidade {
             String gsonRetorno = gson.toJson(cidadeList);
             EnviaJson enviaJson = new EnviaJson();
             RetRetrofit retRetrofit = new RetRetrofit();
-            String url = retRetrofit.retornaSring("cidade");
+            String url = retRetrofit.retornaSring("cidade", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {

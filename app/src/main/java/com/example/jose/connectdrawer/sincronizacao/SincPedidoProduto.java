@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
-import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.google.gson.Gson;
@@ -24,11 +23,11 @@ import retrofit2.Retrofit;
 
 public class SincPedidoProduto {
 
-    public void iniciaSinc(Context context) {
+    public void iniciaSinc(Context context, String ip) {
         final Context context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit();
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
     }
 
 
