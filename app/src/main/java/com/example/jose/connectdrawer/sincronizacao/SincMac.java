@@ -100,7 +100,7 @@ public class SincMac {
             while (response[0] == null){
 //                Log.e("NULL", "RESPOSTA NULL");
                 limitaResposta ++;
-                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
+//                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
                 if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 ){
                     return null;
                 }

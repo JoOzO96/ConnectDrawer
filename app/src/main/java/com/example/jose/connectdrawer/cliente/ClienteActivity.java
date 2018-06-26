@@ -1,13 +1,14 @@
 package com.example.jose.connectdrawer.cliente;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.banco.Banco;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,11 @@ public class ClienteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
-
+        Banco myDb = new Banco(this);
+        SQLiteDatabase db = myDb.getReadableDatabase();
         Cliente cliente = new Cliente();
         ListView listCliente = (ListView) findViewById(R.id.listDados);
-        Cursor cursor = cliente.retornaCliente(this);
+        Cursor cursor = cliente.retornaCliente(db);
         List<Cliente> clienteList = new ArrayList<>();
 
         cursor.moveToFirst();

@@ -129,6 +129,8 @@ public class Banco extends SQLiteOpenHelper {
                 "codinstituicao long ,"+
                 "nfc text ,"+
                 "codcaixa long ,"+
+                "codemitente long," +
+                "codstatus long," +
                 "servicosolicitado text ,"+
                 "cadastroandroid boolean," +
                 "deletadoandroid boolean," +

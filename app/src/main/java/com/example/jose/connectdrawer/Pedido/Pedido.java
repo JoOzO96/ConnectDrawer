@@ -21,6 +21,7 @@ import java.util.List;
 
 public class Pedido {
     private Long pedido;
+    private Long codemitente;
     private Long codcliente;
     private Long data;
     private String codvendedor;
@@ -53,6 +54,7 @@ public class Pedido {
     private String nfc;
     private Long codcaixa;
     private String servicosolicitado;
+    private Long codstatus;
     private List<PedidoProduto> itensPedido;
 
     public Long getPedido() {
@@ -117,14 +119,6 @@ public class Pedido {
 
     public void setEntrada(Double entrada) {
         this.entrada = entrada;
-    }
-
-    public String getOrpedi() {
-        return orpedi;
-    }
-
-    public void setOrpedi(String orpedi) {
-        this.orpedi = orpedi;
     }
 
     public Long getCodbanco() {
@@ -319,6 +313,14 @@ public class Pedido {
         this.servicosolicitado = servicosolicitado;
     }
 
+    public Long getCodstatus() {
+        return codstatus;
+    }
+
+    public void setCodstatus(Long codstatus) {
+        this.codstatus = codstatus;
+    }
+
     public List<PedidoProduto> getItensPedido() {
         return itensPedido;
     }
@@ -461,5 +463,22 @@ public class Pedido {
         values.put(campo, "0");
         int retorno = db.update("pedido", values, campo + " = 1", null);
 
+    }
+
+
+    public Long getCodemitente() {
+        return codemitente;
+    }
+
+    public void setCodemitente(Long codemitente) {
+        this.codemitente = codemitente;
+    }
+
+    public String getOrpedi() {
+        return orpedi;
+    }
+
+    public void setOrpedi(String orpedi) {
+        this.orpedi = orpedi;
     }
 }

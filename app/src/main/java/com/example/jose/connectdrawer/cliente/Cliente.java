@@ -664,14 +664,13 @@ public class Cliente {
         return cursor;
     }
 
-    public Cursor retornaCliente(Context context) {
-        Banco myDb = new Banco(context);
-        SQLiteDatabase db = myDb.getReadableDatabase();
+    public Cursor retornaCliente(SQLiteDatabase db) {
+
         Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente order by nomecliente", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
-        db.close();
+//        db.close();
         return cursor;
     }
 

@@ -42,6 +42,7 @@ public class Sincroniza {
                 sincCidade.iniciaEnvio(context, ip);
                 sincCliente.iniciaenvio(context, ip);
                 sincPedido.iniciaenvio(context, ip);
+                sincPedidoProduto.iniciaenvio(context,ip);
                 dialog.dismiss();
             } catch (IOException e) {
                 dialog.dismiss();

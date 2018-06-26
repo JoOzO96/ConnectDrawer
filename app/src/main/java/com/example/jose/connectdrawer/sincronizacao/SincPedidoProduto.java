@@ -31,7 +31,7 @@ public class SincPedidoProduto {
     }
 
 
-    public void iniciaenvio(Context context) {
+    public void iniciaenvio(Context context, String ip) {
         PedidoProduto pedidoProduto = new PedidoProduto();
         List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -61,7 +61,9 @@ public class SincPedidoProduto {
             String gsonRetorno = gson.toJson(pedidoProdutoList);
             Log.i("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://177.92.186.84:15101/ConnectServices/recebePedidoProduto";
+//            String url = "http://177.92.186.84:15101/ConnectServices/recebePedidoProduto";
+            RetRetrofit retRetrofit = new RetRetrofit();
+            String url = retRetrofit.retornaSring("pedidoproduto", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {
@@ -72,20 +74,20 @@ public class SincPedidoProduto {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-//            if (retornoEnvio != null) {
-//                if (retornoEnvio.contains("nada")) {
-//
-//                } else {
-//                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-//                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-//                    pedidoProduto = new PedidoProduto();
-//                    for (int i = 0; controleCodigoList.size() != i; i++) {
-////                    pedidoProduto.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-////                    pedidoProduto.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-////                    cliente.removeClienteAlteradaAndroid(context, "cadastroAndroid");
-//                    }
-//                }
-//            }
+            if (retornoEnvio != null && retornoEnvio != "") {
+                if (retornoEnvio.contains("nada")) {
+                    pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
+                } else {
+                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                    pedidoProduto = new PedidoProduto();
+                    for (int i = 0; controleCodigoList.size() != i; i++) {
+//                    pedidoProduto.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+//                    pedidoProduto.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                        pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
+                    }
+                }
+            }
         }
     }
 }

@@ -19,16 +19,24 @@ public class RetRetrofit {
         Retrofit retrofit = null;
         if (ip.equals("") || ip == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://177.92.186.84:15101/ConnectServices/")
-//                    .baseUrl("http://192.168.0.199:8080/ConnectServices/")
+//                    .baseUrl("http://177.92.186.84:15101/ConnectServices/")
+                    .baseUrl("http://192.168.0.199:8080/ConnectServices/")
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         } else {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl("http://" + ip + ":15101/ConnectServices/")
+            if (ip.substring(0,3).equals("192")){
+                retrofit = new Retrofit.Builder()
+//                        .baseUrl("http://" + ip + ":15101/ConnectServices/")
+                    .baseUrl("http://" + ip + ":8080/ConnectServices/")
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+            }else {
+                retrofit = new Retrofit.Builder()
+                        .baseUrl("http://" + ip + ":15101/ConnectServices/")
 //                    .baseUrl("http://" + ip + ":8080/ConnectServices/")
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
+            }
         }
 
         return retrofit;
@@ -59,17 +67,39 @@ public class RetRetrofit {
             } else if (tipo.equals("pedido")) {
                 url = "http://" + ip + ":15101/ConnectServices/recebePedido";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
+            }else if (tipo.equals("pedidoproduto")) {
+                url = "http://" + ip + ":15101/ConnectServices/recebePedidoProduto";
+//                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             }
         } else {
-            if (tipo.equals("cidade")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebeCidade";
+            if (ip.substring(0,3).equals("192")){
+                if (tipo.equals("cidade")) {
+                    url = "http://" + ip + ":8080/ConnectServices/recebeCidade";
 //                url = "http://" + ip + ":8080/ConnectServices/recebeCidade";
-            } else if (tipo.equals("cliente")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebeCliente";
+                } else if (tipo.equals("cliente")) {
+                    url = "http://" + ip + ":8080/ConnectServices/recebeCliente";
 //                url = "http://" + ip + ":8080/ConnectServices/recebeCliente";
-            } else if (tipo.equals("pedido")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebePedido";
+                } else if (tipo.equals("pedido")) {
+                    url = "http://" + ip + ":8080/ConnectServices/recebePedido";
 //                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
+                }else if (tipo.equals("pedidoproduto")) {
+                    url = "http://" + ip + ":8080/ConnectServices/recebePedidoProduto";
+//                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
+                }
+            }else {
+                if (tipo.equals("cidade")) {
+                    url = "http://" + ip + ":15101/ConnectServices/recebeCidade";
+//                url = "http://" + ip + ":8080/ConnectServices/recebeCidade";
+                } else if (tipo.equals("cliente")) {
+                    url = "http://" + ip + ":15101/ConnectServices/recebeCliente";
+//                url = "http://" + ip + ":8080/ConnectServices/recebeCliente";
+                } else if (tipo.equals("pedido")) {
+                    url = "http://" + ip + ":15101/ConnectServices/recebePedido";
+//                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
+                } else if (tipo.equals("pedidoproduto")) {
+                    url = "http://" + ip + ":15101/ConnectServices/recebePedidoProduto";
+//                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
+                }
             }
         }
 

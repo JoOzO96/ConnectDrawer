@@ -3,6 +3,7 @@ package com.example.jose.connectdrawer.cliente;
 
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.jose.connectdrawer.R;
+import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.uteis.MostraToast;
@@ -45,9 +47,10 @@ public class ClienteFragment extends Fragment {
         listaCliente = (ListView) view.findViewById(R.id.listCliente);
 
         this.setHasOptionsMenu(true);
-
+        Banco myDb = new Banco(getContext() );
+        SQLiteDatabase db = myDb.getReadableDatabase();
         final Cliente cliente = new Cliente();
-        final Cursor cursor = cliente.retornaCliente(getContext());
+        final Cursor cursor = cliente.retornaCliente(db);
         List<Cliente> clienteList = new ArrayList<>();
 
         cursor.moveToFirst();
@@ -61,6 +64,7 @@ public class ClienteFragment extends Fragment {
                 cursor.moveToNext();
 
             }
+            db.close();
             ArrayAdapter<Cliente> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, clienteList);
             listaCliente.setEmptyView(view.findViewById(R.id.semdados));
             listaCliente.setAdapter(adapter);

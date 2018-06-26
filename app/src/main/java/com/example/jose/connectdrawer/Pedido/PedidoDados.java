@@ -1,25 +1,16 @@
 package com.example.jose.connectdrawer.Pedido;
 
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,33 +21,25 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
-import com.example.jose.connectdrawer.Impressora.BluetoothService;
-import com.example.jose.connectdrawer.Impressora.Command;
-import com.example.jose.connectdrawer.Impressora.ImpressaoTeste;
-import com.example.jose.connectdrawer.Impressora.PrinterCommand;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
+import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
-import com.example.jose.connectdrawer.main.ConnectMain;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
 import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -133,7 +116,8 @@ public class PedidoDados extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         MostraToast mostraToast = new MostraToast();
-
+        Banco myDb = new Banco(getContext() );
+        SQLiteDatabase db = myDb.getReadableDatabase();
         final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
@@ -192,7 +176,7 @@ public class PedidoDados extends Fragment {
                                 //SPINNER DOS CLIENTES
                                 Cliente cliente = new Cliente();
                                 int posicao = 0;
-                                Cursor cursorCliente = cliente.retornaCliente(getContext());
+                                Cursor cursorCliente = cliente.retornaCliente(db);
                                 //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
                                 if (cursorCliente.getCount() > 0) {
                                     //posição do spinner para sair selecionado
@@ -221,6 +205,7 @@ public class PedidoDados extends Fragment {
                                         clienteList.add(cliente1.toString());
                                         cursorCliente.moveToNext();
                                     }
+                                    db.close();
                                 }
                                 for (int k = 0; clienteList.size() != k; k++) {
                                     Integer codHifen = clienteList.get(k).indexOf("-");
@@ -370,7 +355,7 @@ public class PedidoDados extends Fragment {
                             //SPINNER DOS CLIENTES
                             Cliente cliente = new Cliente();
                             int posicao = 0;
-                            Cursor cursorCliente = cliente.retornaCliente(getContext());
+                            Cursor cursorCliente = cliente.retornaCliente(db);
                             //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
                             if (cursorCliente.getCount() > 0) {
                                 //posição do spinner para sair selecionado
@@ -399,7 +384,7 @@ public class PedidoDados extends Fragment {
                                     cursorCliente.moveToNext();
                                 }
                             }
-
+                            db.close();
                             getSetDinamicoTelas.colocaValorSpinnerColorido(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
 
                         } else if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
@@ -634,6 +619,11 @@ public class PedidoDados extends Fragment {
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
             Pedido pedido = new Pedido();
+
+            pedido.setPgto(1L);
+            pedido.setCodemitente(1L);
+            pedido.setOrpedi("2");
+            pedido.setCodstatus(1L);
             for (int f = 0; fieldListPedidoDados.size() != f; f++) {
 
                 if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {

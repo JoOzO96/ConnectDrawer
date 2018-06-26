@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -149,7 +150,7 @@ public class SincPedido {
                     }
                 }
                 pedidoList.add(pedido);
-
+//                Log.e("PGTO", "" + pedido.getPgto());
                 cursor.moveToNext();
             }
         }
@@ -162,15 +163,21 @@ public class SincPedido {
             String url = retRetrofit.retornaSring("pedido", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
+            Date dataInicio = new Date();
             try {
                 enviaJson.execute(gsonRetorno, url);
-                retornoEnvio = enviaJson.get();
+                while (retornoEnvio == "") {
+                    retornoEnvio = enviaJson.get();
+                    if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 ){
+                        break;
+                    }
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if (retornoEnvio != null) {
+            if (retornoEnvio != null && retornoEnvio != "") {
 
                 ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
                 List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
@@ -180,7 +187,7 @@ public class SincPedido {
                     pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.removePedidoAlteradaAndroid(context, "cadastroandroid");
                     SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
-                    sincPedidoProduto.iniciaenvio(context);
+                    sincPedidoProduto.iniciaenvio(context, ip);
                 }
 
             }

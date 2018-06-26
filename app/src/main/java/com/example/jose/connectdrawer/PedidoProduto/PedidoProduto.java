@@ -388,7 +388,7 @@ public class PedidoProduto {
     public Cursor retornaPedidoProdutoAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto",null);   // " + tipo + " = 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto  where " + tipo + " = 1",null);   // " + tipo + " = 1", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
