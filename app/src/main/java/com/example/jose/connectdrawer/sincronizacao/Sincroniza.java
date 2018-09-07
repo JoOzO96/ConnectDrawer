@@ -32,9 +32,9 @@ public class Sincroniza {
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(context, "ERRO AO OBTER O IP");
         }else {
-            sincCliente.iniciaSinc(context, ip);
+            sincCliente.iniciaAsinc(context, ip);
             sincCidade.iniciaSinc(context, ip);
-//        sincPedido.iniciaSinc(context);
+            sincPedido.iniciaSinc(context, ip);
             sincFormaPagamento.iniciaSinc(context, ip);
             sincVendedor.iniciaSinc(context, ip);
             sincProduto.iniciaSinc(context, ip);

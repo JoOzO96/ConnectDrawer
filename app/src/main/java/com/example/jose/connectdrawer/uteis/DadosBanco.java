@@ -14,14 +14,13 @@ import java.util.Date;
 
 public class DadosBanco {
     public ContentValues insereValoresContent(Field field, Object object, ContentValues contentValues) {
-        try {
-            Class classe = Class.forName(object.getClass().toString().replace("class ", ""));
+//            Class classe = Class.forName(object.getClass().toString().replace("class ", ""));
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             Object retorno = null;
             String tipo = "";
-            if (field.getName().toLowerCase().equals("serialversionuid") || field.getName().toLowerCase().equals("$change")){
+            if (field.getName().toLowerCase().equals("serialversionuid") || field.getName().toLowerCase().equals("$change")) {
 
-            }else {
+            } else {
                 retorno = getSetDinamico.retornaValorCampo(field, object);
                 tipo = getSetDinamico.retornaTipoCampo(field);
 
@@ -34,7 +33,7 @@ public class DadosBanco {
                         contentValues.put(field.getName().toString(), Long.parseLong(retorno.toString()));
                     } else if (tipo.toUpperCase().equals("DATE")) {
                         contentValues.put(field.getName().toString(), retorno.toString());
-                        Log.i("DATA",""+ retorno.toString());
+//                        Log.i("DATA", "" + retorno.toString());
                     } else if (tipo.toUpperCase().equals("DOUBLE")) {
                         contentValues.put(field.getName().toString(), Double.parseDouble(retorno.toString()));
                     }
@@ -42,9 +41,5 @@ public class DadosBanco {
                 }
             }
             return contentValues;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

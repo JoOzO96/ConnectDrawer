@@ -46,7 +46,13 @@ public class SincCidade {
                 List<Cidade> cidadeList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Cidade cidade = new Cidade();
-
+                List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+                for (int i = 0 ; fieldList.size() != i ; i++){
+                    if (fieldList.get(i).getName().equals("$change") || fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                        fieldList.remove(i);
+                        i = 0;
+                    }
+                }
                 for (int cid = 0; cidadeList.size() != cid; cid++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
@@ -57,22 +63,20 @@ public class SincCidade {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
 
                         Cidade cidade1 = new Cidade();
-                        List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
+
 
                         for (int f = 0; fieldList.size() != f; f++) {
 
-                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+//                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
                             String nomeCampo = fieldList.get(f).getName();
-                            if (nomeCampo.equals("$change") || nomeCampo.equals("serialVersionUID")) {
 
-                            } else {
                                 if (nomeCampo.equals("UF")) {
                                     nomeCampo = "uf";
                                 }
                                 Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
                                 Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, valorCampo);
                                 cidade1 = (Cidade) teste;
-                            }
+
                         }
                         cursor.moveToNext();
                         //aqui tenho a cidade completa;

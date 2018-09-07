@@ -6,14 +6,18 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
+import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -29,109 +33,187 @@ import retrofit2.Retrofit;
 public class SincCliente extends Activity {
 
 
-    public void iniciaSinc(Context context, String ip) {
+    public void iniciaSinc(Context context, List<Cliente> requestCliente) {
 
         final Context context1;
-        context1 = context;
+//        context1 = context;
+        RetRetrofit retRetrofit = new RetRetrofit();
+
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
+//        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
+
+//        ClienteService clienteService = retrofit.create(ClienteService.class);
+//        Call<List<Cliente>> requestCliente = clienteService.listCliente();
+
+//        requestCliente.enqueue(new Callback<List<Cliente>>() {
+//            @Override
+//            public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
+
+//                List<Cliente> loginList = response.body();
+//        Date dataInicioInsercao = null;
+        Cliente cliInsere = new Cliente();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
+        for (int cli = 0; requestCliente.size() != cli; cli++) {
+            //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
+//            dataInicioInsercao = new Date();
+            Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context, requestCliente.get(cli).getCodigo());
+            if (cursor.getCount() > 0) {
+                cursor.close();
+            } else {
+                cursor.close();
+                //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
+                Cliente cliente = new Cliente();
+
+                for (int f = 0; fieldList.size() != f; f++) {
+
+//                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                    String nomeCampo = fieldList.get(f).getName();
+                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
+                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
+                    cliente = (Cliente) teste;
+
+                }
+                cursor.moveToNext();
+//                cliente.setCodigo(requestCliente.get(cli).getCodigo());
+//                cliente.setNomecliente(requestCliente.get(cli).getNomecliente());
+//                cliente.setCpf(requestCliente.get(cli).getCpf());
+//                cliente.setDatanasc(requestCliente.get(cli).getDatanasc());
+//                cliente.setEndereco(requestCliente.get(cli).getEndereco());
+//                cliente.setPosicao(requestCliente.get(cli).getPosicao());
+//                cliente.setPai(requestCliente.get(cli).getPai());
+//                cliente.setMae(requestCliente.get(cli).getMae());
+//                cliente.setBairro(requestCliente.get(cli).getBairro());
+//                cliente.setCep(requestCliente.get(cli).getCep());
+//                cliente.setIdentidade(requestCliente.get(cli).getIdentidade());
+//                cliente.setTrabalho(requestCliente.get(cli).getTrabalho());
+//                cliente.setTelefone(requestCliente.get(cli).getTelefone());
+//                cliente.setFonetrab(requestCliente.get(cli).getFonetrab());
+//                cliente.setCgc(requestCliente.get(cli).getCgc());
+//                cliente.setIncest(requestCliente.get(cli).getIncest());
+//                cliente.setEnderecotrab(requestCliente.get(cli).getEnderecotrab());
+//                cliente.setCodprofissao(requestCliente.get(cli).getCodprofissao());
+//                cliente.setCodcidade(requestCliente.get(cli).getCodcidade());
+//                cliente.setResponsavel(requestCliente.get(cli).getResponsavel());
+//                cliente.setFone(requestCliente.get(cli).getFone());
+//                cliente.setObs(requestCliente.get(cli).getObs());
+//                cliente.setNume(requestCliente.get(cli).getNume());
+//                cliente.setEmail(requestCliente.get(cli).getEmail());
+//                cliente.setPessoaauto(requestCliente.get(cli).getPessoaauto());
+//                cliente.setLimitecredito(requestCliente.get(cli).getLimitecredito());
+//                cliente.setPessoaauto1(requestCliente.get(cli).getPessoaauto1());
+//                cliente.setLimitecredito1(requestCliente.get(cli).getLimitecredito1());
+//                cliente.setPessoaauto2(requestCliente.get(cli).getPessoaauto2());
+//                cliente.setLimitecredito2(requestCliente.get(cli).getLimitecredito2());
+//                cliente.setLimitepessoal(requestCliente.get(cli).getLimitepessoal());
+//                cliente.setTipocliente(requestCliente.get(cli).getTipocliente());
+//                cliente.setCodvendedor(requestCliente.get(cli).getCodvendedor());
+//                cliente.setSimples(requestCliente.get(cli).getSimples());
+//                cliente.setCelular(requestCliente.get(cli).getCelular());
+//                cliente.setFisju(requestCliente.get(cli).getFisju());
+//                cliente.setConjuge(requestCliente.get(cli).getConjuge());
+//                cliente.setFretecli(requestCliente.get(cli).getFretecli());
+//                cliente.setAntecipacao(requestCliente.get(cli).getAntecipacao());
+//                cliente.setEtiquetas(requestCliente.get(cli).getEtiquetas());
+//                cliente.setSistema(requestCliente.get(cli).getSistema());
+//                cliente.setVmanu(requestCliente.get(cli).getVmanu());
+//                cliente.setRecibo(requestCliente.get(cli).getRecibo());
+//                cliente.setCodigopgto(requestCliente.get(cli).getCodigopgto());
+//                cliente.setCodrepresentante(requestCliente.get(cli).getCodrepresentante());
+//                cliente.setDatacadastro(requestCliente.get(cli).getDatacadastro());
+//                cliente.setDataalteracao(requestCliente.get(cli).getDataalteracao());
+//                cliente.setLiberalimite(requestCliente.get(cli).getLiberalimite());
+//                cliente.setFantasia(requestCliente.get(cli).getFantasia());
+//                cliente.setContatocobranca(requestCliente.get(cli).getContatocobranca());
+//                cliente.setInativo(requestCliente.get(cli).getInativo());
+//                cliente.setClientetipo(requestCliente.get(cli).getClientetipo());
+//                cliente.setDiacobranca(requestCliente.get(cli).getDiacobranca());
+//                cliente.setDiaparavencimento(requestCliente.get(cli).getDiaparavencimento());
+
+
+                ///
+                //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
+                //
+                //
+                //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
+                //
+
+                boolean status = cliInsere.cadastraCliente(
+                        context, cliente
+                );
+
+
+
+
+
+
+//                Log.i("FIM", cli + " - " + (dataInicioInsercao.getTime() - new Date().getTime()));
+
+
+            }
+        }
+
+
+//            @Override
+//            public void onFailure(Call<List<Cliente>> call, Throwable t) {
+//                Log.e("DEU ERRO Sinc", t.toString());
+//            }
+//        });
+    }
+
+
+    public void iniciaAsinc(Context context, String ip) {
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
-
+        Cliente cliInsere = new Cliente();
         ClienteService clienteService = retrofit.create(ClienteService.class);
-        Call<List<Cliente>> requestCliente = clienteService.listCliente();
+        final Call<List<Cliente>> requestCliente = clienteService.listCliente();
+        final Response<List<Cliente>>[] response = new Response[]{null};
+        List<Field> listaCampos = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
 
-        requestCliente.enqueue(new Callback<List<Cliente>>() {
-            @Override
-            public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
-
-                List<Cliente> loginList = response.body();
-
-                Cliente cliInsere = new Cliente();
-                for (int cli = 0; loginList.size() != cli; cli++) {
-                    //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
-
-                    Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context1, loginList.get(cli).getCodigo());
-                    if (cursor.getCount() > 0) {
-                        cursor.close();
-                    } else {
-                        //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-                        Cliente cliente = new Cliente();
-                        cliente.setCodigo(loginList.get(cli).getCodigo());
-                        cliente.setNomecliente(loginList.get(cli).getNomecliente());
-                        cliente.setCpf(loginList.get(cli).getCpf());
-                        cliente.setDatanasc(loginList.get(cli).getDatanasc());
-                        cliente.setEndereco(loginList.get(cli).getEndereco());
-                        cliente.setPosicao(loginList.get(cli).getPosicao());
-                        cliente.setPai(loginList.get(cli).getPai());
-                        cliente.setMae(loginList.get(cli).getMae());
-                        cliente.setBairro(loginList.get(cli).getBairro());
-                        cliente.setCep(loginList.get(cli).getCep());
-                        cliente.setIdentidade(loginList.get(cli).getIdentidade());
-                        cliente.setTrabalho(loginList.get(cli).getTrabalho());
-                        cliente.setTelefone(loginList.get(cli).getTelefone());
-                        cliente.setFonetrab(loginList.get(cli).getFonetrab());
-                        cliente.setCgc(loginList.get(cli).getCgc());
-                        cliente.setIncest(loginList.get(cli).getIncest());
-                        cliente.setEnderecotrab(loginList.get(cli).getEnderecotrab());
-                        cliente.setCodprofissao(loginList.get(cli).getCodprofissao());
-                        cliente.setCodcidade(loginList.get(cli).getCodcidade());
-                        cliente.setResponsavel(loginList.get(cli).getResponsavel());
-                        cliente.setFone(loginList.get(cli).getFone());
-                        cliente.setObs(loginList.get(cli).getObs());
-                        cliente.setNume(loginList.get(cli).getNume());
-                        cliente.setEmail(loginList.get(cli).getEmail());
-                        cliente.setPessoaauto(loginList.get(cli).getPessoaauto());
-                        cliente.setLimitecredito(loginList.get(cli).getLimitecredito());
-                        cliente.setPessoaauto1(loginList.get(cli).getPessoaauto1());
-                        cliente.setLimitecredito1(loginList.get(cli).getLimitecredito1());
-                        cliente.setPessoaauto2(loginList.get(cli).getPessoaauto2());
-                        cliente.setLimitecredito2(loginList.get(cli).getLimitecredito2());
-                        cliente.setLimitepessoal(loginList.get(cli).getLimitepessoal());
-                        cliente.setTipocliente(loginList.get(cli).getTipocliente());
-                        cliente.setCodvendedor(loginList.get(cli).getCodvendedor());
-                        cliente.setSimples(loginList.get(cli).getSimples());
-                        cliente.setCelular(loginList.get(cli).getCelular());
-                        cliente.setFisju(loginList.get(cli).getFisju());
-                        cliente.setConjuge(loginList.get(cli).getConjuge());
-                        cliente.setFretecli(loginList.get(cli).getFretecli());
-                        cliente.setAntecipacao(loginList.get(cli).getAntecipacao());
-                        cliente.setEtiquetas(loginList.get(cli).getEtiquetas());
-                        cliente.setSistema(loginList.get(cli).getSistema());
-                        cliente.setVmanu(loginList.get(cli).getVmanu());
-                        cliente.setRecibo(loginList.get(cli).getRecibo());
-                        cliente.setCodigopgto(loginList.get(cli).getCodigopgto());
-                        cliente.setCodrepresentante(loginList.get(cli).getCodrepresentante());
-                        cliente.setDatacadastro(loginList.get(cli).getDatacadastro());
-                        cliente.setDataalteracao(loginList.get(cli).getDataalteracao());
-                        cliente.setLiberalimite(loginList.get(cli).getLiberalimite());
-                        cliente.setFantasia(loginList.get(cli).getFantasia());
-                        cliente.setContatocobranca(loginList.get(cli).getContatocobranca());
-                        cliente.setInativo(loginList.get(cli).getInativo());
-                        cliente.setClientetipo(loginList.get(cli).getClientetipo());
-                        cliente.setDiacobranca(loginList.get(cli).getDiacobranca());
-                        cliente.setDiaparavencimento(loginList.get(cli).getDiaparavencimento());
-
-
-                        ///
-                        //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
-                        //
-                        //
-                        //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
-                        //
-
-                        boolean status = cliInsere.cadastraCliente(
-                                context1, cliente
-                        );
-                        cursor.close();
+        Date dataInicio = new Date();
+        Thread thread = new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            response[0] = requestCliente.execute();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+        );
+        thread.start();
+        while (response[0] == null) {
+//                Log.e("NULL", "RESPOSTA NULL");
+//            limitaResposta ++;
+//                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
+            if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000) {
+                break;
             }
 
-            @Override
-            public void onFailure(Call<List<Cliente>> call, Throwable t) {
-                Log.e("DEU ERRO Sinc", t.toString());
-            }
-        });
+        }
+        List<Cliente> listaCliente = null;
+        if (response[0].body() != null) {
+           listaCliente = new ArrayList<>(response[0].body());
+        }
+
+//        for (int i = 0 ; listaCampos.size() != i ; i++){
+//            if (listaCampos.get(i).getName().toUpperCase().equals(""));
+//        }
+
+
+        thread.interrupt();
+        if (listaCliente != null){
+            iniciaSinc(context, listaCliente);
+        }else{
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastLong(context, "Erro ao consultar dados do cliente.");
+        }
+
+
     }
 
 
@@ -163,6 +245,7 @@ public class SincCliente extends Activity {
         if (clienteList.size() > 0) {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
+            Log.e("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
             RetRetrofit retRetrofit = new RetRetrofit();
             String url = retRetrofit.retornaSring("cliente", ip);

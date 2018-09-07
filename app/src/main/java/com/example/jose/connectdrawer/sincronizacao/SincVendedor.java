@@ -39,6 +39,7 @@ public class SincVendedor {
                 List<Vendedor> vendedorList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Vendedor vendedor = new Vendedor();
+                List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
                 for (int i = 0; vendedorList.size() != i; i++) {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
@@ -47,7 +48,7 @@ public class SincVendedor {
                         cursor.close();
                     } else {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-                        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+
                         Vendedor vendedor1 = new Vendedor();
                         for (int j = 0; fieldListClasse.size() != j; j++) {
                             if (fieldListClasse.get(j).getName().toLowerCase().equals("$change") ||

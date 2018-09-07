@@ -151,7 +151,7 @@ public class Cidade {
     public Cursor retornaCidadeFiltradaCursor(Context context, Long codCidade) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM cidade where codCidade = " + codCidade, null);
+        Cursor cursor = db.rawQuery("SELECT codCidade FROM cidade where codCidade = " + codCidade, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }

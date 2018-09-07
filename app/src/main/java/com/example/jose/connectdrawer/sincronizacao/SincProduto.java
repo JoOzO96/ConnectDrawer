@@ -43,6 +43,7 @@ public class SincProduto {
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Produto produto = new Produto();
                 produto.removeProdutos(context);
+                List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
                 for (int pro = 0; produtoList.size() != pro; pro++) {
                     Banco myDb = new Banco(context);
                     SQLiteDatabase db = myDb.getReadableDatabase();
@@ -54,7 +55,7 @@ public class SincProduto {
                         cursor.close();
                     } else {
                         //PEGA OS DADOS QUE VIERAM DO SERVIDOR
-                        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
+
 
                         produto = new Produto();
                         for (int i = 0; fieldListClasse.size() != i; i++) {

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
@@ -694,6 +695,7 @@ public class Cliente {
         List<Field> fieldList = new ArrayList<>(Arrays.asList(cliente.getClass().getDeclaredFields()));
 
         for (int i = 0 ; fieldList.size() != i ; i++){
+
             valores = dadosBanco.insereValoresContent(fieldList.get(i), cliente, valores);
         }
 

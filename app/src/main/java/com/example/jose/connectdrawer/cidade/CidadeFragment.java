@@ -51,6 +51,22 @@ public class CidadeFragment extends Fragment {
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         Cursor cursor = cidade.retornaCidade(getContext());
         List<Cidade> cidadeList = new ArrayList<>();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+
+        for (int i = 0 ; fieldList.size() != i ; i++){
+
+            if (fieldList.get(i).getName().toLowerCase().equals("nomecidade") ||
+                    fieldList.get(i).getName().toLowerCase().equals("codcidade")  ||
+                    fieldList.get(i).getName().toLowerCase().equals("uf")){
+
+
+
+            }else{
+                fieldList.remove(i);
+                i = -1;
+            }
+
+        }
 
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
@@ -60,7 +76,7 @@ public class CidadeFragment extends Fragment {
 //                cidade1.setNomecidade(cursor.getString(cursor.getColumnIndex("nomeCidade")));
 //                cidade1.setUf(cursor.getString(cursor.getColumnIndex("uf")));
 
-                List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
+
 
                 for (int f = 0; fieldList.size() != f; f++) {
 
