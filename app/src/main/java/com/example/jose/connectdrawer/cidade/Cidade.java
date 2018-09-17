@@ -140,7 +140,7 @@ public class Cidade {
         this.context = context;
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cidade", null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cidade ORDER BY nomecidade", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }

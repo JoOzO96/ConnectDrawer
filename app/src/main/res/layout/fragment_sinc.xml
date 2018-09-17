@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragmet_sincronizacao"
+    tools:context="com.example.jose.connectdrawer.sincronizacao.SincFragment">
+
+    <TextView android:id="@+id/semdados"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Não há dados para serem exibidos." />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listSincronizacao"></ListView>
+
+</RelativeLayout>

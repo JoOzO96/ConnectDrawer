@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
-import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -162,7 +160,7 @@ public class SincCliente extends Activity {
     }
 
 
-    public void iniciaAsinc(Context context, String ip) {
+    public boolean iniciaAsinc(Context context, String ip) {
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
@@ -208,9 +206,11 @@ public class SincCliente extends Activity {
         thread.interrupt();
         if (listaCliente != null){
             iniciaSinc(context, listaCliente);
+            return true;
         }else{
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(context, "Erro ao consultar dados do cliente.");
+            return false;
         }
 
 

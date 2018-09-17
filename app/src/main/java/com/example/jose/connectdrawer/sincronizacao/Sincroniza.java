@@ -17,7 +17,8 @@ import java.io.IOException;
 public class Sincroniza {
 
     public void iniciaSincronizacao(Context context) {
-        ProgressDialog dialog = new ProgressDialog(context);
+
+//        ProgressDialog dialog = new ProgressDialog(context);
         SincCliente sincCliente = new SincCliente();
         SincCidade sincCidade = new SincCidade();
         SincPedido sincPedido = new SincPedido();
@@ -32,22 +33,17 @@ public class Sincroniza {
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(context, "ERRO AO OBTER O IP");
         }else {
-            sincCliente.iniciaAsinc(context, ip);
-            sincCidade.iniciaSinc(context, ip);
-            sincPedido.iniciaSinc(context, ip);
-            sincFormaPagamento.iniciaSinc(context, ip);
-            sincVendedor.iniciaSinc(context, ip);
-            sincProduto.iniciaSinc(context, ip);
-            try {
-                sincCidade.iniciaEnvio(context, ip);
-                sincCliente.iniciaenvio(context, ip);
-                sincPedido.iniciaenvio(context, ip);
-                sincPedidoProduto.iniciaenvio(context,ip);
-                dialog.dismiss();
-            } catch (IOException e) {
-                dialog.dismiss();
-                e.printStackTrace();
-            }
+            Boolean retorno  = sincCliente.iniciaAsinc(context, ip);
+            sincCidade.iniciaAsinc(context, ip);
+//            sincPedido.iniciaSinc(context, ip);
+//            sincFormaPagamento.iniciaSinc(context, ip);
+//            sincVendedor.iniciaSinc(context, ip);
+//            sincProduto.iniciaSinc(context, ip);
+//            //                sincCidade.iniciaEnvio(context, ip);
+//            sincCliente.iniciaenvio(context, ip);
+//            sincPedido.iniciaenvio(context, ip);
+//            sincPedidoProduto.iniciaenvio(context,ip);
+//            dialog.dismiss();
         }
     }
 }

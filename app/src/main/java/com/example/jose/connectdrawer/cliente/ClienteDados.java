@@ -154,13 +154,13 @@ public class ClienteDados extends Fragment {
                             if (fieldListPassar.get(i).getName().equals("spCidade")) {
 
                                 Cursor cursorCidade = cidade.retornaCidade(getContext());
-
+                                List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
                                 int posicao = 0;
                                 if (cursorCidade.getCount() > 0) {
                                     cursor.moveToFirst();
                                     for (int j = 0; cursorCidade.getCount() != j; j++) {
                                         Cidade cidade1 = new Cidade();
-                                        List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
+
 
                                         for (int f = 0; fieldListCidade.size() != f; f++) {
 

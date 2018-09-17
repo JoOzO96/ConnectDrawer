@@ -3,18 +3,23 @@ package com.example.jose.connectdrawer.sincronizacao;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
+import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cidade.CidadeService;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -29,21 +34,21 @@ import retrofit2.Retrofit;
 
 public class SincCidade {
 
-    public void iniciaSinc(final Context context, String ip) {
+    public void iniciaSinc(final Context context, List<Cidade> cidadeList) {
         final Context context1;
         context1 = context;
 
         //CLASSE QUE MANTEM OS DADOS DO RETROFIR
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
-        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
-
-        CidadeService cidadeService = retrofit.create(CidadeService.class);
-        Call<List<Cidade>> requestCidade = cidadeService.listCidade();
-        requestCidade.enqueue(new Callback<List<Cidade>>() {
-            @Override
-            public void onResponse(Call<List<Cidade>> call, Response<List<Cidade>> response) {
-                List<Cidade> cidadeList = response.body();
+//        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
+//
+//        CidadeService cidadeService = retrofit.create(CidadeService.class);
+//        Call<List<Cidade>> requestCidade = cidadeService.listCidade();
+//        requestCidade.enqueue(new Callback<List<Cidade>>() {
+//            @Override
+//            public void onResponse(Call<List<Cidade>> call, Response<List<Cidade>> response) {
+//                List<Cidade> cidadeList = response.body();
                 GetSetDinamico getSetDinamico = new GetSetDinamico();
                 Cidade cidade = new Cidade();
                 List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
@@ -65,30 +70,30 @@ public class SincCidade {
                         Cidade cidade1 = new Cidade();
 
 
-                        for (int f = 0; fieldList.size() != f; f++) {
+//                        for (int f = 0; fieldList.size() != f; f++) {
 
 //                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-                            String nomeCampo = fieldList.get(f).getName();
+//                            String nomeCampo = fieldList.get(f).getName();
+//
+//                                if (nomeCampo.equals("UF")) {
+//                                    nomeCampo = "uf";
+//                                }
+//                                Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
+//                                Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, valorCampo);
+//                                cidade1 = (Cidade) teste;
+//
+//                        }
 
-                                if (nomeCampo.equals("UF")) {
-                                    nomeCampo = "uf";
-                                }
-                                Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
-                                Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, valorCampo);
-                                cidade1 = (Cidade) teste;
-
-                        }
+//                        aqui tenho a cidade completa;
+                        cidade1.setCep(cidadeList.get(cid).getCep());
+                        cidade1.setCodnacionalcidade(cidadeList.get(cid).getCodnacionalcidade());
+                        cidade1.setPais(cidadeList.get(cid).getCodnacionalpais());
+                        cidade1.setCodnacionaluf(cidadeList.get(cid).getCodnacionaluf());
+                        cidade1.setNomecidade(cidadeList.get(cid).getNomecidade());
+                        cidade1.setPais(cidadeList.get(cid).getPais());
+                        cidade1.setUf(cidadeList.get(cid).getUf());
+                        cidade1.setCodcidade(cidadeList.get(cid).getCodcidade());
                         cursor.moveToNext();
-                        //aqui tenho a cidade completa;
-//                        cidade1.setCep(cidadeList.get(cli).getCep());
-//                        cidade1.setCodNacionalCidade(cidadeList.get(cli).getCodNacionalCidade());
-//                        cidade1.setPais(cidadeList.get(cli).getCodNacionalPais());
-//                        cidade1.setCodNacionalUf(cidadeList.get(cli).getCodNacionalUf());
-//                        cidade1.setNomeCidade(cidadeList.get(cli).getNomeCidade());
-//                        cidade1.setPais(cidadeList.get(cli).getPais());
-//                        cidade1.setUF(cidadeList.get(cli).getUF());
-//                        cidade1.setCodCidade(cidadeList.get(cli).getCodCidade());
-
                         ///
                         //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
                         //
@@ -96,17 +101,73 @@ public class SincCidade {
                         //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
                         //
                         boolean retorno = cidade.cadastraCidade(context, cidade1);
-
                         cursor.close();
                     }
                 }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Cidade>> call, Throwable t) {
+//                Log.e("DEU ERRO Sinc", t.toString());
+//            }
+//        });
+    }
+
+    public boolean iniciaAsinc(Context context, String ip) {
+        RetRetrofit retRetrofit = new RetRetrofit();
+        //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
+        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
+        Cidade cidade = new Cidade();
+        CidadeService cidadeService = retrofit.create(CidadeService.class);
+        final Call<List<Cidade>> requestCidade = cidadeService.listCidade();
+        final Response<List<Cidade>>[] response = new Response[]{null};
+        List<Cidade> listaCidade = null;
+//        List<Field> listaCampos = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+
+        Date dataInicio = new Date();
+        Thread thread = new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            response[0] = requestCidade.execute();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+        thread.start();
+        while (response[0] == null) {
+//                Log.e("NULL", "RESPOSTA NULL");
+//            limitaResposta ++;
+//                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
+            if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000) {
+                break;
             }
 
-            @Override
-            public void onFailure(Call<List<Cidade>> call, Throwable t) {
-                Log.e("DEU ERRO Sinc", t.toString());
-            }
-        });
+        }
+
+        if (response[0].body() != null) {
+            listaCidade = new ArrayList<>(response[0].body());
+        }
+
+//        for (int i = 0 ; listaCampos.size() != i ; i++){
+//            if (listaCampos.get(i).getName().toUpperCase().equals(""));
+//        }
+
+
+        thread.interrupt();
+        if (listaCidade != null){
+            iniciaSinc(context, listaCidade);
+            return true;
+        }else{
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastLong(context, "Erro ao consultar dados do cliente.");
+            return false;
+        }
+
+
     }
 
     public void iniciaEnvio(Context context, String ip) throws IOException {

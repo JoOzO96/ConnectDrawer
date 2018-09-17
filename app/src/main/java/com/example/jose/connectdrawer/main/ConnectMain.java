@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
@@ -35,6 +36,7 @@ import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.cliente.ClienteFragment;
 import com.example.jose.connectdrawer.login.LoginActivity;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
+import com.example.jose.connectdrawer.sincronizacao.SincFragment;
 import com.example.jose.connectdrawer.sincronizacao.Sincroniza;
 
 import java.util.ArrayList;
@@ -148,10 +150,21 @@ public class ConnectMain extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_sync) {
-            fechado = 1L;
-            Sincroniza sincroniza = new Sincroniza();
-            sincroniza.iniciaSincronizacao(this);
-;
+            SincFragment sincFragment = new SincFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, sincFragment, sincFragment.getTag()).commit();
+            fechado = 0L;
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    Sincroniza sincroniza = new Sincroniza();
+                    sincroniza.iniciaSincronizacao(ConnectMain.this);
+                }
+            });
+
+            thread.start();
+
         } else if (id == R.id.nav_deleta) {
             Context context = this;
             context.deleteDatabase("connect.db");
