@@ -1,5 +1,6 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.example.jose.connectdrawer.cidade.CidadeService;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.MostraToast;
+import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -49,61 +51,64 @@ public class SincCidade {
 //            @Override
 //            public void onResponse(Call<List<Cidade>> call, Response<List<Cidade>> response) {
 //                List<Cidade> cidadeList = response.body();
-                GetSetDinamico getSetDinamico = new GetSetDinamico();
-                Cidade cidade = new Cidade();
-                List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
-                for (int i = 0 ; fieldList.size() != i ; i++){
-                    if (fieldList.get(i).getName().equals("$change") || fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
-                        fieldList.remove(i);
-                        i = 0;
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        Cidade cidade = new Cidade();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+        for (int i = 0; fieldList.size() != i; i++) {
+            if (fieldList.get(i).getName().equals("$change") || fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                fieldList.remove(i);
+                i = 0;
+            }
+        }
+        ProgressDialog progressDialog = Sessao.getProgress();
+        progressDialog.setMessage("Cadastro de Cidade   0 de " + cidadeList.size());
+        for (int cid = 0; cidadeList.size() != cid; cid++) {
+            //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
+
+            Cursor cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cid).getCodcidade());
+            progressDialog.setMessage("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
+            if (cursor.getCount() > 0) {
+                cursor.close();
+            } else {
+                //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
+
+                Cidade cidade1 = new Cidade();
+
+
+                for (int f = 0; fieldList.size() != f; f++) {
+
+                    String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                    String nomeCampo = fieldList.get(f).getName();
+
+                    if (nomeCampo.equals("UF")) {
+                        nomeCampo = "uf";
                     }
+                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
+                    Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, valorCampo);
+                    cidade1 = (Cidade) teste;
+
                 }
-                for (int cid = 0; cidadeList.size() != cid; cid++) {
-                    //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
-
-                    Cursor cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cid).getCodcidade());
-                    if (cursor.getCount() > 0) {
-                        cursor.close();
-                    } else {
-                        //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-
-                        Cidade cidade1 = new Cidade();
-
-
-//                        for (int f = 0; fieldList.size() != f; f++) {
-
-//                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-//                            String nomeCampo = fieldList.get(f).getName();
-//
-//                                if (nomeCampo.equals("UF")) {
-//                                    nomeCampo = "uf";
-//                                }
-//                                Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
-//                                Object teste = getSetDinamico.insereField(fieldList.get(f), cidade1, valorCampo);
-//                                cidade1 = (Cidade) teste;
-//
-//                        }
 
 //                        aqui tenho a cidade completa;
-                        cidade1.setCep(cidadeList.get(cid).getCep());
-                        cidade1.setCodnacionalcidade(cidadeList.get(cid).getCodnacionalcidade());
-                        cidade1.setPais(cidadeList.get(cid).getCodnacionalpais());
-                        cidade1.setCodnacionaluf(cidadeList.get(cid).getCodnacionaluf());
-                        cidade1.setNomecidade(cidadeList.get(cid).getNomecidade());
-                        cidade1.setPais(cidadeList.get(cid).getPais());
-                        cidade1.setUf(cidadeList.get(cid).getUf());
-                        cidade1.setCodcidade(cidadeList.get(cid).getCodcidade());
-                        cursor.moveToNext();
-                        ///
-                        //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
-                        //
-                        //
-                        //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
-                        //
-                        boolean retorno = cidade.cadastraCidade(context, cidade1);
-                        cursor.close();
-                    }
-                }
+//                        cidade1.setCep(cidadeList.get(cid).getCep());
+//                        cidade1.setCodnacionalcidade(cidadeList.get(cid).getCodnacionalcidade());
+//                        cidade1.setPais(cidadeList.get(cid).getCodnacionalpais());
+//                        cidade1.setCodnacionaluf(cidadeList.get(cid).getCodnacionaluf());
+//                        cidade1.setNomecidade(cidadeList.get(cid).getNomecidade());
+//                        cidade1.setPais(cidadeList.get(cid).getPais());
+//                        cidade1.setUf(cidadeList.get(cid).getUf());
+//                        cidade1.setCodcidade(cidadeList.get(cid).getCodcidade());
+                cursor.moveToNext();
+                ///
+                //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
+                //
+                //
+                //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
+                //
+                boolean retorno = cidade.cadastraCidade(context, cidade1);
+                cursor.close();
+            }
+        }
 //            }
 //
 //            @Override
@@ -123,8 +128,15 @@ public class SincCidade {
         final Response<List<Cidade>>[] response = new Response[]{null};
         List<Cidade> listaCidade = null;
 //        List<Field> listaCampos = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
+        ProgressDialog progressDialog = Sessao.getProgress();
+        progressDialog.setMessage("Consultando dados das cidades");
+        final Date dataInicio = new Date();
+//        try {
+//            response[0] = requestCidade.execute();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        Date dataInicio = new Date();
         Thread thread = new Thread(
                 new Runnable() {
                     @Override
@@ -137,18 +149,40 @@ public class SincCidade {
                     }
                 }
         );
+        thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
-        while (response[0] == null) {
-//                Log.e("NULL", "RESPOSTA NULL");
-//            limitaResposta ++;
-//                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
-            if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000) {
-                break;
-            }
-
+        try {
+            thread.join(120000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        if (response[0].body() != null) {
+        if (thread.isAlive()){
+            thread.interrupt();
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar cidades.");
+        }
+
+
+
+//        while (response[0] == null) {
+////                Log.e("NULL", "RESPOSTA NULL");
+////            limitaResposta ++;
+////                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
+//            if ((dataInicio.getTime() - System.currentTimeMillis()) <= -300000) {
+//                break;
+//            }else{
+//                try {
+//                    Thread.sleep(3000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
+
+//        if (thread.getState() == Thread.State.TERMINATED) {
+        if (response[0] != null) {
             listaCidade = new ArrayList<>(response[0].body());
         }
 
@@ -157,18 +191,20 @@ public class SincCidade {
 //        }
 
 
-        thread.interrupt();
-        if (listaCidade != null){
+//            thread.interrupt();
+        if (listaCidade != null) {
             iniciaSinc(context, listaCidade);
             return true;
-        }else{
+        } else {
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(context, "Erro ao consultar dados do cliente.");
             return false;
         }
-
-
     }
+
+
+//        return true;
+//    }
 
     public void iniciaEnvio(Context context, String ip) throws IOException {
 
@@ -234,8 +270,6 @@ public class SincCidade {
             }
 
         }
-
-
 
 
         //

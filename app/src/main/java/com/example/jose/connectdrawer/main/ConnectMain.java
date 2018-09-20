@@ -12,6 +12,7 @@ import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
+import android.renderscript.RenderScript;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +39,7 @@ import com.example.jose.connectdrawer.login.LoginActivity;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
 import com.example.jose.connectdrawer.sincronizacao.SincFragment;
 import com.example.jose.connectdrawer.sincronizacao.Sincroniza;
+import com.example.jose.connectdrawer.uteis.Sessao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,19 +153,33 @@ public class ConnectMain extends AppCompatActivity
 
         } else if (id == R.id.nav_sync) {
             SincFragment sincFragment = new SincFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, sincFragment, sincFragment.getTag()).commit();
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container, sincFragment, sincFragment.getTag()).commit();
             fechado = 0L;
+
+//            Sessao sessao = Sessao.getInstance();
+////            sessao.getProgressDialog();
+            Sessao.setaContext(this);
+            final ProgressDialog progressDialog = Sessao.getProgress();
+
+
+            runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    Sessao.getProgress("Sincronizando");
+                }
+            });
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     Looper.prepare();
                     Sincroniza sincroniza = new Sincroniza();
-                    sincroniza.iniciaSincronizacao(ConnectMain.this);
+                    sincroniza.iniciaSincronizacao(Sessao.retornaContext());
                 }
             });
-
+            thread.setPriority(Thread.MAX_PRIORITY);
             thread.start();
+
 
         } else if (id == R.id.nav_deleta) {
             Context context = this;
@@ -194,7 +210,7 @@ public class ConnectMain extends AppCompatActivity
 //        } else if (id == R.id.nav_send) {
 
         }
-        if (fechado<1L){
+        if (fechado < 1L) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         }

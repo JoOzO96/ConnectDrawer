@@ -11,6 +11,7 @@ import com.example.jose.connectdrawer.Pedido.PedidoService;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Field;
@@ -135,7 +136,7 @@ public class SincPedido {
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
         Cursor cursor = pedido.retornaPedidoAlteradaAndroid(context, "cadastroAndroid");
-
+        Sessao.colocaTextoProgress("Verificando pedidos novos.");
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
                 pedido = new Pedido();
@@ -150,6 +151,7 @@ public class SincPedido {
                     }
                 }
                 pedidoList.add(pedido);
+                Sessao.colocaTextoProgress("Enviando os dados de pedidos." + (i+1) + " de " + cursor.getCount());
 //                Log.e("PGTO", "" + pedido.getPgto());
                 cursor.moveToNext();
             }

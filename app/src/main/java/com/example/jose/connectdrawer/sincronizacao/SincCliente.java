@@ -1,6 +1,7 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -10,6 +11,7 @@ import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.MostraToast;
+import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -31,13 +33,13 @@ import retrofit2.Retrofit;
 public class SincCliente extends Activity {
 
 
-    public void iniciaSinc(Context context, List<Cliente> requestCliente) {
+    public void iniciaSinc(final Context context, final List<Cliente> requestCliente) {
 
         final Context context1;
 //        context1 = context;
         RetRetrofit retRetrofit = new RetRetrofit();
 
-        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        final GetSetDinamico getSetDinamico = new GetSetDinamico();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
 //        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
 
@@ -50,29 +52,34 @@ public class SincCliente extends Activity {
 
 //                List<Cliente> loginList = response.body();
 //        Date dataInicioInsercao = null;
-        Cliente cliInsere = new Cliente();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
-        for (int cli = 0; requestCliente.size() != cli; cli++) {
-            //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
-//            dataInicioInsercao = new Date();
-            Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context, requestCliente.get(cli).getCodigo());
-            if (cursor.getCount() > 0) {
-                cursor.close();
-            } else {
-                cursor.close();
-                //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-                Cliente cliente = new Cliente();
+        ProgressDialog progressDialog = Sessao.getProgress();
+        progressDialog.setMessage("Cadastro de Cliente   0 de " + requestCliente.size());
+        final Cliente cliInsere = new Cliente();
+        final List<Field> fieldList = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
 
-                for (int f = 0; fieldList.size() != f; f++) {
+                for (int cli = 0; requestCliente.size() != cli; cli++) {
+                    //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
+//            dataInicioInsercao = new Date();
+                    Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context, requestCliente.get(cli).getCodigo());
+                    progressDialog.setMessage("Cadastro de Cliente   " + (cli + 1) + " de " + requestCliente.size());
+                    if (cursor.getCount() > 0) {
+                        cursor.close();
+                    } else {
+                        cursor.close();
+                        //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
+                        Cliente cliente = new Cliente();
+
+
+                        for (int f = 0; fieldList.size() != f; f++) {
 
 //                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-                    String nomeCampo = fieldList.get(f).getName();
-                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
-                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
-                    cliente = (Cliente) teste;
+                            String nomeCampo = fieldList.get(f).getName();
+                            Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
+                            Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
+                            cliente = (Cliente) teste;
 
-                }
-                cursor.moveToNext();
+                        }
+                        cursor.moveToNext();
 //                cliente.setCodigo(requestCliente.get(cli).getCodigo());
 //                cliente.setNomecliente(requestCliente.get(cli).getNomecliente());
 //                cliente.setCpf(requestCliente.get(cli).getCpf());
@@ -129,32 +136,25 @@ public class SincCliente extends Activity {
 //                cliente.setDiaparavencimento(requestCliente.get(cli).getDiaparavencimento());
 
 
-                ///
-                //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
-                //
-                //
-                //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
-                //
+                        ///
+                        //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
+                        //
+                        //
+                        //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
+                        //
 
-                boolean status = cliInsere.cadastraCliente(
-                        context, cliente
-                );
-
-
+                        boolean status = cliInsere.cadastraCliente(
+                                context, cliente
+                        );
 
 
-
-
-//                Log.i("FIM", cli + " - " + (dataInicioInsercao.getTime() - new Date().getTime()));
-
-
-            }
-        }
+                    }
+                }
 
 
 //            @Override
 //            public void onFailure(Call<List<Cliente>> call, Throwable t) {
-//                Log.e("DEU ERRO Sinc", t.toString());
+
 //            }
 //        });
     }
@@ -169,7 +169,8 @@ public class SincCliente extends Activity {
         final Call<List<Cliente>> requestCliente = clienteService.listCliente();
         final Response<List<Cliente>>[] response = new Response[]{null};
         List<Field> listaCampos = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
-
+//        ProgressDialog progressDialog = Sessao.getProgress();
+//        progressDialog.setMessage("Consultando dados dos clientes");
         Date dataInicio = new Date();
         Thread thread = new Thread(
                 new Runnable() {
@@ -188,8 +189,14 @@ public class SincCliente extends Activity {
 //                Log.e("NULL", "RESPOSTA NULL");
 //            limitaResposta ++;
 //                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
-            if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000) {
+            if ((dataInicio.getTime() - System.currentTimeMillis()) <= -300000) {
                 break;
+            }else{
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -210,6 +217,7 @@ public class SincCliente extends Activity {
         }else{
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(context, "Erro ao consultar dados do cliente.");
+
             return false;
         }
 
@@ -223,7 +231,7 @@ public class SincCliente extends Activity {
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
         Cursor cursor = cliente.retornaClienteAlteradaAndroid(context, "cadastroandroid");
-
+        Sessao.colocaTextoProgress("Verificando clientes novos.");
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
                 cliente = new Cliente();
@@ -238,7 +246,7 @@ public class SincCliente extends Activity {
                     }
                 }
                 clienteList.add(cliente);
-
+                Sessao.colocaTextoProgress("Enviando os dados de clientes." + (i+1) + " de " + cursor.getCount());
                 cursor.moveToNext();
             }
         }

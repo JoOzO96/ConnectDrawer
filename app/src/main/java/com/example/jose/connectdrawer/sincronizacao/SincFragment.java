@@ -34,6 +34,9 @@ public class SincFragment extends Fragment {
         List<String> listString = new ArrayList<>();
         listSincronizacao.setEmptyView(view.findViewById(R.id.semdados));
 
+
+
+
         return view;
     }
 
