@@ -42,9 +42,7 @@ public class SincFormaPagamento {
 //            @Override
 //            public void onResponse(Call<List<FormaPagamento>> call, Response<List<FormaPagamento>> response) {
 //        List<FormaPagamento> formaPagamentoList = response.body();
-//        ProgressDialog progressDialog = Sessao.getProgress();
-//        progressDialog.setMessage("Consultando dados da Forma de Pagamento");
-        Sessao.colocaTextoProgress("Consultando dados");
+        Sessao.colocaTexto("Consultando dados da Forma de Pagamento");
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         FormaPagamento formaPagamento = new FormaPagamento();
         List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(FormaPagamento.class.getDeclaredFields()));
@@ -53,7 +51,7 @@ public class SincFormaPagamento {
 
             Cursor cursor = formaPagamento.retornaFormaPagamentoFiltradaCursor(Sessao.retornaContext(), formaPagamentoList.get(i).getCodigo());
 //            progressDialog.setMessage("Cadastro de Forma de Pagamento " + (i + 1) + " de " + formaPagamentoList.size());
-            Sessao.colocaTextoProgress("Cadastrando Form. Pagt. " + (i + 1) + " de " + formaPagamentoList.size());
+            Sessao.colocaTexto("Cadastrando Forma de Pagamento. " + (i + 1) + " de " + formaPagamentoList.size());
             if (cursor.getCount() > 0) {
                 cursor.close();
             } else {

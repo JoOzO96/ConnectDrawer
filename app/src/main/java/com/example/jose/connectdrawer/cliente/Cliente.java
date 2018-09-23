@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.google.gson.annotations.JsonAdapter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import java.util.List;
  */
 
 public class Cliente {
-
     private Long codigo;
     private String nomecliente;
     private String cpf;

@@ -2,15 +2,27 @@ package com.example.jose.connectdrawer.uteis;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.example.jose.connectdrawer.main.ConnectMain;
 
 public class Sessao {
+    private static Thread thread;
+    private static Handler handler;
+    private static ProgressBar progressBar;
+    private static TextView textoSinc;
     // Variável estática que conterá a instancia da classe
     private static Sessao instance;
     private static Context contextSalvo;
     private static ProgressDialog progressDialog;
 
     // Construtor privado (suprime o construtor público padrão).
-    private Sessao() {}
+    private Sessao() {
+    }
 
     // Método público estático de acesso único ao objeto!
     public static Sessao getInstance() {
@@ -19,7 +31,42 @@ public class Sessao {
         return instance;
     }
 
+    public static void setTextView(TextView texto) {
+        textoSinc = texto;
+    }
+
+    public static TextView getTextView() {
+        return textoSinc;
+    }
+
+    public static void setHandler(Handler h) {
+        handler = h;
+    }
+
+    public static Handler getHandler() {
+        return handler;
+    }
+
+    public static void setProgressBar(ProgressBar p) {
+        progressBar = p;
+    }
+
+    public static ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public static void colocaTexto(final String texto) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                textoSinc.setText(texto);
+            }
+        });
+
+    }
+
     public static ProgressDialog getProgress() {
+
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(contextSalvo);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -37,13 +84,15 @@ public class Sessao {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
-            progressDialog.show();
+            if (!progressDialog.isShowing()) {
+                progressDialog.show();
+            }
         }
         return progressDialog;
     }
 
     public static void removeProgress() {
-         progressDialog = null;
+        progressDialog = null;
     }
 
     public static void setaContext(Context context) {
@@ -67,23 +116,28 @@ public class Sessao {
     }
 
 
-    public static void colocaTextoProgress(String mensagem){
-        ProgressDialog progressDialog = Sessao.getProgress();
-        if (mensagem.length() > 29 ){
-            mensagem.substring(0,29);
-        }
-        if (progressDialog.isShowing()){
+    public static void colocaTextoProgress(String mensagem) {
+        if (mensagem.length() > 28) {
+            progressDialog.setMessage(mensagem.substring(0, 28));
+        } else {
             progressDialog.setMessage(mensagem);
-        }else{
-            progressDialog.setMessage(mensagem);
-//            progressDialog.show();
         }
     }
 
-    public static void terminaProgress(){
-        progressDialog.dismiss();
-        progressDialog = null;
+    public static void terminaProgress() {
+        Intent intent = new Intent(contextSalvo, ConnectMain.class);
+        contextSalvo.startActivity(intent);
     }
+
+    public static void iniciaProgress() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
 
 
 /*

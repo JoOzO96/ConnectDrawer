@@ -27,10 +27,10 @@
             android:icon="@drawable/ic_payment_black"
             android:title="Forma Pagamento" />
         android:title="Vendedor" />
-        <item
-            android:id="@+id/nav_impressao"
-            android:icon="@drawable/ic_payment_black"
-            android:title="Impressao" />
+        <!--<item-->
+            <!--android:id="@+id/nav_impressao"-->
+            <!--android:icon="@drawable/ic_payment_black"-->
+            <!--android:title="Impressao" />-->
     </group>
 
     <item android:title="Sincronizar">
@@ -39,10 +39,10 @@
                 android:id="@+id/nav_sync"
                 android:icon="@drawable/ic_sync_black"
                 android:title="Sincronizar" />
-            <item
-                android:id="@+id/nav_deleta"
-                android:icon="@drawable/ic_sync_black"
-                android:title="Deletar Banco" />
+            <!--<item-->
+                <!--android:id="@+id/nav_deleta"-->
+                <!--android:icon="@drawable/ic_sync_black"-->
+                <!--android:title="Deletar Banco" />-->
             <!--<item-->
                 <!--android:id="@+id/nav_login"-->
                 <!--android:icon="@drawable/ic_sync_black"-->

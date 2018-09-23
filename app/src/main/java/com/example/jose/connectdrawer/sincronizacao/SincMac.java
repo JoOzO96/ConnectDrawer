@@ -95,7 +95,13 @@ public class SincMac {
                     }
                 }
             });
+            thread.setPriority(Thread.MAX_PRIORITY);
             thread.start();
+        try {
+            thread.join(120000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         limitaResposta = 0L;
             while (response[0] == null){
 //                Log.e("NULL", "RESPOSTA NULL");

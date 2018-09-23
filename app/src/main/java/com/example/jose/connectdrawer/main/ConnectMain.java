@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
@@ -24,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamentoFragment;
@@ -145,45 +147,30 @@ public class ConnectMain extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, produtoFragment, produtoFragment.getTag()).commit();
 
-        } else if (id == R.id.nav_impressao) {
-//            Intent intent = new Intent(this, ImpressaoActibity.class);
+//        } else if (id == R.id.nav_impressao) {
+////            Intent intent = new Intent(this, ImpressaoActibity.class);
+////            startActivity(intent);
+//            Intent intent = new Intent(this, ImprimirTexto.class);
 //            startActivity(intent);
-            Intent intent = new Intent(this, ImprimirTexto.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_sync) {
+            Sessao.setaContext(this);
             SincFragment sincFragment = new SincFragment();
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_container, sincFragment, sincFragment.getTag()).commit();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, sincFragment, sincFragment.getTag()).commit();
             fechado = 0L;
 
-//            Sessao sessao = Sessao.getInstance();
-////            sessao.getProgressDialog();
-            Sessao.setaContext(this);
-            final ProgressDialog progressDialog = Sessao.getProgress();
-
-
-            runOnUiThread(new Runnable(){
-                @Override
-                public void run() {
-                    Sessao.getProgress("Sincronizando");
-                }
-            });
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    Sincroniza sincroniza = new Sincroniza();
-                    sincroniza.iniciaSincronizacao(Sessao.retornaContext());
-                }
-            });
-            thread.setPriority(Thread.MAX_PRIORITY);
-            thread.start();
-
-
-        } else if (id == R.id.nav_deleta) {
-            Context context = this;
-            context.deleteDatabase("connect.db");
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Sessao.setTextView(textoSinc);
+//                    Sessao.colocaTexto("Iniciando");
+//                    Sessao.setaContext(ConnectMain.this);
+//                }
+//            });
+//        } else if (id == R.id.nav_deleta) {
+//            Context context = this;
+//            context.deleteDatabase("connect.db");
 //        } else if (id == R.id.nav_login) {
 //            Intent intent = new Intent(this, LoginActivity.class);
 //            startActivity(intent);

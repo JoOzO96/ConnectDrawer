@@ -49,7 +49,7 @@ public class SincVendedor {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
                     Cursor cursor = vendedor.retornaVendedorFiltradaCursor(Sessao.retornaContext(), vendedorList.get(i).getCodvendedor());
-                    Sessao.colocaTextoProgress("Cadastro de vendedor   " + (i + 1) + " de " + vendedorList.size());
+                    Sessao.colocaTexto("Cadastro de vendedor.   " + (i + 1) + " de " + vendedorList.size());
                     if (cursor.getCount() > 0) {
                         cursor.close();
                     } else {
@@ -99,7 +99,7 @@ public class SincVendedor {
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
         Date dataInicio = new Date();
-        Sessao.colocaTextoProgress("Consultando dados do vendedor.");
+        Sessao.colocaTexto("Consultando dados do vendedor.");
         VendedorService vendedorService = retrofit.create(VendedorService.class);
         final Call<List<Vendedor>> requestVendedor = vendedorService.listVendedor();
         final Response<List<Vendedor>>[] response = new Response[]{null};

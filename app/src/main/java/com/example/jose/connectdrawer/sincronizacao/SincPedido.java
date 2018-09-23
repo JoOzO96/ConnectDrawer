@@ -136,7 +136,7 @@ public class SincPedido {
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
         Cursor cursor = pedido.retornaPedidoAlteradaAndroid(context, "cadastroAndroid");
-        Sessao.colocaTextoProgress("Verificando pedidos novos.");
+        Sessao.colocaTexto("Verificando pedidos novos.");
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
                 pedido = new Pedido();
@@ -151,7 +151,7 @@ public class SincPedido {
                     }
                 }
                 pedidoList.add(pedido);
-                Sessao.colocaTextoProgress("Enviando os dados de pedidos." + (i+1) + " de " + cursor.getCount());
+                Sessao.colocaTexto("Enviando os dados de pedidos." + (i+1) + " de " + cursor.getCount());
 //                Log.e("PGTO", "" + pedido.getPgto());
                 cursor.moveToNext();
             }

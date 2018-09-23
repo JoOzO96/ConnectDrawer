@@ -56,7 +56,7 @@ public class SincProduto {
                     //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
                     produto = new Produto();
                     Cursor cursor = produto.retornaProdutoFiltradaCursorSincro(db, listaProduto.get(pro).getCodproduto());
-                    Sessao.colocaTextoProgress("Cadastro de produtos   " + (pro + 1) + " de " + listaProduto.size());
+                    Sessao.colocaTexto("Cadastro de produtos.   " + (pro + 1) + " de " + listaProduto.size());
                     if (cursor.getCount() > 0) {
                         cursor.close();
                     } else {
@@ -99,7 +99,7 @@ public class SincProduto {
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
         Date dataInicio = new Date();
-        Sessao.colocaTextoProgress("Consultando dados dos produtos.");
+        Sessao.colocaTexto("Consultando dados dos produtos.");
         ProdutoService produtoService = retrofit.create(ProdutoService.class);
         final Call<List<Produto>> requestProduto = produtoService.listaProduto();
         final Response<List<Produto>>[] response = new Response[]{null};
