@@ -12,6 +12,7 @@ import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.cliente.ClienteService;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.example.jose.connectdrawer.uteis.Mac;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
@@ -67,17 +68,24 @@ public class SincCliente extends Activity {
 //        Sessao.colocaTextoProgress("Cadastro de Cliente. 0 de " + requestCliente.size());
         final Cliente cliInsere = new Cliente();
         final List<Field> fieldList = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
-        for (int i = fieldList.size() - 1 ; 0 != i ; i--){
-            if (fieldList.get(i).getName().toLowerCase().equals("$change") || fieldList.get(i).getName().toLowerCase().equals("serialversionuid")){
+        for (int i = fieldList.size() - 1; 0 != i; i--) {
+            if (fieldList.get(i).getName().toLowerCase().equals("$change") || fieldList.get(i).getName().toLowerCase().equals("serialversionuid")) {
                 fieldList.remove(i);
 //                i--;
             }
         }
+//        Date inicioCadastro = new Date();
+//        Date fimCadastro = new Date();
+//        Long tempoDemora = 0L;
+//        Long media = 0L;
+//        Long maiorDemora = 0L;
+        String clienteMaisDemorado = "";
         for (int cli = 0; requestCliente.size() != cli; cli++) {
+//            inicioCadastro = new Date();
             //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 //            dataInicioInsercao = new Date();
             Cursor cursor = cliInsere.retornaClienteFiltradoCursor(context, requestCliente.get(cli).getCodigo());
-
+            Cliente cliente = new Cliente();
             final int finalCli = cli;
             handler.post(new Runnable() {
                 @Override
@@ -86,11 +94,27 @@ public class SincCliente extends Activity {
                 }
             });
             if (cursor.getCount() > 0) {
+                Cliente clienteConsulta = new Cliente();
+                for (int f = 0; fieldList.size() != f; f++) {
+
+//                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                    String nomeCampo = fieldList.get(f).getName();
+                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
+                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
+                    cliente = (Cliente) teste;
+
+                }
+
+                clienteConsulta = clienteConsulta.retornaClienteObjetoAtualizar(context, cursor.getLong(cursor.getColumnIndex("codigo")));
+                String clienteS = new Gson().toJson(cliente);
+                String clienteConsultaS = new Gson().toJson(clienteConsulta);
+
                 cursor.close();
+
+
             } else {
                 cursor.close();
                 //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-                Cliente cliente = new Cliente();
 
 
                 for (int f = 0; fieldList.size() != f; f++) {
@@ -172,7 +196,21 @@ public class SincCliente extends Activity {
 
 
             }
+
+//
+//            fimCadastro = new Date();
+//
+//            tempoDemora = fimCadastro.getTime() - inicioCadastro.getTime();
+//            media += tempoDemora;
+//            if (tempoDemora > maiorDemora){
+//                maiorDemora = tempoDemora;
+//                clienteMaisDemorado = cliente.getNomecliente();
+//            }
+
         }
+
+
+//        Log.e("TESTECLIENTE", "MEDIA:" + media / requestCliente.size() + " MAIS LENTO:" + maiorDemora + " NOME: " + clienteMaisDemorado);
 
 
 //            @Override
@@ -183,67 +221,69 @@ public class SincCliente extends Activity {
     }
 
 
-    public boolean iniciaAsinc(Context context, final String ip) {
+    public boolean iniciaAsinc(final Context context, final String ip) {
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
         Cliente cliInsere = new Cliente();
+        final Mac mac = new Mac();
+
         ClienteService clienteService = retrofit.create(ClienteService.class);
-        final Call<List<Cliente>> requestCliente = clienteService.listCliente();
+        final Call<List<Cliente>> requestCliente = clienteService.listCliente(mac.retornaMac(context));
         final Response<List<Cliente>>[] response = new Response[]{null};
         List<Field> listaCampos = new ArrayList<>(Arrays.asList(cliInsere.getClass().getDeclaredFields()));
 //        final Handler handler = Sessao.getHandler();
 //        handler.post(new Runnable() {
 //            @Override
 //            public void run() {
-                Sessao.colocaTexto("Consultando dados. (Cliente)");
+        Sessao.colocaTexto("Consultando dados. (Cliente)");
 //            }
 //        });
 
         Date dataInicio = new Date();
         final String[] conteudo = {null};
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
+//        Thread thread = new Thread(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        try {
+////                            response[0] = requestCliente.execute();
+////                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        }
 //                        try {
-//                            response[0] = requestCliente.execute();
+//
+//                            URL url = new URL("http://" + ip + "/api/cliente/" + mac.retornaMac(context));            //aqui já botei a URL que meu amigo cedeu do WS
+//                            URLConnection connection = null;
+//
+//                            connection = url.openConnection();
+//
+//                            InputStream is = connection.getInputStream();
+//
+//                            Scanner scanner = new Scanner(is);
+////                            handler.post(new Runnable() {
+////                                @Override
+////                                public void run() {
+//                                    Sessao.colocaTexto("Lendo dados dos clientes.");
+////                                }
+////                            });
+//
+//                            conteudo[0] = scanner.useDelimiter("//A").next();
+//                            scanner.close();
 //                        } catch (IOException e) {
 //                            e.printStackTrace();
 //                        }
-                        try {
-
-                            URL url = new URL("http://" + ip + ":15101/ConnectServices/listaCliente");            //aqui já botei a URL que meu amigo cedeu do WS
-                            URLConnection connection = null;
-
-                            connection = url.openConnection();
-
-                            InputStream is = connection.getInputStream();
-
-                            Scanner scanner = new Scanner(is);
-//                            handler.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-                                    Sessao.colocaTexto("Lendo dados dos clientes.");
-//                                }
-//                            });
-
-                            conteudo[0] = scanner.useDelimiter("//A").next();
-                            scanner.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-        );
-        thread.setPriority(Thread.MAX_PRIORITY);
-        thread.start();
-        try {
-            thread.join(300000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//
+//                    }
+//                }
+//        );
+//        thread.setPriority(Thread.MAX_PRIORITY);
+//        thread.start();
+//        try {
+//            thread.join(300000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 //        thread.start();
 //        while (response[0] == null) {
 ////                Log.e("NULL", "RESPOSTA NULL");
@@ -262,41 +302,44 @@ public class SincCliente extends Activity {
 //        }
 
 
-
-        List<Cliente> listaCliente = new ArrayList<>();
-        JSONArray jsonArray = null;
+//        List<Cliente> listaCliente = new ArrayList<>();
+//        JSONArray jsonArray = null;
 //        handler.post(new Runnable() {
 //            @Override
 //            public void run() {
-                Sessao.colocaTexto("Montando dados.(Cliente)");
+//                Sessao.colocaTexto("Montando dados.(Cliente)");
 //            }
 //        });
 
-        try {
-            jsonArray = new JSONArray(conteudo[0]);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        Cliente cliente = new Cliente();
-        for (int i = 0; i != jsonArray.length() - 1 ; i++){
-            cliente = new Cliente();
-            final int finalI = i;
-            final JSONArray finalJsonArray = jsonArray;
-//            handler.post(new Runnable() {
-//                @Override
-//                public void run() {
-                    Sessao.colocaTexto("Montando dados. " + finalI + " de " + finalJsonArray.length());
+//        try {
+//            jsonArray = new JSONArray(conteudo[0]);
+//
+//            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+//            Cliente cliente = new Cliente();
+//            for (int i = 0; i != jsonArray.length() - 1 ; i++){
+//                cliente = new Cliente();
+//                final int finalI = i;
+//                final JSONArray finalJsonArray = jsonArray;
+////            handler.post(new Runnable() {
+////                @Override
+////                public void run() {
+//                Sessao.colocaTexto("Montando dados. " + finalI + " de " + finalJsonArray.length());
+////                }
+////            });
+////            Sessao.colocaTextoProgress("Montando dados. " + i + " de " + jsonArray.length());
+//                try {
+//                    cliente = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), Cliente.class);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
 //                }
-//            });
-//            Sessao.colocaTextoProgress("Montando dados. " + i + " de " + jsonArray.length());
-            try {
-                cliente = gson.fromJson(String.valueOf(jsonArray.getJSONObject(i)), Cliente.class);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            listaCliente.add(cliente);
-        }
+//                listaCliente.add(cliente);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        } catch (Exception ex){
+//            MostraToast mostraToast = new MostraToast();
+//            mostraToast.mostraToastLong(context, "Erro!!! O servidor nao respondeu.");
+//        }
 
 
 //        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
@@ -307,13 +350,49 @@ public class SincCliente extends Activity {
 //            if (listaCampos.get(i).getName().toUpperCase().equals(""));
 //        }
 
+        Thread thread = new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            response[0] = requestCliente.execute();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
+
+        List<Cliente> listaCliente = null;
+        try {
+            thread.join(120000);
+
+            if (thread.isAlive()) {
+                thread.interrupt();
+                MostraToast mostraToast = new MostraToast();
+                mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar vendedor.");
+            }
+
+            if (response[0].body() != null) {
+                Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+                listaCliente = new ArrayList<>(response[0].body());
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         if (listaCliente != null) {
             iniciaSinc(context, listaCliente);
             return true;
         } else {
             MostraToast mostraToast = new MostraToast();
-            mostraToast.mostraToastLong(context, "Erro ao consultar dados do cliente.");
+            mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar dados do cliente.");
 
             return false;
         }
@@ -350,7 +429,7 @@ public class SincCliente extends Activity {
         if (clienteList.size() > 0) {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
-            Log.e("JSON", gsonRetorno);
+//            Log.e("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
             RetRetrofit retRetrofit = new RetRetrofit();
             String url = retRetrofit.retornaSring("cliente", ip);

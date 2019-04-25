@@ -168,9 +168,9 @@ public class ConnectMain extends AppCompatActivity
 //                    Sessao.setaContext(ConnectMain.this);
 //                }
 //            });
-//        } else if (id == R.id.nav_deleta) {
-//            Context context = this;
-//            context.deleteDatabase("connect.db");
+        } else if (id == R.id.nav_deleta) {
+            Context context = this;
+            context.deleteDatabase("connect.db");
 //        } else if (id == R.id.nav_login) {
 //            Intent intent = new Intent(this, LoginActivity.class);
 //            startActivity(intent);

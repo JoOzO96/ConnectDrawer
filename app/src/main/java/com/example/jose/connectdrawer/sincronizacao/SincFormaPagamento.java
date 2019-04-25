@@ -131,7 +131,7 @@ public class SincFormaPagamento {
         }
 
         List<FormaPagamento> listaFormaPagamento = null;
-        if (response[0].body() != null) {
+        if (response[0] != null) {
             listaFormaPagamento = new ArrayList<>(response[0].body());
         }
 

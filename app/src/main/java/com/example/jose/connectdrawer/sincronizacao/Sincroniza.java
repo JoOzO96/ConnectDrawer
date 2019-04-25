@@ -40,13 +40,14 @@ public class Sincroniza {
             Boolean retorno = sincCliente.iniciaAsinc(context, ip);
 
 //            sincPedido.iniciaSinc(context, ip);
+//            sincCliente.iniciaAsinc(context,ip);
             sincFormaPagamento.iniciaASinc(context, ip);
             sincVendedor.iniciaASinc(context, ip);
             sincProduto.iniciaASinc(context, ip);
             sincCidade.iniciaAsinc(context, ip);
             sincCliente.iniciaenvio(context, ip);
-            sincPedido.iniciaenvio(context, ip);
-            sincPedidoProduto.iniciaenvio(context, ip);
+//            sincPedido.iniciaenvio(context, ip);
+//            sincPedidoProduto.iniciaenvio(context, ip);
             Sessao.terminaProgress();
 
         }

@@ -51,7 +51,7 @@ public class Cliente {
     private String pessoaauto1;
     private Double limitecredito1;
     private String pessoaauto2;
-    private Double limitecredito2;
+    private String limitecredito2;
     private Double limitepessoal;
     private Long tipocliente;
     private String codvendedor;
@@ -316,11 +316,11 @@ public class Cliente {
         this.pessoaauto2 = pessoaauto2;
     }
 
-    public Double getLimitecredito2() {
+    public String getLimitecredito2() {
         return limitecredito2;
     }
 
-    public void setLimitecredito2(Double limitecredito2) {
+    public void setLimitecredito2(String limitecredito2) {
         this.limitecredito2 = limitecredito2;
     }
 
@@ -763,6 +763,49 @@ public class Cliente {
             cursor.moveToFirst();
         }
         List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+        for (int j = 0; cursor.getCount() != j; j++) {
+            Cliente cliente1 = new Cliente();
+
+            for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
+                    cliente1 = (Cliente) retCliente;
+                }
+            }
+            cliente = cliente1;
+        }
+        db.close();
+        return cliente;
+
+    }
+
+    public Cliente retornaClienteObjetoAtualizar(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        Cliente cliente = new Cliente();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where codigo = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+
+        for (int f = 0; fieldListCliente.size() != f; f++) {
+            if (fieldListCliente.get(f).getName().toLowerCase().equals("alteradoandroid")){
+                fieldListCliente.remove(f);
+            }
+            if (fieldListCliente.get(f).getName().toLowerCase().equals("cadastroandroid")){
+                fieldListCliente.remove(f);
+            }
+            if (fieldListCliente.get(f).getName().toLowerCase().equals("deletadooandroid")){
+                fieldListCliente.remove(f);
+            }
+        }
+
         for (int j = 0; cursor.getCount() != j; j++) {
             Cliente cliente1 = new Cliente();
 

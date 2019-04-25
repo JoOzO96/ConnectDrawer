@@ -48,7 +48,7 @@ public class Banco extends SQLiteOpenHelper {
                 "pessoaauto1 text,"+
                 "limitecredito1 real,"+
                 "pessoaauto2 text,"+
-                "limitecredito2 real,"+
+                "limitecredito2 text,"+
                 "limitepessoal real,"+
                 "tipocliente long,"+
                 "codvendedor text,"+

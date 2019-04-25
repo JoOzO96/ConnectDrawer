@@ -42,48 +42,48 @@ public class SincVendedor {
 //            @Override
 //            public void onResponse(Call<List<Vendedor>> call, Response<List<Vendedor>> response) {
 //                List<Vendedor> vendedorList = response.body();
-                GetSetDinamico getSetDinamico = new GetSetDinamico();
-                Vendedor vendedor = new Vendedor();
-                List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
-                for (int i = 0; vendedorList.size() != i; i++) {
-                    //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        Vendedor vendedor = new Vendedor();
+        List<Field> fieldListClasse = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+        for (int i = 0; vendedorList.size() != i; i++) {
+            //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
 
-                    Cursor cursor = vendedor.retornaVendedorFiltradaCursor(Sessao.retornaContext(), vendedorList.get(i).getCodvendedor());
-                    Sessao.colocaTexto("Cadastro de vendedor.   " + (i + 1) + " de " + vendedorList.size());
-                    if (cursor.getCount() > 0) {
-                        cursor.close();
+            Cursor cursor = vendedor.retornaVendedorFiltradaCursor(Sessao.retornaContext(), vendedorList.get(i).getCodvendedor());
+            Sessao.colocaTexto("Cadastro de vendedor.   " + (i + 1) + " de " + vendedorList.size());
+            if (cursor.getCount() > 0) {
+                cursor.close();
+            } else {
+                //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
+
+                Vendedor vendedor1 = new Vendedor();
+                for (int j = 0; fieldListClasse.size() != j; j++) {
+                    if (fieldListClasse.get(j).getName().toLowerCase().equals("$change") ||
+                            fieldListClasse.get(j).getName().toLowerCase().equals("serialversionuid")) {
                     } else {
-                        //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
-
-                        Vendedor vendedor1 = new Vendedor();
-                        for (int j = 0; fieldListClasse.size() != j; j++) {
-                            if (fieldListClasse.get(j).getName().toLowerCase().equals("$change") ||
-                                    fieldListClasse.get(j).getName().toLowerCase().equals("serialversionuid")) {
-                            } else {
-                                String tipo = getSetDinamico.retornaTipoCampo(fieldListClasse.get(j));
-                                String nomecampo = "";
-                                nomecampo = fieldListClasse.get(j).getName().toLowerCase();
-                                Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(j), vendedorList.get(i));
-                                if (valorCampo != null) {
-                                    Object teste;
-                                    teste = getSetDinamico.insereField(fieldListClasse.get(j), vendedor1, valorCampo);
-                                    vendedor1 = (Vendedor) teste;
-                                }
-                            }
+                        String tipo = getSetDinamico.retornaTipoCampo(fieldListClasse.get(j));
+                        String nomecampo = "";
+                        nomecampo = fieldListClasse.get(j).getName().toLowerCase();
+                        Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(j), vendedorList.get(i));
+                        if (valorCampo != null) {
+                            Object teste;
+                            teste = getSetDinamico.insereField(fieldListClasse.get(j), vendedor1, valorCampo);
+                            vendedor1 = (Vendedor) teste;
                         }
-
-                        ///
-                        //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
-                        //
-                        //
-                        //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
-                        //
-
-                        boolean retorno = vendedor.cadastraVendedorSinc(Sessao.retornaContext(), vendedor1);
-
-                        cursor.close();
                     }
                 }
+
+                ///
+                //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
+                //
+                //
+                //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
+                //
+
+                boolean retorno = vendedor.cadastraVendedorSinc(Sessao.retornaContext(), vendedor1);
+
+                cursor.close();
+            }
+        }
 //            }
 
 //            @Override
@@ -94,7 +94,7 @@ public class SincVendedor {
 
     }
 
-    public void iniciaASinc(Context context, String ip){
+    public void iniciaASinc(Context context, String ip) {
         RetRetrofit retRetrofit = new RetRetrofit();
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
@@ -117,27 +117,32 @@ public class SincVendedor {
         );
         thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
+        List<Vendedor> listaVendedor = null;
         try {
             thread.join(120000);
+
+            if (thread.isAlive()) {
+                thread.interrupt();
+                MostraToast mostraToast = new MostraToast();
+                mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar vendedor.");
+            }
+
+
+            if (response[0].body() != null) {
+                listaVendedor = new ArrayList<>(response[0].body());
+            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        if (thread.isAlive()){
-            thread.interrupt();
+        } catch (Exception ex){
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar vendedor.");
         }
 
-        List<Vendedor> listaVendedor = null;
-        if (response[0].body() != null) {
-            listaVendedor = new ArrayList<>(response[0].body());
-        }
-
-
         thread.interrupt();
-        if (listaVendedor != null){
+        if (listaVendedor != null) {
             iniciaSinc(listaVendedor);
-        }else{
+        } else {
             MostraToast mostraToast = new MostraToast();
             mostraToast.mostraToastLong(context, "Erro ao consultar dados do vendedor.");
         }

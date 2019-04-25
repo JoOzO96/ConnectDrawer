@@ -117,6 +117,7 @@ public class GetSetDinamicoTelas extends Fragment {
 //                                4 - Bloqueado
 //                                5 - SERASA
 //                                6 - Advogados
+                                Log.i("COLORIDO", "" + cursor.getLong(cursor.getColumnIndex("posicao")));
                                 if (cursor.getLong(cursor.getColumnIndex("posicao")) == 1L){
                                     tv.setTextColor(Color.GREEN);
                                 }else if (cursor.getLong(cursor.getColumnIndex("posicao")) == 2L){

@@ -10,7 +10,7 @@ import retrofit2.http.GET;
  */
 
 public interface FormaPagamentoService {
-    @GET("listaFormaPagamento")
+    @GET("formaPagamento")
     Call<List<FormaPagamento>> listFormaPagamento();
 
 }

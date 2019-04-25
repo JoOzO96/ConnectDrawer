@@ -8,12 +8,17 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.login.LoginService;
+import com.example.jose.connectdrawer.uteis.Mac;
+import com.example.jose.connectdrawer.uteis.MostraToast;
+import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -31,47 +36,17 @@ public class SincMac {
         //SETA O RETROFIT COM OS DADOS QUE A CLASSE RETORNOU, PARA O SISTEMA
         Retrofit retrofit = retRetrofit.retornaRetrofit();
         LoginService loginService = retrofit.create(LoginService.class);
-        final String[] ip = {""};
+        String ip = "";
+        Mac mac = new Mac();
         //PEGA O MAC DO APARELHO
 
 //        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 //        WifiInfo info = manager.getConnectionInfo();
 //        String macAddress = info.getMacAddress();
-        String macAddress = "";
-        List<NetworkInterface> all = null;
-        try {
-            all = Collections.list(NetworkInterface.getNetworkInterfaces());
-
-        for (NetworkInterface nif : all) {
-            if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
-
-            byte[] macBytes = nif.getHardwareAddress();
-            if (macBytes == null) {
-                return "";
-            }
-
-            StringBuilder res1 = new StringBuilder();
-            for (byte b : macBytes) {
-                res1.append(Integer.toHexString(b & 0xFF) + ":");
-            }
-
-            if (res1.length() > 0) {
-                res1.deleteCharAt(res1.length() - 1);
-            }
-            macAddress = res1.toString();
-        }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
 
         Gson gson = new Gson();
-        if (accounts.length > 0) {
-            macAddress += accounts[0].name;
-        }
-        final Call<String> requestCliente = loginService.retornaMac(macAddress);
+        final Call<String> requestMac = loginService.retornaMac(mac.retornaMac(context));
+        final Response<String>[] response = new Response[]{null};
 //        Log.e("TEST", response.toString());
 //        requestCliente.enqueue(new Callback<String>() {
 //            @Override
@@ -84,37 +59,69 @@ public class SincMac {
 //                Log.e("TEST", t.toString());
 //            }
 //        });
-        final Response<String>[] response = new Response[]{null};
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        response[0] = requestCliente.execute();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+//        final Response<String>[] response = new Response[]{null};
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        response[0] = requestCliente.execute();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            thread.setPriority(Thread.MAX_PRIORITY);
+//            thread.start();
+//        try {
+//            thread.join(120000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        limitaResposta = 0L;
+//            while (response[0] == null){
+////                Log.e("NULL", "RESPOSTA NULL");
+//                limitaResposta ++;
+////                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
+//                if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 ){
+//                    return null;
+//                }
+//
+//            }
+//            ip[0] = response[0].body();
+//            thread.interrupt();
+
+
+
+        Thread thread = new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            response[0] = requestMac.execute();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            });
-            thread.setPriority(Thread.MAX_PRIORITY);
-            thread.start();
+        );
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
         try {
             thread.join(120000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        limitaResposta = 0L;
-            while (response[0] == null){
-//                Log.e("NULL", "RESPOSTA NULL");
-                limitaResposta ++;
-//                Log.e("OI", " " + (dataInicio.getTime() - System.currentTimeMillis()) + " ");
-                if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 ){
-                    return null;
-                }
-
-            }
-            ip[0] = response[0].body();
+        if (thread.isAlive()){
             thread.interrupt();
-        return ip[0];
+            MostraToast mostraToast = new MostraToast();
+            mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar forma de pagamento.");
+        }
+        if (response[0] != null){
+            ip = response[0].body();
+        }
+
+
+        return ip;
     }
 
 }

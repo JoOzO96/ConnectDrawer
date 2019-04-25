@@ -9,8 +9,11 @@ import android.util.Log;
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -1212,13 +1215,14 @@ public class Produto {
 
     @Override
     public String toString() {
-        return codproduto + " - " + mercadoria;
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return codproduto + " - " + mercadoria + " - R$ " + decimalFormat.format(valorprazo) ;
     }
 
     public Cursor retornaProduto(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM produto", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM produto", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -1385,7 +1389,7 @@ public class Produto {
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,max(idcodproduto) from produto", null);
+        Cursor cursor = db.rawQuery("SELECT max(idcodproduto) from produto", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getLong(1);
@@ -1398,6 +1402,49 @@ public class Produto {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         db.delete("Produto", null,null);
+
+    }
+
+    public Produto retornaProdutoObjetoAtualizar(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        Produto produto = new Produto();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where codigo = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
+
+        for (int f = 0; fieldListCliente.size() != f; f++) {
+            if (fieldListCliente.get(f).getName().toLowerCase().equals("alteradoandroid")){
+                fieldListCliente.remove(f);
+            }
+            if (fieldListCliente.get(f).getName().toLowerCase().equals("cadastroandroid")){
+                fieldListCliente.remove(f);
+            }
+            if (fieldListCliente.get(f).getName().toLowerCase().equals("deletadooandroid")){
+                fieldListCliente.remove(f);
+            }
+        }
+
+        for (int j = 0; cursor.getCount() != j; j++) {
+            produto = new Produto();
+
+            for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), produto, retorno);
+                    produto = (Produto) retCliente;
+                }
+            }
+
+        }
+        db.close();
+        return produto;
 
     }
 }

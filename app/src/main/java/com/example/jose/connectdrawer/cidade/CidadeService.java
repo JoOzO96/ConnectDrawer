@@ -10,6 +10,6 @@ import retrofit2.http.GET;
  */
 
 public interface CidadeService {
-    @GET("listaCidade")
+    @GET("cidade")
     Call<List<Cidade>> listCidade();
 }

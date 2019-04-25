@@ -164,9 +164,6 @@ public class SincCidade {
         thread.start();
         try {
             thread.join(120000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         if (thread.isAlive()){
             thread.interrupt();
@@ -200,6 +197,11 @@ public class SincCidade {
 //        for (int i = 0 ; listaCampos.size() != i ; i++){
 //            if (listaCampos.get(i).getName().toUpperCase().equals(""));
 //        }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 //            thread.interrupt();
