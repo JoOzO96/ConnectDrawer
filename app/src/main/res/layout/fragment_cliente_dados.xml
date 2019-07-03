@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="Codigo"
             android:layout_alignParentTop="true">
 
             <EditText
@@ -22,7 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
-                android:hint="Codigo"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:hint="Nome Cliente"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textInputLayout">
 
@@ -38,7 +39,6 @@
                 android:id="@+id/txNomeCliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nome Cliente"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="Endereço"
             android:layout_below="@+id/textInputLayout1">
 
             <EditText
@@ -56,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Endereço"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
@@ -66,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="Numero"
             android:layout_below="@+id/textInputLayout2">
 
             <EditText
@@ -74,7 +75,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Numero"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -84,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="Bairro"
             android:layout_below="@+id/textInputLayout3">
 
             <EditText
@@ -92,7 +93,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Bairro"
                 android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
@@ -102,6 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="CEP"
             android:layout_below="@+id/textInputLayout4">
 
             <EditText
@@ -110,7 +111,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="CEP"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -119,6 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:hint="CPF / CNPJ"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textInputLayout5">
 
@@ -128,9 +129,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="CPF / CNPJ"
+
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/consultarSefaz"
+            android:layout_below="@+id/textInputLayout6"
+            android:text="Consultar no SEFAZ"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayout7"
@@ -138,7 +146,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textInputLayout6">
+            android:hint="IE"
+            android:layout_below="@+id/consultarSefaz">
 
             <EditText
                 android:id="@+id/txIncest"
@@ -146,7 +155,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="IE"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -170,6 +178,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:hint="Telefone"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/spCidade">
 
@@ -179,7 +188,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Telefone"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -189,6 +197,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="Celular"
             android:layout_below="@+id/textInputLayout8">
 
             <EditText
@@ -197,7 +206,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Celular"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -207,6 +215,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:hint="Telefone Trabalho"
             android:layout_below="@+id/textInputLayout9">
 
             <EditText
@@ -215,7 +224,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Telefone Trabalho"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -224,6 +232,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:hint="Email"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textInputLayout10">
 
@@ -233,7 +242,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="Email"
                 android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 

@@ -23,7 +23,7 @@ public class Pedido {
     private Long pedido;
     private Long codemitente;
     private Long codcliente;
-    private Long data;
+    private Date data;
     private String codvendedor;
     private String formadepagamento;
     private Double frete;
@@ -73,11 +73,11 @@ public class Pedido {
         this.codcliente = codcliente;
     }
 
-    public Long getData() {
+    public Date getData() {
         return data;
     }
 
-    public void setData(long data) {
+    public void setData(Date data) {
         this.data = data;
     }
 

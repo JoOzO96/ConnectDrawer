@@ -10,9 +10,11 @@ import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.Pedido.PedidoService;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.DateDeserializer;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -140,6 +142,12 @@ public class SincPedido {
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
                 pedido = new Pedido();
+                pedido.setCodemitente(1L);
+                pedido.setData(new Date());
+                pedido.setCodstatus(1L);
+//                pedido.setCodvendedor("01");
+
+                pedido.setSimnao(false);
                 for (int ped = 0; fieldListPedido.size() != ped; ped++) {
                     if (fieldListPedido.get(ped).getName().toLowerCase().equals("$change") ||
                             fieldListPedido.get(ped).getName().toLowerCase().equals("serialversionuid")) {
@@ -157,7 +165,10 @@ public class SincPedido {
             }
         }
         if (pedidoList.size() > 0) {
-            Gson gson = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+            gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+            Gson gson = gsonBuilder.create();
             String gsonRetorno = gson.toJson(pedidoList);
             Log.i("JSONPEDIDO", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
@@ -170,7 +181,7 @@ public class SincPedido {
                 enviaJson.execute(gsonRetorno, url);
                 while (retornoEnvio == "") {
                     retornoEnvio = enviaJson.get();
-                    if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 ){
+                    if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 || retornoEnvio != ""){
                         break;
                     }
                 }

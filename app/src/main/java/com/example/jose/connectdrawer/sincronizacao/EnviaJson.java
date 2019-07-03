@@ -1,8 +1,11 @@
 package com.example.jose.connectdrawer.sincronizacao;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -48,6 +51,7 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         String jsonDeResposta = "";
+        String jsonResposta = "";
         try {
             URL obj = null;
 
@@ -57,7 +61,7 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
 
             connection.setRequestMethod("POST"); //fala que quer um post
 
-            connection.setRequestProperty("Content-type", "text/plain"); //fala o que vai mandar
+            connection.setRequestProperty("Content-type", "application/json"); //fala o que vai mandar
 
             connection.setDoOutput(true); //fala que voce vai enviar algo
 
@@ -66,8 +70,20 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
             printStream.println(params[0]); //seta o que voce vai enviar
 
             connection.connect(); //envia para o servidor
+//            Scanner retorno = new Scanner(connection.getInputStream());
+//            jsonDeResposta = new Scanner(connection.getInputStream()).next();
 
-            jsonDeResposta = new Scanner(connection.getInputStream()).next();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            connection.getInputStream()));
+            while ((jsonResposta = in.readLine()) != null) {
+                jsonDeResposta += jsonResposta;
+            }
+//            while(retorno.hasNextLine()){
+//                jsonResposta = retorno.nextLine();
+//            }
+
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {
@@ -75,7 +91,7 @@ public class EnviaJson extends AsyncTask<String, Integer, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+//        Log.e("RESPOSTA", jsonResposta);
         return jsonDeResposta;
     }
 }

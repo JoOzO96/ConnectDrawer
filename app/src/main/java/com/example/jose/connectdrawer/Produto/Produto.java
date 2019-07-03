@@ -1216,7 +1216,14 @@ public class Produto {
     @Override
     public String toString() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
+//        return codproduto + " - " + mercadoria + " - R$ " + decimalFormat.format(valorprazo) ;
+        return codproduto + " - " + mercadoria;
+    }
+
+    public String toStringComValor() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
         return codproduto + " - " + mercadoria + " - R$ " + decimalFormat.format(valorprazo) ;
+//        return codproduto + " - " + mercadoria;
     }
 
     public Cursor retornaProduto(Context context) {

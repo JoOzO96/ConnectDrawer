@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.jose.connectdrawer.A7.A7Dados;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamentoFragment;
 import com.example.jose.connectdrawer.Impressora.ImpressaoActibity;
@@ -54,6 +55,8 @@ public class ConnectMain extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -137,6 +140,10 @@ public class ConnectMain extends AppCompatActivity
             VendedorFragment vendedorFragment = new VendedorFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, vendedorFragment, vendedorFragment.getTag()).commit();
+        }else if (id == R.id.nav_testeimpressao) {
+                A7Dados a7Dados = new A7Dados();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, a7Dados, a7Dados.getTag()).commit();
         } else if (id == R.id.nav_formapagamento) {
             FormaPagamentoFragment formaPagamentoFragment = new FormaPagamentoFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

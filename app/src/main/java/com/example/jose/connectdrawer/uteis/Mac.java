@@ -42,13 +42,6 @@ public class Mac {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
-
-        if (accounts.length > 0) {
-            macAddress += accounts[0].name;
-        }
         return macAddress;
     }
 

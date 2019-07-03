@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
 import com.example.jose.connectdrawer.Impressora.BluetoothService;
 import com.example.jose.connectdrawer.Impressora.Command;
+import com.example.jose.connectdrawer.Impressora.PrintPicture;
 import com.example.jose.connectdrawer.Impressora.PrinterCommand;
 
 /**
@@ -36,26 +38,33 @@ public class CriaImpressao {
         if (alinhamento > 0) {
             texto = alinhaTexto(texto, nFontType, alinhamento);
         }
-        try {
             SendDataByte(PrinterCommand.POS_Print_Text(texto, THAI, codpage, nWidhTimes, nHeightTimes, nFontType));
             SendDataByte(Command.LF);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+    }
+
+    public void imprimeCodigoBarra(String texto, Integer codpage, Integer nWidhTimes, Integer nHeightTimes, Integer nFontType, Integer alinhamento) {
+//        TIPO DA LETRA = 0 48 POSICOES
+//        TIPO DA LETRA = 1 E 2 64 POSIÇOES
+//
+        if (alinhamento > 0) {
+            texto = alinhaTexto(texto, nFontType, alinhamento);
         }
+            SendDataByte(PrinterCommand.POS_Print_Text(texto, THAI, codpage, nWidhTimes, nHeightTimes, nFontType));
+            SendDataByte(Command.LF);
+
     }
 
     public void avanco(Integer avanco) {
         for (int i = 0; i <= avanco; i++) {
-            try {
+
 //                SendDataByte(PrinterCommand.POS_Print_Text("", THAI, 0, 0, 0, 0));
                 SendDataByte(Command.LF);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 
-    private String alinhaTexto(String texto, Integer nFontType, Integer alinhamento) {
+    public String alinhaTexto(String texto, Integer nFontType, Integer alinhamento) {
         if (nFontType > 0) {
             if (alinhamento == 1) {
                 if (texto.length() < 64) {
@@ -226,10 +235,37 @@ public class CriaImpressao {
         mService.stop();
     }
 
-    public void SendDataByte(byte[] data) throws InterruptedException {
+    public void SendDataByte(byte[] data) {
 
         mService.write(data);
 
+    }
+
+    public void imprimeimagem(Bitmap bitmap){
+//	byte[] buffer = PrinterCommand.POS_Set_PrtInit();
+
+        int nMode = 0;
+        int nPaperWidth = 384;
+
+            nPaperWidth = 576;
+        if(bitmap != null)
+        {
+            /**
+             * Parameters:
+             * mBitmap  要打印的图片
+             * nWidth   打印宽度（58和80）
+             * nMode    打印模式
+             * Returns: byte[]
+             */
+            byte[] data = PrintPicture.POS_PrintBMP(bitmap, nPaperWidth, nMode);
+            //	SendDataByte(buffer);
+            SendDataByte(Command.ESC_Init);
+            SendDataByte(Command.LF);
+            SendDataByte(data);
+            SendDataByte(PrinterCommand.POS_Set_PrtAndFeedPaper(30));
+            SendDataByte(PrinterCommand.POS_Set_Cut(1));
+            SendDataByte(PrinterCommand.POS_Set_PrtInit());
+        }
     }
 
 

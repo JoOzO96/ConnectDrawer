@@ -429,7 +429,7 @@ public class SincCliente extends Activity {
         if (clienteList.size() > 0) {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
-//            Log.e("JSON", gsonRetorno);
+            Log.e("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
             RetRetrofit retRetrofit = new RetRetrofit();
             String url = retRetrofit.retornaSring("cliente", ip);

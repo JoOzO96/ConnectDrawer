@@ -6,11 +6,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +29,14 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.jose.connectdrawer.A7.A7Dados;
+import com.example.jose.connectdrawer.A7.BarCode;
+import com.example.jose.connectdrawer.A7.BarI25;
+import com.example.jose.connectdrawer.A7.Bluetooth;
+import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.ImprimirTexto;
+import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
@@ -31,17 +44,22 @@ import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.sincronizacao.EnviaJson;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,6 +123,7 @@ public class PedidoDados extends Fragment {
 //    private EditText txservicosolicitado;
     private Button btSalvar;
     private Button btCancelar;
+    private Button btGerarNfe;
 
     public PedidoDados() {
         // Required empty public constructor
@@ -115,11 +134,12 @@ public class PedidoDados extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        MostraToast mostraToast = new MostraToast();
+        final MostraToast mostraToast = new MostraToast();
         Banco myDb = new Banco(getContext() );
         SQLiteDatabase db = myDb.getReadableDatabase();
         final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
+        btGerarNfe = (Button) view.findViewById(R.id.btgerarnfe);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
@@ -489,7 +509,7 @@ public class PedidoDados extends Fragment {
                     } else {
 
                         Bundle bundle = new Bundle();
-                        bundle.putString("codigo", "0");
+                        bundle.putLong("codigo", 0L);
                         bundle.putDouble("comissaoVendedor", comissaoVendedor);
                         bundle.putString("codigoClicado", "");
                         bundle.putLong("idPedidoProduto", -1L);
@@ -510,6 +530,40 @@ public class PedidoDados extends Fragment {
                 PedidoFragment pedidoFragment = new PedidoFragment();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
+            }
+        });
+
+        btGerarNfe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    NotaFiscal notaFiscal = new NotaFiscal();
+                    txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
+                    notaFiscal = (NotaFiscal) getSetDinamico.colocaDadosNotaFiscal(getContext(), notaFiscal, txPedido.getText().toString());
+                    List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
+                    listaNotaFiscal.add(notaFiscal);
+                    EnviaJson enviaJson = new EnviaJson();
+                    String url = "http://192.168.0.199:45455/api/notafiscal";
+                    List<ControleCodigo> retorno = null;
+                    String retornoEnvio = "";
+                    Gson gson = new Gson();
+                    String gsonRetorno = gson.toJson(listaNotaFiscal);
+                    try {
+                        enviaJson.execute(gsonRetorno, url);
+                        retornoEnvio = enviaJson.get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    ControleCodigo controleCodigo[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+
+                    if (controleCodigo[0].getMensagem() != null){
+                        mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -697,7 +751,7 @@ public class PedidoDados extends Fragment {
                 return -1;
             }
             pedido.setNome(cliente.getNomecliente());
-            pedido.setData(new Date().getTime());
+            pedido.setData(new Date());
 
 
             Vendedor vendedor = new Vendedor();
@@ -822,7 +876,7 @@ public class PedidoDados extends Fragment {
                 return -1;
             }
             pedido.setNome(cliente.getNomecliente());
-            pedido.setData(new Date().getTime());
+            pedido.setData(new Date());
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
 
             Vendedor vendedor = new Vendedor();
@@ -939,6 +993,8 @@ public class PedidoDados extends Fragment {
                 }
                 impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
                 impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO );
+                Bluetooth bluetooth = new Bluetooth();
+                impressao.imprimeimagem(bluetooth.imprimeNota());
 
                 impressao.avanco(2);
 

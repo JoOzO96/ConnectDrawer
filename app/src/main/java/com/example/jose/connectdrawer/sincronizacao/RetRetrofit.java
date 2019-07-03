@@ -19,7 +19,7 @@ public class RetRetrofit {
 
     public Retrofit retornaRetrofit(String ip) {
         GsonBuilder gsonBuilder = new GsonBuilder()
-                .setDateFormat("dd/MM/yyyy'T'hh:mm:ss");
+                .setDateFormat("yyyy-MM-dd'T'hh:mm:ss");
         gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
         Gson gson = gsonBuilder.create();
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -76,30 +76,30 @@ public class RetRetrofit {
         String url = "";
         if (ip.equals("") || ip == null) {
             if (tipo.equals("cidade")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebeCidade";
+                url = "http://" + ip + "/api/cidade";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebeCidade";
             } else if (tipo.equals("cliente")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebeCliente";
+                url = "http://" + ip + "/api/Cliente";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebeCliente";
             } else if (tipo.equals("pedido")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebePedido";
+                url = "http://" + ip + "/api/Pedido";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             } else if (tipo.equals("pedidoproduto")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebePedidoProduto";
+                url = "http://" + ip + "/api/PedidoProduto";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             }
         } else {
             if (tipo.equals("cidade")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebeCidade";
+                url = "http://" + ip + "/api/Cidade";
 //                url = "http://" + ip + ":8080/ConnectServices/recebeCidade";
             } else if (tipo.equals("cliente")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebeCliente";
+                url = "http://" + ip + "/api/Cliente";
 //                url = "http://" + ip + ":8080/ConnectServices/recebeCliente";
             } else if (tipo.equals("pedido")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebePedido";
+                url = "http://" + ip + "/api/Pedido";
 //                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
             } else if (tipo.equals("pedidoproduto")) {
-                url = "http://" + ip + ":15101/ConnectServices/recebePedidoProduto";
+                url = "http://" + ip + "/api/PedidoProduto";
 //                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
             }
         }

@@ -1,11 +1,20 @@
 package com.example.jose.connectdrawer.uteis;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+
+import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
+import com.example.jose.connectdrawer.Pedido.Pedido;
+import com.example.jose.connectdrawer.cliente.Cliente;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Jose on 02/06/2017.
@@ -137,4 +146,53 @@ public class GetSetDinamico {
         }
         return field;
     }
+
+
+    public Object colocaDadosNotaFiscal(Context context, NotaFiscal notaFiscal, String numeroPedido){
+        try {
+            GetSetDinamico getSetDinamico = new GetSetDinamico();
+            Cliente cliente = new Cliente();
+            Pedido pedido = new Pedido();
+            List<Field> fieldsPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+            List<Field> fieldsCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+            Cursor cursorPedido = pedido.retornaPedidoFiltradaCursor(context, Long.parseLong(numeroPedido));
+
+
+            for (int i = 0; fieldsPedido.size() > i; i++) {
+                if (fieldsPedido.get(i).getName().toLowerCase().equals("$change") ||
+                        fieldsPedido.get(i).getName().toLowerCase().equals("serialversionuid")) {
+                } else {
+                    pedido = (Pedido) getSetDinamico.setValorObjetoCursor(fieldsPedido.get(i), pedido, cursorPedido);
+                }
+            }
+            cliente = cliente.retornaClienteObjeto(context, pedido.getCodcliente());
+
+            if (cursorPedido.getCount() > 0) {
+                String codNota = notaFiscal.retornaCodNota(context);
+                notaFiscal.setCodnota("000000003");
+                notaFiscal.setCodemitente(1L);
+                notaFiscal.setCodtipo(1L);
+                notaFiscal.setCodcliente(pedido.getCodcliente());
+                notaFiscal.setNomecliente(cliente.getNomecliente());
+                notaFiscal.setCgccpf(cliente.getCpf());
+                notaFiscal.setMarc(false);
+                notaFiscal.setCnpj(cliente.getCgc());
+                notaFiscal.setEndereco(cliente.getEndereco());
+                notaFiscal.setCep(cliente.getCep());
+                notaFiscal.setBairro(cliente.getBairro());
+                notaFiscal.setFonefax(cliente.getTelefone());
+                notaFiscal.setSaida("1");
+                notaFiscal.setDataemissao(new Date());
+                notaFiscal.setDatasaida(new Date());
+                notaFiscal.setHora(new Date());
+
+            }
+
+
+        }catch (Exception ex){
+
+        }
+        return notaFiscal;
+    }
+
 }

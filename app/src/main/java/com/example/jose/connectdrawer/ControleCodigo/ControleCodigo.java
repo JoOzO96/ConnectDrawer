@@ -2,25 +2,31 @@ package com.example.jose.connectdrawer.ControleCodigo;
 
 public class ControleCodigo {
 
-    private Long codigoBanco;
-    private Long codigoAndroid;
-
+    private Long CodigoBanco;
+    private Long CodigoAndroid;
+    private String Mensagem;
 
     public Long getCodigoBanco() {
-        return codigoBanco;
+        return CodigoBanco;
     }
 
     public void setCodigoBanco(Long codigoBanco) {
-        this.codigoBanco = codigoBanco;
+        CodigoBanco = codigoBanco;
     }
 
     public Long getCodigoAndroid() {
-        return codigoAndroid;
+        return CodigoAndroid;
     }
 
     public void setCodigoAndroid(Long codigoAndroid) {
-        this.codigoAndroid = codigoAndroid;
+        CodigoAndroid = codigoAndroid;
     }
 
+    public String getMensagem() {
+        return Mensagem;
+    }
 
+    public void setMensagem(String mensagem) {
+        Mensagem = mensagem;
+    }
 }

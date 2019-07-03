@@ -59,7 +59,7 @@ public class SincPedidoProduto {
         if (pedidoProdutoList.size() > 0) {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(pedidoProdutoList);
-            Log.i("JSON", gsonRetorno);
+            Log.i("JSONPEDIDOPRODUTO", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
 //            String url = "http://177.92.186.84:15101/ConnectServices/recebePedidoProduto";
             RetRetrofit retRetrofit = new RetRetrofit();
@@ -79,12 +79,14 @@ public class SincPedidoProduto {
                     pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
                 } else {
                     ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-                    pedidoProduto = new PedidoProduto();
-                    for (int i = 0; controleCodigoList.size() != i; i++) {
+                    if (conversao != null) {
+                        List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                        pedidoProduto = new PedidoProduto();
+                        for (int i = 0; controleCodigoList.size() != i; i++) {
 //                    pedidoProduto.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
 //                    pedidoProduto.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                        pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
+                            pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
+                        }
                     }
                 }
             }
