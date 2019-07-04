@@ -157,6 +157,9 @@ public class Produto {
     private Double vpise;
     private Double vsubsti;
 
+    public Produto() {
+    }
+
     public String getAliqcide() {
         return aliqcide;
     }

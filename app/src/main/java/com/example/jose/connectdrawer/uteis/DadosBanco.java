@@ -32,7 +32,8 @@ public class DadosBanco {
                     } else if (tipo.toUpperCase().equals("LONG")) {
                         contentValues.put(field.getName().toString(), Long.parseLong(retorno.toString()));
                     } else if (tipo.toUpperCase().equals("DATE")) {
-                        contentValues.put(field.getName().toString(), retorno.toString());
+                        Date data = (Date) retorno;
+                        contentValues.put(field.getName().toString(), data.getTime());
 //                        Log.i("DATA", "" + retorno.toString());
                     } else if (tipo.toUpperCase().equals("DOUBLE")) {
                         contentValues.put(field.getName().toString(), Double.parseDouble(retorno.toString()));

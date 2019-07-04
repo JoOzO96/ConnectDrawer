@@ -343,8 +343,9 @@ public class Banco extends SQLiteOpenHelper {
 
         sql = "CREATE TABLE NotaFiscal(" +
                 "idNota long PRIMARY KEY," +
-                "codnota long PRIMARY KEY," +
+                "codnota long," +
                 "codemitente long, " +
+                "codigo long," +
                 "codtipo long," +
                 "codcliente long," +
                 "nomecliente text," +
@@ -353,6 +354,7 @@ public class Banco extends SQLiteOpenHelper {
                 "cnpj text," +
                 "cpf text," +
                 "endereco text," +
+                "cep text," +
                 "codcidade long," +
                 "bairro text," +
                 "fonefax text," +
@@ -403,7 +405,6 @@ public class Banco extends SQLiteOpenHelper {
                 "emidesti text," +
                 "issqn double," +
                 "vissqn double," +
-                "numero text," +
                 "pedido text," +
                 "protocoloc text," +
                 "envemail boolean," +
@@ -431,8 +432,10 @@ public class Banco extends SQLiteOpenHelper {
                 "ccocupom text, "+
                 "placavei text, "+
                 "operacaosefaz boolean, "+
-                "estonodenfe boolean"+
-                ");";
+                "estonodenfe boolean, "+
+                "cadastroandroid boolean," +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
         db.execSQL(sql);
 
         sql = "CREATE TABLE NotaProduto(" +
@@ -440,7 +443,7 @@ public class Banco extends SQLiteOpenHelper {
                 "codnota text, "+
                 "codemitente long, "+
                 "auto long, "+
-                "quantidade long, "+
+                "quantidade double, "+
                 "valorunitário double, "+
                 "valortotal double, "+
                 "valornota double, "+
@@ -478,8 +481,10 @@ public class Banco extends SQLiteOpenHelper {
                 "vcusto double, "+
                 "totaltribest double, "+
                 "comple text, "+
-                "ncmproduto text"+
-                ");";
+                "ncmproduto text,"+
+                "cadastroandroid boolean, " +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
     }
 
     @Override

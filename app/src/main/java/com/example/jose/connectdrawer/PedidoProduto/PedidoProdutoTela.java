@@ -41,7 +41,7 @@ public class PedidoProdutoTela extends DialogFragment {
     private Button btCancelar;
     private Button btSalvar;
     private EditText txquantidade;
-    private AutoCompleteTextView txproduto;
+    private AutoCompleteTextView auproduto;
     private EditText txvalorunitario;
     private EditText txvalortotal;
     //    private Spinner spProduto;
@@ -134,40 +134,29 @@ public class PedidoProdutoTela extends DialogFragment {
                         //posição do spinner para sair selecionado
 
                         //COLOCA VALOR NO SPINNER DO PRODUTO
-                        if (fieldListPassar.get(i).getName().toLowerCase().equals("spproduto")) {
+                        if (fieldListPassar.get(i).getName().toLowerCase().equals("auproduto")) {
+                            cursorProduto = produto.retornaProdutoFiltradaCursor(getContext(), codigoProduto.toString());
+                            for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
+                                if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
+                                } else {
+                                    fieldListProduto.remove(f);
+                                }
+                            }
 
-//                            for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
-//                                if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
-//                                } else {
-//                                    fieldListProduto.remove(f);
-//                                }
-//                            }
-//                            cursorProduto.moveToFirst();
-//                            for (int j = 0; cursorProduto.getCount() != j; j++) {
-//                                produto = new Produto();
-//                                for (int f = 0; fieldListProduto.size() != f; f++) {
-//                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListProduto.get(f));
-//                                    String nomeCampo = fieldListProduto.get(f).getName().toLowerCase();
-//                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorProduto);
-//                                    if (retorno != null) {
-//                                        Object retProduto = getSetDinamico.insereField(fieldListProduto.get(f), produto, retorno);
-//                                        produto = (Produto) retProduto;
-//                                    }
-//                                }
-//                                produtoList.add(produto.toStringSemValor());
-//                                cursorProduto.moveToNext();
-//                            }
-//
-//
-//                            for (int k = 0; produtoList.size() != k; k++) {
-//                                Integer codHifen = produtoList.get(k).indexOf("-");
-//                                String codProduto = produtoList.get(k).substring(0, codHifen - 1);
-//
-//                                if (codProduto.equals(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("codproduto")))) {
-//                                    posicao = k;
-//                                    break;
-//                                }
-//                            }
+                            for (int j = 0; cursorProduto.getCount() != j; j++) {
+                                produto = new Produto();
+                                for (int f = 0; fieldListProduto.size() != f; f++) {
+                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListProduto.get(f));
+                                    String nomeCampo = fieldListProduto.get(f).getName().toLowerCase();
+                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorProduto);
+                                    if (retorno != null) {
+                                        Object retProduto = getSetDinamico.insereField(fieldListProduto.get(f), produto, retorno);
+                                        produto = (Produto) retProduto;
+                                    }
+                                }
+                            }
+
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, produto.toString(), null);
 //                            getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, produtoList, getContext(), posicao);
 //                            //FIM DO SPINNER DOS PRODUTOS
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
@@ -237,7 +226,7 @@ public class PedidoProdutoTela extends DialogFragment {
             public void onClick(View v) {
                 Produto produto1 = new Produto();
                 List<Field> fieldListObjeto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
-                produto1.setCodproduto(txproduto.getText().toString().substring(0, txproduto.getText().toString().indexOf(" -")));
+                produto1.setCodproduto(auproduto.getText().toString().substring(0, auproduto.getText().toString().indexOf(" -")));
 //                Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), getSetDinamicoTelas.retornaValorSpinner(view, "Produto"));
                 Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), produto1.getCodproduto());
                 if (cursor.getCount() > 0) {
@@ -341,9 +330,9 @@ public class PedidoProdutoTela extends DialogFragment {
 //            }
 //        });
 
-        txproduto = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(view, "auproduto");
+        auproduto = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(view, "auproduto");
         ArrayAdapter<Produto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, produtoList);
-        txproduto.setAdapter(adapter);
+        auproduto.setAdapter(adapter);
 
 //        txproduto.setOnClickListener(
 //                new View.OnClickListener() {
@@ -366,11 +355,11 @@ public class PedidoProdutoTela extends DialogFragment {
 //            }
 //        });
 
-        txproduto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        auproduto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Produto produtoClicado = new Produto();
-                String texto = txproduto.getText().toString();
+                String texto = auproduto.getText().toString();
 
                 Integer codHifen = texto.indexOf("-");
                 String codProduto = texto.substring(0, codHifen - 1);

@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 public class NotaFiscal {
-    Long idNotaFiscal;
+    Long idNota;
     String codnota;
     Long codemitente;
     Long codtipo;
@@ -105,6 +105,14 @@ public class NotaFiscal {
     String ccocupom;
     String placavei;
     Boolean operacaosefaz;
+
+    public Long getIdNota() {
+        return idNota;
+    }
+
+    public void setIdNota(Long idNota) {
+        this.idNota = idNota;
+    }
 
     public String getCodnota() {
         return codnota;
@@ -831,28 +839,31 @@ public class NotaFiscal {
     public String retornaCodNota(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
+        Integer codNota = 0;
         Cursor cursor = db.rawQuery("SELECT * FROM NotaFiscal", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             db.close();
-            return formataCodNota(cursor.getString(cursor.getColumnIndex("codnota")));
+            codNota = Integer.parseInt(cursor.getString(cursor.getColumnIndex("codnota")));
+            codNota++;
+            return formataCodNota(codNota.toString());
         } else {
             db.close();
             return formataCodNota("1");
         }
     }
 
-    private String formataCodNota(String codnota){
-        for (int i = codnota.length(); i == 9 ; i ++){
+    private String formataCodNota(String codnota) {
+        for (int i = codnota.length(); i < 9; i++) {
             codnota = "0" + codnota;
         }
         return codnota;
     }
 
-    private  Long retornaMaiorCod(Context context) {
+    private Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT  rowid _id,  max(idnotafiscal) from notafiscal", null);
+        Cursor cursor = db.rawQuery("SELECT  rowid _id,  max(idnota) from notafiscal", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getLong(1);
@@ -861,10 +872,10 @@ public class NotaFiscal {
         }
     }
 
-    private  Cursor retornaClienteFiltradaCursor(Context context, Long codigo) {
+    private Cursor retornaClienteFiltradaCursor(Context context, Long codigo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT idNotaFiscal FROM notafiscal where idNotaFiscal = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT idnota FROM notafiscal where idnota = " + codigo, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -873,43 +884,43 @@ public class NotaFiscal {
     }
 
 
-    public Boolean cadastraNota(Context context, NotaFiscal notaFiscal){
+    public Boolean cadastraNota(Context context, NotaFiscal notaFiscal) {
         Banco myDb = new Banco(context);
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(notaFiscal.getClass().getDeclaredFields()));
 
-        for (int i = 0 ; fieldList.size() != i ; i++){
+        for (int i = 0; fieldList.size() != i; i++) {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), notaFiscal, valores);
         }
 
-        if (valores.get("idNotaFiscal") == null){
+        if (valores.get("idNota") == null) {
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
             valores.remove("codigo");
             valores.remove("cadastroandroid");
             valores.put("codigo", retorno);
             valores.put("cadastroandroid", true);
-            retorno = db.insert("cliente", null, valores);
+            retorno = db.insert("notafiscal", null, valores);
             db.close();
             valores.clear();
             return retorno != -1;
-        }else{
-            Cursor cursor = notaFiscal.retornaClienteFiltradaCursor(context, Long.parseLong(valores.get("codigo").toString()));
+        } else {
+            Cursor cursor = notaFiscal.retornaClienteFiltradaCursor(context, Long.parseLong(valores.get("idnota").toString()));
 
-            if (cursor.getCount() > 0){
+            if (cursor.getCount() > 0) {
                 valores.remove("alteradoandroid");
                 valores.put("alteradoandroid", true);
-                long retorno = db.update("cliente", valores, "codigo= " + valores.get("codigo").toString(), null);
+                long retorno = db.update("NotaFiscal", valores, "idnota= " + valores.get("idnota").toString(), null);
                 db.close();
                 valores.clear();
                 return retorno != -1;
-            }else{
+            } else {
                 long retorno = retornaMaiorCod(context);
                 retorno = retorno + 1;
                 valores.remove("cadastroandroid");
-                retorno = db.insert("cliente", null, valores);
+                retorno = db.insert("notafiscal", null, valores);
                 db.close();
                 valores.clear();
                 return retorno != -1;

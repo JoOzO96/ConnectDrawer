@@ -560,6 +560,8 @@ public class PedidoDados extends Fragment {
 
                     if (controleCodigo[0].getMensagem() != null){
                         mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
+                    }else{
+                        
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();
