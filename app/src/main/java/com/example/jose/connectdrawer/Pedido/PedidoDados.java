@@ -6,18 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,17 +22,14 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.jose.connectdrawer.A7.A7Dados;
-import com.example.jose.connectdrawer.A7.BarCode;
-import com.example.jose.connectdrawer.A7.BarI25;
 import com.example.jose.connectdrawer.A7.Bluetooth;
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.Email.CriaEmail;
-import com.example.jose.connectdrawer.Email.EnviaEmail;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscalService;
+import com.example.jose.connectdrawer.Parcelas.ParcelasDados;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
@@ -58,11 +48,9 @@ import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,6 +153,7 @@ public class PedidoDados extends Fragment {
         final List<String> formaPagamentoList = new ArrayList<>();
         final Pedido pedido = new Pedido();
         Double porcentagem_lucro = 0D;
+        txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
@@ -500,7 +489,7 @@ public class PedidoDados extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
-                txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
+
 
                 if (txPedido.length() == 0) {
 
@@ -744,6 +733,19 @@ public class PedidoDados extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.show();
                 return true;
+            }
+        });
+
+        btGerarParcelas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SalvaPedido(view,2L,false);
+                ParcelasDados parcelas = new ParcelasDados();
+                Bundle bundle = new Bundle();
+                bundle.putLong("codigo", Long.parseLong(txPedido.getText().toString()));
+                parcelas.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, parcelas, parcelas.getTag()).commit();
             }
         });
 

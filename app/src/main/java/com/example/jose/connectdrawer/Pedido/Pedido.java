@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -465,6 +466,31 @@ public class Pedido {
 
     }
 
+    public Pedido retornaPedidoObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        Pedido pedido = new Pedido();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM pedido where pedido = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
+        for (int j = 0; cursor.getCount() != j; j++) {
+            for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), pedido, retorno);
+                    pedido = (Pedido) retCliente;
+                }
+            }
+        }
+        db.close();
+        return pedido;
+    }
 
     public Long getCodemitente() {
         return codemitente;

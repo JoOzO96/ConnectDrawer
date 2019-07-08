@@ -29,7 +29,7 @@ public class DadosBanco {
                         contentValues.put(field.getName().toString(), retorno.toString());
                     } else if (tipo.toUpperCase().equals("BOOLEAN")) {
                         Integer verdadeiro = 0;
-                        if (retorno == true){
+                        if (Boolean.parseBoolean(retorno.toString()) == true){
                             verdadeiro = 1;
                         }else{
                             verdadeiro = 0;

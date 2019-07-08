@@ -12,7 +12,7 @@ import android.util.Log;
 public class Banco extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "connect.db";
-    private static final int VERSAO =2;
+    private static final int VERSAO = 3;
 
     public Banco(Context context){
         super(context, NOME_BANCO,null,VERSAO);
@@ -492,7 +492,7 @@ public class Banco extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql = "";
-        if (newVersion == 2) {
+        if (oldVersion < 2) {
             sql = "CREATE TABLE NotaFiscal(" +
                     "idNota long PRIMARY KEY," +
                     "codnota long," +
@@ -639,35 +639,18 @@ public class Banco extends SQLiteOpenHelper {
                     "alteradoandroid boolean);";
             db.execSQL(sql);
         }
+
+        if (oldVersion < 3) {
+            sql = "CREATE TABLE Parcela(" +
+                    "idParcela long PRIMARY KEY," +
+                    "codpedido text, " +
+                    "dvenci long, " +
+                    "vparce double, " +
+                    "diave long, " +
+                    "fatura text, " +
+                    "valorboleto double, " +
+                    "gerarboleto boolean);";
+            db.execSQL(sql);
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

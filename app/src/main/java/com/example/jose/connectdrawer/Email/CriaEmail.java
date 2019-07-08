@@ -16,7 +16,7 @@ public class CriaEmail {
         final String body = mensagem;
 
         if(!isOnline(context)) {
-            mostraToast.mostraToastLong(context, "Não estava online para enviar e-mail!");
+//            mostraToast.mostraToastLong(context, "Não estava online para enviar e-mail!");
             System.exit(0);
         }
 
@@ -42,7 +42,7 @@ public class CriaEmail {
                     System.exit(0);
                 }
 
-                mostraToast.mostraToastLong(context, "Email enviado!");
+//                mostraToast.mostraToastLong(context, "Email enviado!");
             }
         }).start();
     }
