@@ -2,6 +2,7 @@ package com.example.jose.connectdrawer.uteis;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.RestrictTo;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
@@ -10,6 +11,7 @@ import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.Produto.Produto;
 import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Retrofit;
 
 /**
  * Created by Jose on 02/06/2017.
@@ -94,7 +98,7 @@ public class GetSetDinamico {
             }else if (tipo.equals("DOUBLE")) {
                 objeto = cursor1.getDouble(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("BOOLEAN")) {
-                objeto = cursor1.getInt(cursor1.getColumnIndex(nome)) == 0;
+                objeto = cursor1.getInt(cursor1.getColumnIndex(nome)) == 1;
             }
         }
         return objeto;
@@ -151,8 +155,9 @@ public class GetSetDinamico {
     }
 
 
-    public Object colocaDadosNotaFiscal(Context context, NotaFiscal notaFiscal, String numeroPedido){
+    public Object colocaDadosNotaFiscal(Context context, NotaFiscal notaFiscal, String numeroPedido, Long codigoBanco){
         try {
+
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             Cliente cliente = new Cliente();
             Pedido pedido = new Pedido();
@@ -173,9 +178,12 @@ public class GetSetDinamico {
             cliente = cliente.retornaClienteObjeto(context, pedido.getCodcliente());
 
             if (cursorPedido.getCount() > 0) {
+
                 if (pedido.getNotafisca() == null) {
-                    String codNota = notaFiscal.retornaCodNota(context);
-                    notaFiscal.setCodnota(codNota);
+                    if (codigoBanco > 0 ){
+                        String codNota = notaFiscal.retornaCodNota(context);
+                        notaFiscal.setCodnota(notaFiscal.formataCodNota(codigoBanco.toString()));
+                    }
                 }else{
                     notaFiscal.setCodnota(pedido.getNotafisca());
                 }

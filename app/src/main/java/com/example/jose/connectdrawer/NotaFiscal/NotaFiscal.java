@@ -853,7 +853,7 @@ public class NotaFiscal {
         }
     }
 
-    private String formataCodNota(String codnota) {
+    public String formataCodNota(String codnota) {
         for (int i = codnota.length(); i < 9; i++) {
             codnota = "0" + codnota;
         }

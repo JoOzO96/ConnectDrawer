@@ -28,7 +28,13 @@ public class DadosBanco {
                     if (tipo.toUpperCase().equals("STRING")) {
                         contentValues.put(field.getName().toString(), retorno.toString());
                     } else if (tipo.toUpperCase().equals("BOOLEAN")) {
-                        contentValues.put(field.getName().toString(), false);
+                        Integer verdadeiro = 0;
+                        if (retorno == true){
+                            verdadeiro = 1;
+                        }else{
+                            verdadeiro = 0;
+                        }
+                        contentValues.put(field.getName().toString(), verdadeiro);
                     } else if (tipo.toUpperCase().equals("LONG")) {
                         contentValues.put(field.getName().toString(), Long.parseLong(retorno.toString()));
                     } else if (tipo.toUpperCase().equals("DATE")) {

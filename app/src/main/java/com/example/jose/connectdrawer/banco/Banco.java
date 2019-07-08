@@ -12,7 +12,7 @@ import android.util.Log;
 public class Banco extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "connect.db";
-    private static final int VERSAO = 1;
+    private static final int VERSAO =2;
 
     public Banco(Context context){
         super(context, NOME_BANCO,null,VERSAO);
@@ -420,19 +420,19 @@ public class Banco extends SQLiteOpenHelper {
                 "codpgto long," +
                 "baseimpo double," +
                 "desaduaneira double," +
-                "valoimpor double, "+
-                "valoriof double, "+
-                "gerabloqueto boolean, "+
-                "finalidade text, "+
-                "presencial text, "+
-                "destioperacao text, "+
-                "codplanocontas long, "+
-                "codcentrocustos text, "+
-                "emailnota text, "+
-                "ccocupom text, "+
-                "placavei text, "+
-                "operacaosefaz boolean, "+
-                "estonodenfe boolean, "+
+                "valoimpor double, " +
+                "valoriof double, " +
+                "gerabloqueto boolean, " +
+                "finalidade text, " +
+                "presencial text, " +
+                "destioperacao text, " +
+                "codplanocontas long, " +
+                "codcentrocustos text, " +
+                "emailnota text, " +
+                "ccocupom text, " +
+                "placavei text, " +
+                "operacaosefaz boolean, " +
+                "estonodenfe boolean, " +
                 "cadastroandroid boolean," +
                 "deletadoandroid boolean," +
                 "alteradoandroid boolean);";
@@ -440,56 +440,205 @@ public class Banco extends SQLiteOpenHelper {
 
         sql = "CREATE TABLE NotaProduto(" +
                 "idNotaProduto long PRIMARY KEY," +
-                "codnota text, "+
-                "codemitente long, "+
-                "auto long, "+
-                "quantidade double, "+
-                "valorunitário double, "+
-                "valortotal double, "+
-                "valornota double, "+
-                "valoripi double, "+
-                "aliqicms double, "+
-                "aliqipi double, "+
-                "codicms text, "+
-                "peso long, "+
-                "cfop text, "+
-                "bicms double, "+
-                "vicms double, "+
-                "descopro double, "+
-                "mvap long, "+
-                "vbcst double, "+
-                "vsst double, "+
-                "vseguro double, "+
-                "descri text, "+
-                "vfrete double, "+
-                "codtipo long, "+
-                "codpis text, "+
-                "porpis long, "+
-                "codcofins text, "+
-                "porcofins long, "+
-                "codipi text, "+
-                "sst text, "+
-                "voutros double, "+
-                "totaltribpro double, "+
-                "porimposto long, "+
-                "pesoliq long, "+
-                "datas long, "+
-                "cstpis long, "+
-                "vpis double, "+
-                "cstcofins long, "+
-                "vcofins double, "+
-                "vcusto double, "+
-                "totaltribest double, "+
-                "comple text, "+
-                "ncmproduto text,"+
+                "codnota text, " +
+                "codemitente long, " +
+                "auto long, " +
+                "quantidade double, " +
+                "valorunitário double, " +
+                "valortotal double, " +
+                "valornota double, " +
+                "valoripi double, " +
+                "aliqicms double, " +
+                "aliqipi double, " +
+                "codicms text, " +
+                "peso long, " +
+                "cfop text, " +
+                "bicms double, " +
+                "vicms double, " +
+                "descopro double, " +
+                "mvap long, " +
+                "vbcst double, " +
+                "vsst double, " +
+                "vseguro double, " +
+                "descri text, " +
+                "vfrete double, " +
+                "codtipo long, " +
+                "codpis text, " +
+                "porpis long, " +
+                "codcofins text, " +
+                "porcofins long, " +
+                "codipi text, " +
+                "sst text, " +
+                "voutros double, " +
+                "totaltribpro double, " +
+                "porimposto long, " +
+                "pesoliq long, " +
+                "datas long, " +
+                "cstpis long, " +
+                "vpis double, " +
+                "cstcofins long, " +
+                "vcofins double, " +
+                "vcusto double, " +
+                "totaltribest double, " +
+                "comple text, " +
+                "ncmproduto text," +
                 "cadastroandroid boolean, " +
                 "deletadoandroid boolean," +
                 "alteradoandroid boolean);";
+        db.execSQL(sql);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        String sql = "";
+        if (newVersion == 2) {
+            sql = "CREATE TABLE NotaFiscal(" +
+                    "idNota long PRIMARY KEY," +
+                    "codnota long," +
+                    "codemitente long, " +
+                    "codigo long," +
+                    "codtipo long," +
+                    "codcliente long," +
+                    "nomecliente text," +
+                    "cgccpf text," +
+                    "marc boolean," +
+                    "cnpj text," +
+                    "cpf text," +
+                    "endereco text," +
+                    "cep text," +
+                    "codcidade long," +
+                    "bairro text," +
+                    "fonefax text," +
+                    "inscest text," +
+                    "saida text," +
+                    "venda text," +
+                    "materia text," +
+                    "dataemissao long," +
+                    "datasaida long," +
+                    "hora long," +
+                    "codinstituicao long," +
+                    "praca text," +
+                    "fatura text," +
+                    "vencimento long," +
+                    "valor double," +
+                    "baseicms double," +
+                    "valoricms double," +
+                    "icmssub double," +
+                    "valoricmssub double," +
+                    "valordosprodutos double," +
+                    "valorseguro double," +
+                    "despesas double," +
+                    "valordoipi double," +
+                    "codtransportador," +
+                    "valorfrete double," +
+                    "valornota double," +
+                    "observacao double," +
+                    "pesobruto double," +
+                    "pesoliquido double," +
+                    "quantidade double," +
+                    "especie text," +
+                    "marca text," +
+                    "numero text," +
+                    "complemento text," +
+                    "codvendedor text," +
+                    "firma text," +
+                    "desconto double," +
+                    "cf text," +
+                    "tran text," +
+                    "cancela boolean," +
+                    "simnao boolean," +
+                    "nnota text," +
+                    "dupli boolean," +
+                    "norconti text," +
+                    "chave text," +
+                    "protocolo text," +
+                    "recibo text," +
+                    "emidesti text," +
+                    "issqn double," +
+                    "vissqn double," +
+                    "pedido text," +
+                    "protocoloc text," +
+                    "envemail boolean," +
+                    "notaref text," +
+                    "obsfisco text," +
+                    "justicancelamento text," +
+                    "funrural double," +
+                    "reajustadas double," +
+                    "valorfun double," +
+                    "valortributos double," +
+                    "totaltributos double," +
+                    "agrupa boolean," +
+                    "codpgto long," +
+                    "baseimpo double," +
+                    "desaduaneira double," +
+                    "valoimpor double, " +
+                    "valoriof double, " +
+                    "gerabloqueto boolean, " +
+                    "finalidade text, " +
+                    "presencial text, " +
+                    "destioperacao text, " +
+                    "codplanocontas long, " +
+                    "codcentrocustos text, " +
+                    "emailnota text, " +
+                    "ccocupom text, " +
+                    "placavei text, " +
+                    "operacaosefaz boolean, " +
+                    "estonodenfe boolean, " +
+                    "cadastroandroid boolean," +
+                    "deletadoandroid boolean," +
+                    "alteradoandroid boolean);";
+            db.execSQL(sql);
 
+            sql = "CREATE TABLE NotaProduto(" +
+                    "idNotaProduto long PRIMARY KEY," +
+                    "codnota text, " +
+                    "codemitente long, " +
+                    "auto long, " +
+                    "quantidade double, " +
+                    "valorunitário double, " +
+                    "valortotal double, " +
+                    "valornota double, " +
+                    "valoripi double, " +
+                    "aliqicms double, " +
+                    "aliqipi double, " +
+                    "codicms text, " +
+                    "peso long, " +
+                    "cfop text, " +
+                    "bicms double, " +
+                    "vicms double, " +
+                    "descopro double, " +
+                    "mvap long, " +
+                    "vbcst double, " +
+                    "vsst double, " +
+                    "vseguro double, " +
+                    "descri text, " +
+                    "vfrete double, " +
+                    "codtipo long, " +
+                    "codpis text, " +
+                    "porpis long, " +
+                    "codcofins text, " +
+                    "porcofins long, " +
+                    "codipi text, " +
+                    "sst text, " +
+                    "voutros double, " +
+                    "totaltribpro double, " +
+                    "porimposto long, " +
+                    "pesoliq long, " +
+                    "datas long, " +
+                    "cstpis long, " +
+                    "vpis double, " +
+                    "cstcofins long, " +
+                    "vcofins double, " +
+                    "vcusto double, " +
+                    "totaltribest double, " +
+                    "comple text, " +
+                    "ncmproduto text," +
+                    "cadastroandroid boolean, " +
+                    "deletadoandroid boolean," +
+                    "alteradoandroid boolean);";
+            db.execSQL(sql);
+        }
     }
 
 

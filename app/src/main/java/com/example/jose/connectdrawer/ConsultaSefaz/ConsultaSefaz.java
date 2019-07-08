@@ -2,9 +2,11 @@ package com.example.jose.connectdrawer.ConsultaSefaz;
 
 import android.content.Context;
 
+import com.example.jose.connectdrawer.Email.CriaEmail;
 import com.example.jose.connectdrawer.sincronizacao.EnviaJson;
 import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
 import com.example.jose.connectdrawer.sincronizacao.SincMac;
+import com.example.jose.connectdrawer.uteis.Mac;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
@@ -70,8 +72,14 @@ public class ConsultaSefaz {
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        CriaEmail criaEmail = new CriaEmail();
+                        Mac mac = new Mac();
+                        criaEmail.enviarEmail(context, mac.retornaMac(context), e.getMessage());
                     } catch (Exception e) {
                         e.printStackTrace();
+                        CriaEmail criaEmail = new CriaEmail();
+                        Mac mac = new Mac();
+                        criaEmail.enviarEmail(context, mac.retornaMac(context), e.getMessage());
                     }
 
                 return listaInfCadastro;

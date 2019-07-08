@@ -14,12 +14,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.ConsultaSefaz.InfCadastro;
+import com.example.jose.connectdrawer.Email.CriaEmail;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.ConsultaSefaz.ConsultaSefaz;
 import com.example.jose.connectdrawer.uteis.CamposRequeridos;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
+import com.example.jose.connectdrawer.uteis.Mac;
 import com.example.jose.connectdrawer.uteis.Mascara;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
@@ -511,7 +513,9 @@ public class ClienteDados extends Fragment {
                             }
                         }
                     } catch (Exception ex) {
-                        Log.e("ERRO", ex.toString());
+                        CriaEmail criaEmail = new CriaEmail();
+                        Mac mac = new Mac();
+                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), ex.getMessage());
                     }
                 }
             }

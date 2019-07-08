@@ -152,6 +152,12 @@
             android:layout_below="@+id/linear1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/btgerarparcelas"
+            android:text="Gerar Parcelas"/>
+        <Button
+            android:layout_below="@+id/btgerarparcelas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/btgerarnfe"
             android:text="Gerar NF-e"/>
     </RelativeLayout>

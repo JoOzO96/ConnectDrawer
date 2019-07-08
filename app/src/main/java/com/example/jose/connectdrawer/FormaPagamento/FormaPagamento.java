@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -125,6 +126,35 @@ public class FormaPagamento {
         }
         db.close();
         return cursor;
+    }
+
+    public FormaPagamento retornaFormaPagamentoObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        FormaPagamento formaPagamento = new FormaPagamento();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM formapagamento where codigo = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(FormaPagamento.class.getDeclaredFields()));
+        for (int j = 0; cursor.getCount() != j; j++) {
+
+
+            for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), formaPagamento, retorno);
+                    formaPagamento = (FormaPagamento) retCliente;
+                }
+            }
+        }
+        db.close();
+        return formaPagamento;
+
     }
 
     public Cursor retornaFormaPagamentoFiltradaCursor(Context context, Long codFormaPagamento) {

@@ -34,9 +34,12 @@ import com.example.jose.connectdrawer.A7.BarCode;
 import com.example.jose.connectdrawer.A7.BarI25;
 import com.example.jose.connectdrawer.A7.Bluetooth;
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
+import com.example.jose.connectdrawer.Email.CriaEmail;
+import com.example.jose.connectdrawer.Email.EnviaEmail;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
+import com.example.jose.connectdrawer.NotaFiscal.NotaFiscalService;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
@@ -45,13 +48,19 @@ import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.sincronizacao.EnviaJson;
+import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
+import com.example.jose.connectdrawer.sincronizacao.SincMac;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
+import com.example.jose.connectdrawer.uteis.Mac;
 import com.example.jose.connectdrawer.uteis.MostraToast;
+import com.example.jose.connectdrawer.uteis.Sessao;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -60,6 +69,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,6 +137,7 @@ public class PedidoDados extends Fragment {
     private Button btSalvar;
     private Button btCancelar;
     private Button btGerarNfe;
+    private Button btGerarParcelas;
 
     public PedidoDados() {
         // Required empty public constructor
@@ -135,18 +149,20 @@ public class PedidoDados extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final MostraToast mostraToast = new MostraToast();
-        Banco myDb = new Banco(getContext() );
+        Banco myDb = new Banco(getContext());
         SQLiteDatabase db = myDb.getReadableDatabase();
         final View view = inflater.inflate(R.layout.fragment_pedido_dados, container, false);
         btAdicionarItens = (Button) view.findViewById(R.id.btAdicionaritens);
         btGerarNfe = (Button) view.findViewById(R.id.btgerarnfe);
+        btGerarParcelas = (Button) view.findViewById(R.id.btgerarparcelas);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
+        spFormadepagamento = (Spinner) view.findViewById(R.id.spFormadepagamento);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
         List<String> vendedorList = new ArrayList<>();
-        List<String> formaPagamentoList = new ArrayList<>();
+        final List<String> formaPagamentoList = new ArrayList<>();
         final Pedido pedido = new Pedido();
         Double porcentagem_lucro = 0D;
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
@@ -343,6 +359,9 @@ public class PedidoDados extends Fragment {
                         try {
                             cursorPedidoProduto.moveToNext();
                         } catch (IllegalStateException i) {
+                            CriaEmail criaEmail = new CriaEmail();
+                            Mac mac = new Mac();
+                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), i.getMessage());
                         }
                     }
                     porcentagem_lucro = valorVenda * 100 / custo - 100;
@@ -476,9 +495,7 @@ public class PedidoDados extends Fragment {
 
         }
 
-        btAdicionarItens.setOnClickListener(new View.OnClickListener()
-
-        {
+        btAdicionarItens.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
@@ -522,9 +539,7 @@ public class PedidoDados extends Fragment {
             }
         });
 
-        btCancelar.setOnClickListener(new View.OnClickListener()
-
-        {
+        btCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PedidoFragment pedidoFragment = new PedidoFragment();
@@ -532,42 +547,132 @@ public class PedidoDados extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
             }
         });
+        spFormadepagamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String pgto = formaPagamentoList.get(i);
+                FormaPagamento formaPagamento = new FormaPagamento();
 
+                formaPagamento = formaPagamento.retornaFormaPagamentoObjeto(getContext(), Long.parseLong( pgto.substring(0, pgto.indexOf("-") - 1)));
+
+                if (formaPagamento.getPrazo() ==true){
+                    btGerarParcelas.setVisibility(View.VISIBLE);
+                }else{
+                    btGerarParcelas.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         btGerarNfe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    SalvaPedido(view, 2L, false);
                     NotaFiscal notaFiscal = new NotaFiscal();
-                    txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
-                    notaFiscal = (NotaFiscal) getSetDinamico.colocaDadosNotaFiscal(getContext(), notaFiscal, txPedido.getText().toString());
-                    List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
-                    listaNotaFiscal.add(notaFiscal);
-                    EnviaJson enviaJson = new EnviaJson();
-                    String url = "http://192.168.0.199:45455/api/notafiscal";
-                    List<ControleCodigo> retorno = null;
-                    String retornoEnvio = "";
-                    Gson gson = new Gson();
-                    String gsonRetorno = gson.toJson(listaNotaFiscal);
-                    try {
-                        enviaJson.execute(gsonRetorno, url);
-                        retornoEnvio = enviaJson.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    ControleCodigo controleCodigo[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                    RetRetrofit retRetrofit = new RetRetrofit();
+                    SincMac sincMac = new SincMac();
+                    String ip = sincMac.iniciasinc(getContext());
+                    ControleCodigo controleCodigo1 = null;
+                    if (ip != null) {
+                        Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
+                        NotaFiscalService notaFiscalService = retrofit.create(NotaFiscalService.class);
+                        final Call<ControleCodigo> requeControleCodigo = notaFiscalService.notafiscal();
+                        final Response<ControleCodigo>[] response = new Response[]{null};
+                        Thread thread = new Thread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            response[0] = requeControleCodigo.execute();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        }
+                                    }
+                                }
+                        );
+                        thread.setPriority(Thread.MAX_PRIORITY);
+                        thread.start();
 
-                    if (controleCodigo[0].getMensagem() != null){
-                        mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
+                        try {
+                            thread.join(120000);
+
+                            if (thread.isAlive()) {
+                                thread.interrupt();
+                                MostraToast mostraToast = new MostraToast();
+                                mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar dados da sequencia da NF-e.");
+                            }
+
+                            if (response[0].body() != null) {
+                                Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+
+                                controleCodigo1 = response[0].body();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            CriaEmail criaEmail = new CriaEmail();
+                            Mac mac = new Mac();
+                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            CriaEmail criaEmail = new CriaEmail();
+                            Mac mac = new Mac();
+                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                        }
+
+                        if (controleCodigo1 != null) {
+                            txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
+                            notaFiscal = (NotaFiscal) getSetDinamico.colocaDadosNotaFiscal(getContext(), notaFiscal, txPedido.getText().toString(), controleCodigo1.getCodigoBanco() + 1);
+                            List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
+                            listaNotaFiscal.add(notaFiscal);
+                            EnviaJson enviaJson = new EnviaJson();
+                            String url = "http://192.168.0.199:45455/api/notafiscal";
+                            List<ControleCodigo> retorno = null;
+                            String retornoEnvio = "";
+                            Gson gson = new Gson();
+                            String gsonRetorno = gson.toJson(listaNotaFiscal);
+                            try {
+                                enviaJson.execute(gsonRetorno, url);
+                                retornoEnvio = enviaJson.get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                CriaEmail criaEmail = new CriaEmail();
+                                Mac mac = new Mac();
+                                criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                                CriaEmail criaEmail = new CriaEmail();
+                                Mac mac = new Mac();
+                                criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                            }
+                            ControleCodigo controleCodigo[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+
+                            if (controleCodigo[0].getMensagem() != null) {
+                                mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
+                            } else {
+
+                            }
+                        }
                     }else{
-                        
+                        mostraToast.mostraToastLong(getContext(),"Não foi possivel verificar a sequencia da NF-e" );
                     }
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
+                    CriaEmail criaEmail = new CriaEmail();
+                    Mac mac = new Mac();
+                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), ex.getMessage());
                 }
             }
         });
+
+//        btGerarNfe.setVisibility(view.INVISIBLE);
 
 
         //PARTE AONDE PEGA O CLIQUE DO BOTAO PARA ADICIONAR O ITEM
@@ -576,9 +681,7 @@ public class PedidoDados extends Fragment {
         final FragmentManager fragmentManager = getFragmentManager();
 
 
-        listItenspedido.setOnItemClickListener(new AdapterView.OnItemClickListener()
-
-        {
+        listItenspedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -596,9 +699,7 @@ public class PedidoDados extends Fragment {
                 pedidoProdutoTela.show(fragmentManager, "Pedido Produto");
             }
         });
-        listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-
-        {
+        listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, final View view1, int position,
                                            long id) {
@@ -647,9 +748,7 @@ public class PedidoDados extends Fragment {
         });
 
 
-        btSalvar.setOnClickListener(new View.OnClickListener()
-
-        {
+        btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Integer retorno = SalvaPedido(view, 1L, true);
@@ -776,7 +875,7 @@ public class PedidoDados extends Fragment {
                     if (pedido.getPedido() > 0) {
                         if (imprime) {
                             imprimePedido(1L, pedido);
-                        }else{
+                        } else {
                             //montaTelaPedido(1L);
                         }
 
@@ -784,7 +883,7 @@ public class PedidoDados extends Fragment {
                     } else {
                         if (imprime) {
                             imprimePedido(2L, pedido);
-                        }else{
+                        } else {
                             montaTelaPedido(2L);
                         }
 
@@ -950,12 +1049,15 @@ public class PedidoDados extends Fragment {
                 List<PedidoProduto> pedidoProdutoLista = new ArrayList<>();
                 cliente = cliente.retornaClienteObjeto(getContext(), pedido.getCodcliente());
                 cidade = cidade.retornaCidadeObjeto(getContext(), cliente.getCodcidade());
-                vendedor = vendedor.retornaVendedorObjeto(getContext(),pedido.getCodvendedor());
+                vendedor = vendedor.retornaVendedorObjeto(getContext(), pedido.getCodvendedor());
                 pedidoProdutoLista = pedidoProduto.retornaPedidoProdutoObjeto(getContext(), pedido.getPedido());
                 try {
                     impressao.conectaImpressora(getContext());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    CriaEmail criaEmail = new CriaEmail();
+                    Mac mac = new Mac();
+                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
                 }
                 impressao.imprime("KADINI E KADINI LTDA", 0, 0, 0, 0, CENTRALIZADO);
                 impressao.imprime("RUA MANOEL TEIXEIRA, 108", 0, 0, 0, 0, CENTRALIZADO);
@@ -994,7 +1096,7 @@ public class PedidoDados extends Fragment {
                     somaitem += pedidoProdutoLista.get(i).getValortotal();
                 }
                 impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO );
+                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO);
                 Bluetooth bluetooth = new Bluetooth();
                 impressao.imprimeimagem(bluetooth.imprimeNota());
 
@@ -1004,6 +1106,9 @@ public class PedidoDados extends Fragment {
                     impressao.desconectaImpressora();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    CriaEmail criaEmail = new CriaEmail();
+                    Mac mac = new Mac();
+                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
                 }
 
 
