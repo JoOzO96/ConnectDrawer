@@ -331,6 +331,22 @@ public class PedidoProduto {
         return cursor;
     }
 
+    public Double retornaTotalPedido(Context context, Long codPedido){
+        Banco myDb = new Banco(context);
+        Double valorTotal = 0D;
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where pedido = " + codPedido, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for(int i = 0 ; i < cursor.getCount() ; i++){
+                valorTotal += cursor.getDouble(cursor.getColumnIndex("valortotal"));
+            }
+        }
+
+        db.close();
+        return valorTotal;
+    }
+
     public Cursor retornaItemPedido(Context context, Long idPedidoProduto){
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();

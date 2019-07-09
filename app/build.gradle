@@ -5,7 +5,7 @@ android {
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.jose.connectdrawer"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 26
         versionCode 30
         versionName "0.0.0.30"

@@ -342,7 +342,7 @@ public class Banco extends SQLiteOpenHelper {
         db.execSQL(sql);
 
         sql = "CREATE TABLE NotaFiscal(" +
-                "idNota long PRIMARY KEY," +
+                "idnota long PRIMARY KEY," +
                 "codnota long," +
                 "codemitente long, " +
                 "codigo long," +
@@ -439,7 +439,7 @@ public class Banco extends SQLiteOpenHelper {
         db.execSQL(sql);
 
         sql = "CREATE TABLE NotaProduto(" +
-                "idNotaProduto long PRIMARY KEY," +
+                "idnotaproduto long PRIMARY KEY," +
                 "codnota text, " +
                 "codemitente long, " +
                 "auto long, " +
@@ -487,6 +487,20 @@ public class Banco extends SQLiteOpenHelper {
                 "alteradoandroid boolean);";
         db.execSQL(sql);
 
+        sql = "CREATE TABLE Parcela(" +
+                "idparcela long PRIMARY KEY," +
+                "codpedido text, " +
+                "dvenci long, " +
+                "vparce double, " +
+                "diave long, " +
+                "fatura text, " +
+                "valorboleto double, " +
+                "gerarboleto boolean,"+
+                "cadastroandroid boolean, " +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
+        db.execSQL(sql);
+
     }
 
     @Override
@@ -494,7 +508,7 @@ public class Banco extends SQLiteOpenHelper {
         String sql = "";
         if (oldVersion < 2) {
             sql = "CREATE TABLE NotaFiscal(" +
-                    "idNota long PRIMARY KEY," +
+                    "idnota long PRIMARY KEY," +
                     "codnota long," +
                     "codemitente long, " +
                     "codigo long," +
@@ -591,7 +605,7 @@ public class Banco extends SQLiteOpenHelper {
             db.execSQL(sql);
 
             sql = "CREATE TABLE NotaProduto(" +
-                    "idNotaProduto long PRIMARY KEY," +
+                    "idnotaproduto long PRIMARY KEY," +
                     "codnota text, " +
                     "codemitente long, " +
                     "auto long, " +
@@ -642,14 +656,17 @@ public class Banco extends SQLiteOpenHelper {
 
         if (oldVersion < 3) {
             sql = "CREATE TABLE Parcela(" +
-                    "idParcela long PRIMARY KEY," +
+                    "idparcela long PRIMARY KEY," +
                     "codpedido text, " +
                     "dvenci long, " +
                     "vparce double, " +
                     "diave long, " +
                     "fatura text, " +
                     "valorboleto double, " +
-                    "gerarboleto boolean);";
+                    "gerarboleto boolean,"+
+                    "cadastroandroid boolean, " +
+                    "deletadoandroid boolean," +
+                    "alteradoandroid boolean);";
             db.execSQL(sql);
         }
     }

@@ -5,11 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -80,6 +83,14 @@ public class Parcelas {
         this.valorboleto = valorboleto;
     }
 
+    @Override
+    public String toString() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dataVencimento = simpleDateFormat.format(dvenci);
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return fatura + " - Venc: " +  dataVencimento +  " Valor: " + decimalFormat.format(vparce) +" Dias: " + diave;
+    }
+
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
@@ -94,6 +105,7 @@ public class Parcelas {
 
     public Boolean cadastraParcela(Context context, Parcelas parcelas){
         Banco myDb = new Banco(context);
+
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
@@ -106,11 +118,11 @@ public class Parcelas {
         if (valores.get("idParcela") == null){
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
-            valores.remove("codigo");
+            valores.remove("idParcela");
             valores.remove("cadastroandroid");
-            valores.put("codigo", retorno);
+            valores.put("idParcela", retorno);
             valores.put("cadastroandroid", true);
-            retorno = db.insert("cliente", null, valores);
+            retorno = db.insert("parcela", null, valores);
             db.close();
             valores.clear();
             return retorno != -1;
@@ -134,6 +146,12 @@ public class Parcelas {
                 return retorno != -1;
             }
         }
+    }
+
+    public void limpaParcelas(Context context, Long codPedido) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        db.delete("parcela","codpedido="+codPedido,null );
     }
 
     public Parcelas retornaParcelasObjeto(Context context, Long codigo) {
@@ -172,4 +190,61 @@ public class Parcelas {
         db.close();
         return cursor;
     }
+
+    public boolean retornaExistenciaParcelas(Context context, Long codigoPedido) {
+        Boolean existe = false;
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM parcela where codPedido = " + codigoPedido, null);
+        if (cursor.getCount() > 0) {
+            existe = true;
+        }
+        db.close();
+        return  existe;
+    }
+
+    public List<Parcelas> retornaListaDeParcelas(Context context, Long codigoPedido) {
+        Boolean existe = false;
+        List<Parcelas> parcelasList = new ArrayList<>();
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM parcela where codPedido = " + codigoPedido + " ORDER BY dvenci", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for(int i = 0 ; i < cursor.getCount() ; i++) {
+                parcelasList.add(retornaParcelasObjeto(context, cursor.getLong(cursor.getColumnIndex("idparcela"))));
+                cursor.moveToNext();
+            }
+
+        }
+//        db.close();
+        return  parcelasList;
+    }
+
+    public void recalculaValorParcelas(Context context, Long codPedido, Long idParcela){
+        Double valorPedido = 0D;
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Pedido pedido = new Pedido();
+        pedido = pedido.retornaPedidoObjeto(context, codPedido);
+        valorPedido = pedido.getValortotal();
+        List<Parcelas> parcelasList = new ArrayList<>();
+
+
+        parcelasList = retornaListaDeParcelas(context, codPedido);
+
+        for (int i = 0; i<parcelasList.size();i++){
+            valorPedido -= parcelasList.get(i).getVparce();
+        }
+        limpaParcelas(context, codPedido);
+        for (int i = 0; i<parcelasList.size();i++){
+            if (parcelasList.get(i).getIdParcela() != idParcela){
+                parcelasList.get(i).setVparce((parcelasList.get(i).getVparce()) + (valorPedido / (parcelasList.size() - 1)));
+                cadastraParcela(context, parcelasList.get(i));
+            }else {
+                cadastraParcela(context, parcelasList.get(i));
+            }
+        }
+    }
+
 }

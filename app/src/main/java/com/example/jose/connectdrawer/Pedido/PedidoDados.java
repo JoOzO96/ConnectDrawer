@@ -768,6 +768,7 @@ public class PedidoDados extends Fragment {
 
 
     public Integer SalvaPedido(View view, Long clique, Boolean imprime) {
+        PedidoProduto pedidoProduto = new PedidoProduto();
         if (clique == 1L) {
             //fieldListPedidoDados CONTEM OS DADOS DA TELA DO SISTEMA
             List<Field> fieldListPedidoDados = new ArrayList<>(Arrays.asList(PedidoDados.class.getDeclaredFields()));
@@ -776,6 +777,7 @@ public class PedidoDados extends Fragment {
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
             Pedido pedido = new Pedido();
+
 
             pedido.setPgto(1L);
             pedido.setCodemitente(1L);
@@ -856,7 +858,11 @@ public class PedidoDados extends Fragment {
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date());
 
+            Double valorTotalPedido = pedidoProduto.retornaTotalPedido(getContext(), pedido.getPedido());
 
+            pedido.setValortotal(valorTotalPedido);
+
+            boolean retorno = pedido.cadastraPedido(getContext(), pedido);
             Vendedor vendedor = new Vendedor();
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
             if (cursorVendedor.getCount() > 0) {
@@ -864,10 +870,6 @@ public class PedidoDados extends Fragment {
             } else {
                 return -1;
             }
-
-
-            boolean retorno = pedido.cadastraPedido(getContext(), pedido);
-
 
             if (retorno) {
                 if (clique == 1) {
@@ -980,6 +982,10 @@ public class PedidoDados extends Fragment {
             }
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date());
+            Double valorTotalPedido = pedidoProduto.retornaTotalPedido(getContext(), pedido.getPedido());
+
+            pedido.setValortotal(valorTotalPedido);
+
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
 
             Vendedor vendedor = new Vendedor();

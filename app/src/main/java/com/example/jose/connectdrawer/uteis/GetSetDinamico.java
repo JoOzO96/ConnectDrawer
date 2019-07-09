@@ -43,6 +43,13 @@ public class GetSetDinamico {
                     Method method = objetoRecebido.getClass().getMethod("set" + primeiro.toUpperCase() + nomeCampo,
                             field.getType());
                     method.invoke(objetoRecebido, recebido.toString());
+                }else if (field.getType().getSimpleName().toUpperCase().equals("DATE")) {
+                    cArg[0] = Date.class;
+                    Method method = objetoRecebido.getClass().getMethod("set" + primeiro.toUpperCase() + nomeCampo,
+                            field.getType());
+                    Date data = new Date();
+                    data.setTime(Long.parseLong(recebido.toString()));
+                    method.invoke(objetoRecebido, data);
                 } else if (field.getType().getSimpleName().toUpperCase().equals("LONG")) {
                     cArg[0] = Long.class;
                     Method method = objetoRecebido.getClass().getMethod("set" + primeiro.toUpperCase() + nomeCampo,
@@ -92,6 +99,8 @@ public class GetSetDinamico {
             if (tipo.equals("STRING") || tipo.equals("EDITTEXT")) {
                 objeto = cursor1.getString(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("LONG")) {
+                objeto = cursor1.getLong(cursor1.getColumnIndex(nome));
+            }else if (tipo.equals("DATE")) {
                 objeto = cursor1.getLong(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("INT")) {
                 objeto = cursor1.getInt(cursor1.getColumnIndex(nome));

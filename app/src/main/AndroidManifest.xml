@@ -35,6 +35,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".cliente.ClienteActivity" />
+        <activity android:name=".PedidoProduto.ParcelasTela" />
         <activity android:name=".PedidoProduto.PedidoProdutoTela" />
         <activity android:name=".Impressora.ImpressaoActibity" />
         <activity android:name=".Impressora.DeviceListActivity" />
