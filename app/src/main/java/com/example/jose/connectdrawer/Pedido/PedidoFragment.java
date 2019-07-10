@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.jose.connectdrawer.Impressora.BluetoothService;
 import com.example.jose.connectdrawer.ImprimirTexto;
+import com.example.jose.connectdrawer.Parcelas.Parcelas;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
@@ -169,7 +170,9 @@ public class PedidoFragment extends Fragment {
                             MostraToast toast = new MostraToast();
                             boolean retorno = pedido.removerPedido(getContext(), pedido.getPedido());
                             if (retorno == true) {
+                                Parcelas parcelas = new Parcelas();
                                 retorno = pedido.removerPedidoProduto(getContext(), pedido.getPedido());
+                                parcelas.limpaParcelas(getContext(), pedido.getPedido());
                                 if (retorno == true) {
                                     toast.mostraToastShort(getContext(), "Pedido excluido com sucesso");
                                     PedidoFragment pedidoFragment = new PedidoFragment();

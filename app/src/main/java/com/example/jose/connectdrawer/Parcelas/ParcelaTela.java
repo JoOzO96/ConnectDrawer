@@ -36,7 +36,6 @@ public class ParcelaTela extends DialogFragment {
     }
 
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -61,7 +60,6 @@ public class ParcelaTela extends DialogFragment {
         final Parcelas finalParcela = parcelas;
 
 
-
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -82,7 +80,7 @@ public class ParcelaTela extends DialogFragment {
                     long diffInMillies = Math.abs(new Date().getTime() - simpleDateFormat.parse(txDataVencimento.getText().toString()).getTime());
                     long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
                     txDias.setText(String.valueOf(diff));
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -101,7 +99,6 @@ public class ParcelaTela extends DialogFragment {
         });
 
 
-
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,22 +109,21 @@ public class ParcelaTela extends DialogFragment {
                     if (data.getTime() <= new Date().getTime()) {
                         mostraToast.mostraToastLong(getContext(), "A data de vencimento deve ser maior que a data atual.");
                     } else {
+                        ParcelasDados parcelasDados = new ParcelasDados();
                         Parcelas parcelas = new Parcelas();
                         parcelas = finalParcela;
                         parcelas.setDiave(Long.parseLong(txDias.getText().toString()));
                         parcelas.setDvenci(simpleDateFormat.parse(txDataVencimento.getText().toString()));
                         parcelas.setVparce(Double.parseDouble(txValorParcela.getText().toString()));
                         finalParcela.cadastraParcela(getContext(), parcelas);
-                        PedidoDados pedidoDados = new PedidoDados();
                         Bundle bundle = new Bundle();
                         bundle.putLong("codigo", idPedido);
-                        pedidoDados.setArguments(bundle);
+                        parcelasDados.setArguments(bundle);
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         parcelas.recalculaValorParcelas(getContext(), idPedido, idParcela);
                         dismiss();
-                        fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
+                        fragmentTransaction.replace(R.id.fragment_container, parcelasDados, parcelasDados.getTag()).commit();
                     }
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

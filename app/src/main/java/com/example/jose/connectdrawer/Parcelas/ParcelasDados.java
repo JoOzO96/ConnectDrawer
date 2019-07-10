@@ -111,7 +111,7 @@ public class ParcelasDados extends Fragment {
                             for (int i = 0; i < numeroDeParcelas; i++) {
                                 parcelas = new Parcelas();
                                 parcelas.setCodPedido(codigoPedido.toString());
-                                calendar.add(Calendar.MONTH, i);
+                                calendar.add(Calendar.MONTH, 1);
                                 data = calendar.getTime();
                                 parcelas.setDvenci(data);
                                 if (i == Integer.parseInt(txNumeroparcelas.getText().toString()) - 1) {

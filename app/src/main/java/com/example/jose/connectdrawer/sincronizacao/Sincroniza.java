@@ -21,6 +21,7 @@ public class Sincroniza {
         SincVendedor sincVendedor = new SincVendedor();
         SincProduto sincProduto = new SincProduto();
         SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
+        SincParcelas sincParcelas = new SincParcelas();
         final SincMac sincMac = new SincMac();
         String ip = null;
 //        Handler handler = Sessao.getHandler();
@@ -48,6 +49,7 @@ public class Sincroniza {
             sincCliente.iniciaenvio(context, ip);
             sincPedido.iniciaenvio(context, ip);
             sincPedidoProduto.iniciaenvio(context, ip);
+            sincParcelas.iniciaenvio(context, ip);
             Sessao.terminaProgress();
 
         }

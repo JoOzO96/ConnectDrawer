@@ -36,12 +36,12 @@ public class RetRetrofit {
                     .build();
         } else {
 //            if (ip.substring(0, 3).equals("192")) {
-                retrofit = new Retrofit.Builder()
-                        .baseUrl("http://" + ip + "/api/")
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://" + ip + "/api/")
 //                    .baseUrl("http://" + ip + ":8080/ConnectServices/")
-                        .addConverterFactory(GsonConverterFactory.create(gson))
-                        .client(okHttpClient)
-                        .build();
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(okHttpClient)
+                    .build();
 //            } else {
 //                retrofit = new Retrofit.Builder()
 //                        .baseUrl("http://" + ip + ":15101/ConnectServices/")
@@ -81,6 +81,9 @@ public class RetRetrofit {
             } else if (tipo.equals("cliente")) {
                 url = "http://" + ip + "/api/Cliente";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebeCliente";
+            } else if (tipo.equals("parcelas")) {
+                url = "http://" + ip + "/api/parcelas";
+//                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             } else if (tipo.equals("pedido")) {
                 url = "http://" + ip + "/api/Pedido";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
@@ -92,6 +95,9 @@ public class RetRetrofit {
             if (tipo.equals("cidade")) {
                 url = "http://" + ip + "/api/Cidade";
 //                url = "http://" + ip + ":8080/ConnectServices/recebeCidade";
+            } else if (tipo.equals("parcelas")) {
+                url = "http://" + ip + "/api/parcelas";
+//                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             } else if (tipo.equals("cliente")) {
                 url = "http://" + ip + "/api/Cliente";
 //                url = "http://" + ip + ":8080/ConnectServices/recebeCliente";

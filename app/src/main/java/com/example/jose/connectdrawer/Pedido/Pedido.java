@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.jose.connectdrawer.Parcelas.Parcelas;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
@@ -454,6 +455,24 @@ public class Pedido {
         ContentValues values = new ContentValues();
         values.put("pedido", codigoServidor);
         int retorno = db.update("pedidoproduto", values, "pedido = " + codigoAndroid, null);
+
+    }
+
+    public void alteraParcelas(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        Parcelas parcelas = new Parcelas();
+        List<Parcelas> parcelasList = parcelas.retornaListaDeParcelas(context, codigoAndroid);
+        parcelas.limpaParcelas(context, codigoAndroid);
+        for (int i = 0; i < parcelasList.size(); i++){
+            parcelasList.get(i).setCodPedido(codigoServidor.toString());
+            parcelasList.get(i).setFatura(codigoServidor + "/" + i);
+            parcelas.cadastraParcela(context, parcelasList.get(i));
+        }
+
+//        values.put("pedido", codigoServidor);
+//        int retorno = db.update("pedidoproduto", values, "pedido = " + codigoAndroid, null);
 
     }
 

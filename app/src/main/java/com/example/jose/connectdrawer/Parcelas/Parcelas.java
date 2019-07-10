@@ -140,7 +140,8 @@ public class Parcelas {
                 long retorno = retornaMaiorCod(context);
                 retorno = retorno + 1;
                 valores.remove("cadastroandroid");
-                retorno = db.insert("Parcela", null, valores);
+                valores.put("cadastroandroid", true);
+                retorno = db.insert("parcela", null, valores);
                 db.close();
                 valores.clear();
                 return retorno != -1;
@@ -245,6 +246,26 @@ public class Parcelas {
                 cadastraParcela(context, parcelasList.get(i));
             }
         }
+    }
+
+    public Cursor retornaParcelaAlteradaAndroid(Context context, String tipo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT codpedido FROM parcela where " + tipo + " = 1 GROUP BY codpedido", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
+    public void removeParcelaAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo, "0");
+        int retorno = db.update("parcela", values, campo + " = 1", null);
+
     }
 
 }
