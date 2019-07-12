@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscalService;
+import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
 import com.example.jose.connectdrawer.Parcelas.ParcelasDados;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
@@ -340,7 +342,7 @@ public class PedidoDados extends Fragment {
                         PedidoProduto pedidoProdutoListar = new PedidoProduto();
                         pedidoProdutoListar.setCodproduto(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("codproduto")));
                         pedidoProdutoListar.setDescri(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("descri")));
-                        pedidoProdutoListar.setIdPedidoProduto(cursorPedidoProduto.getLong(cursorPedidoProduto.getColumnIndex("idPedidoProduto")));
+                        pedidoProdutoListar.setIdpedidoproduto(cursorPedidoProduto.getLong(cursorPedidoProduto.getColumnIndex("idpedidoproduto")));
                         pedidoProdutoListar.setCusto(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo")));
                         custo += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo"));
                         valorVenda += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("valorunitario"));
@@ -542,11 +544,11 @@ public class PedidoDados extends Fragment {
                 String pgto = formaPagamentoList.get(i);
                 FormaPagamento formaPagamento = new FormaPagamento();
 
-                formaPagamento = formaPagamento.retornaFormaPagamentoObjeto(getContext(), Long.parseLong( pgto.substring(0, pgto.indexOf("-") - 1)));
+                formaPagamento = formaPagamento.retornaFormaPagamentoObjeto(getContext(), Long.parseLong(pgto.substring(0, pgto.indexOf("-") - 1)));
 
-                if (formaPagamento.getPrazo() ==true){
+                if (formaPagamento.getPrazo() == true) {
                     btGerarParcelas.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     btGerarParcelas.setVisibility(View.GONE);
                 }
 
@@ -644,13 +646,43 @@ public class PedidoDados extends Fragment {
                             ControleCodigo controleCodigo[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
 
                             if (controleCodigo[0].getMensagem() != null) {
-                                mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
-                            } else {
-
+                                if (!controleCodigo[0].getMensagem().equals("NF-e atualizada, tentando novo envio.")) {
+                                    mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
+                                } else {
+                                    List<NotaProduto> notaProdutoList = getSetDinamico.colocaDadosNotaProduto(getContext(), notaFiscal, txPedido.getText().toString());
+                                    enviaJson = new EnviaJson();
+                                    url = "http://192.168.0.199:45455/api/notaproduto";
+                                    retorno = null;
+                                    retornoEnvio = "";
+                                    gson = new Gson();
+                                    gsonRetorno = gson.toJson(notaProdutoList);
+                                    try {
+                                        enviaJson.execute(gsonRetorno, url);
+                                        retornoEnvio = enviaJson.get();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        CriaEmail criaEmail = new CriaEmail();
+                                        Mac mac = new Mac();
+                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                        CriaEmail criaEmail = new CriaEmail();
+                                        Mac mac = new Mac();
+                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                    }
+                                    controleCodigo = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                                    Log.e("TESTE", controleCodigo.toString());
+                                    for (int i = 0 ; i < controleCodigo.length ; i ++){
+                                        NotaProduto notaProduto = new NotaProduto();
+                                        notaProdutoList.get(i).setAuto(controleCodigo[i].getCodigoBanco());
+                                        notaProduto.cadastraNotaProduto(context, notaProdutoList.get(i));
+                                    }
+                                }
                             }
                         }
-                    }else{
-                        mostraToast.mostraToastLong(getContext(),"Não foi possivel verificar a sequencia da NF-e" );
+
+                    } else {
+                        mostraToast.mostraToastLong(getContext(), "Não foi possivel verificar a sequencia da NF-e");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -678,9 +710,9 @@ public class PedidoDados extends Fragment {
                 Bundle bundle = new Bundle();
                 PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 PedidoProdutoTela pedidoProdutoTela = new PedidoProdutoTela();
-                bundle.putLong("codigo", pedidoProduto.getIdPedidoProduto());
+                bundle.putLong("codigo", pedidoProduto.getIdpedidoproduto());
                 bundle.putString("codigoClicado", pedidoProduto.getCodproduto());
-                bundle.putLong("idPedidoProduto", pedidoProduto.getIdPedidoProduto());
+                bundle.putLong("idPedidoProduto", pedidoProduto.getIdpedidoproduto());
                 txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
                 bundle.putString("codigoPedido", txPedido.getText().toString());
                 pedidoProdutoTela.setArguments(bundle);
@@ -690,7 +722,8 @@ public class PedidoDados extends Fragment {
         });
         listItenspedido.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, final View view1, int position,
+            public boolean onItemLongClick(AdapterView<?> parent, final View view1,
+                                           int position,
                                            long id) {
                 final PedidoProduto pedidoProduto = (PedidoProduto) listItenspedido.getItemAtPosition(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -704,7 +737,7 @@ public class PedidoDados extends Fragment {
 
                         MostraToast toast = new MostraToast();
                         txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
-                        boolean retorno = pedidoProduto.removerPedidoProduto(getContext(), pedidoProduto.getIdPedidoProduto());
+                        boolean retorno = pedidoProduto.removerPedidoProduto(getContext(), pedidoProduto.getIdpedidoproduto());
                         if (retorno == true) {
                             toast.mostraToastShort(getContext(), "Item excluido com sucesso");
                             PedidoDados pedidoDados = new PedidoDados();
@@ -739,7 +772,7 @@ public class PedidoDados extends Fragment {
         btGerarParcelas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SalvaPedido(view,2L,false);
+                SalvaPedido(view, 2L, false);
                 ParcelasDados parcelas = new ParcelasDados();
                 Bundle bundle = new Bundle();
                 bundle.putLong("codigo", Long.parseLong(txPedido.getText().toString()));

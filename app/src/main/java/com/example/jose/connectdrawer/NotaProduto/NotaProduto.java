@@ -8,14 +8,16 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class NotaProduto {
-    Long idNotaProduto;
+    Long idnotaproduto;
     String codnota;
     Long codemitente;
     String codigo;
@@ -50,7 +52,7 @@ public class NotaProduto {
     Double totaltribpro;
     Long porimposto;
     Long pesoliq;
-    Long datas;
+    Date datas;
     Long cstpis;
     Double vpis;
     Long cstcofins;
@@ -59,6 +61,14 @@ public class NotaProduto {
     Double totaltribest;
     String comple;
     String ncmproduto;
+
+    public Long getIdnotaproduto() {
+        return idnotaproduto;
+    }
+
+    public void setIdnotaproduto(Long idnotaproduto) {
+        this.idnotaproduto = idnotaproduto;
+    }
 
     public String getCodnota() {
         return codnota;
@@ -332,11 +342,11 @@ public class NotaProduto {
         this.pesoliq = pesoliq;
     }
 
-    public Long getDatas() {
+    public Date getDatas() {
         return datas;
     }
 
-    public void setDatas(Long datas) {
+    public void setDatas(Date datas) {
         this.datas = datas;
     }
 
@@ -404,8 +414,34 @@ public class NotaProduto {
         this.ncmproduto = ncmproduto;
     }
 
+    public NotaProduto retornaNotaProdutoObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        NotaProduto notaProduto = new NotaProduto();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM notaproduto where idnotaproduto = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(NotaProduto.class.getDeclaredFields()));
+        for (int j = 0; cursor.getCount() != j; j++) {
+            for (int f = 0; fieldList.size() != f; f++) {
 
-    public Boolean cadastraNotaProduto(Context context, NotaProduto notaProduto) {
+                String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                String nomeCampo = fieldList.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object ret = getSetDinamico.insereField(fieldList.get(f), notaProduto, retorno);
+                    notaProduto = (NotaProduto) ret;
+                }
+            }
+        }
+        db.close();
+        return notaProduto;
+    }
+
+
+    public NotaProduto cadastraNotaProduto(Context context, NotaProduto notaProduto) {
         Banco myDb = new Banco(context);
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
@@ -416,38 +452,43 @@ public class NotaProduto {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), notaProduto, valores);
         }
 
-        if (valores.get("idNotaProduto") == null) {
+        if (valores.get("idnotaproduto") == null) {
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
-            valores.remove("codigo");
+            valores.remove("idnotaproduto");
             valores.remove("cadastroandroid");
-            valores.put("codigo", retorno);
+            valores.put("idnotaproduto", retorno);
             valores.put("cadastroandroid", true);
-            retorno = db.insert("NotaProduto", null, valores);
+            retorno = db.insert("notaproduto", null, valores);
             db.close();
+
+            notaProduto = notaProduto.retornaNotaProdutoObjeto(context, valores.getAsLong("idnotaproduto"));
             valores.clear();
-            return retorno != -1;
+            return notaProduto;
         } else {
-            Cursor cursor = notaProduto.retornaNotaProdutoFiltradaCursor(context, Long.parseLong(valores.get("idnota").toString()));
+            Cursor cursor = notaProduto.retornaNotaProdutoFiltradaCursor(context, Long.parseLong(valores.get("idnotaproduto").toString()));
 
             if (cursor.getCount() > 0) {
                 valores.remove("alteradoandroid");
                 valores.put("alteradoandroid", true);
-                long retorno = db.update("NotaFiscal", valores, "idnota= " + valores.get("idnota").toString(), null);
+                long retorno = db.update("notaproduto", valores, "idnotaproduto= " + valores.get("idnotaproduto").toString(), null);
                 db.close();
                 valores.clear();
-                return retorno != -1;
+                notaProduto = notaProduto.retornaNotaProdutoObjeto(context, retorno);
+                return notaProduto;
             } else {
                 long retorno = retornaMaiorCod(context);
                 retorno = retorno + 1;
                 valores.remove("cadastroandroid");
-                retorno = db.insert("notafiscal", null, valores);
+                retorno = db.insert("notaproduto", null, valores);
                 db.close();
                 valores.clear();
-                return retorno != -1;
+                notaProduto = notaProduto.retornaNotaProdutoObjeto(context, retorno);
+                return notaProduto;
             }
         }
     }
+
     private Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();

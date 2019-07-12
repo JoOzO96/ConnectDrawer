@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.annotation.RestrictTo;
 import android.util.Log;
 
+import com.example.jose.connectdrawer.Icms.Icms;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
 import com.example.jose.connectdrawer.Pedido.Pedido;
@@ -43,7 +44,7 @@ public class GetSetDinamico {
                     Method method = objetoRecebido.getClass().getMethod("set" + primeiro.toUpperCase() + nomeCampo,
                             field.getType());
                     method.invoke(objetoRecebido, recebido.toString());
-                }else if (field.getType().getSimpleName().toUpperCase().equals("DATE")) {
+                } else if (field.getType().getSimpleName().toUpperCase().equals("DATE")) {
                     cArg[0] = Date.class;
                     Method method = objetoRecebido.getClass().getMethod("set" + primeiro.toUpperCase() + nomeCampo,
                             field.getType());
@@ -100,11 +101,11 @@ public class GetSetDinamico {
                 objeto = cursor1.getString(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("LONG")) {
                 objeto = cursor1.getLong(cursor1.getColumnIndex(nome));
-            }else if (tipo.equals("DATE")) {
+            } else if (tipo.equals("DATE")) {
                 objeto = cursor1.getLong(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("INT")) {
                 objeto = cursor1.getInt(cursor1.getColumnIndex(nome));
-            }else if (tipo.equals("DOUBLE")) {
+            } else if (tipo.equals("DOUBLE")) {
                 objeto = cursor1.getDouble(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("BOOLEAN")) {
                 objeto = cursor1.getInt(cursor1.getColumnIndex(nome)) == 1;
@@ -114,11 +115,11 @@ public class GetSetDinamico {
     }
 
 
-    public Object setValorObjetoCursor(Field field, Object object, Cursor cursor){
+    public Object setValorObjetoCursor(Field field, Object object, Cursor cursor) {
         String tipo = retornaTipoCampo(field);
         Object retorno = null;
-        if (field.getName().toLowerCase().equals("$change") || field.getName().toLowerCase().equals("serialversionuid") || field.getName().toLowerCase().equals("context")){
-        }else{
+        if (field.getName().toLowerCase().equals("$change") || field.getName().toLowerCase().equals("serialversionuid") || field.getName().toLowerCase().equals("context")) {
+        } else {
 
             if (tipo.equals("STRING")) {
                 retorno = cursor.getString(cursor.getColumnIndex(field.getName().toLowerCase()));
@@ -164,7 +165,7 @@ public class GetSetDinamico {
     }
 
 
-    public Object colocaDadosNotaFiscal(Context context, NotaFiscal notaFiscal, String numeroPedido, Long codigoBanco){
+    public Object colocaDadosNotaFiscal(Context context, NotaFiscal notaFiscal, String numeroPedido, Long codigoBanco) {
         try {
 
             GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -189,11 +190,11 @@ public class GetSetDinamico {
             if (cursorPedido.getCount() > 0) {
 
                 if (pedido.getNotafisca() == null) {
-                    if (codigoBanco > 0 ){
+                    if (codigoBanco > 0) {
                         String codNota = notaFiscal.retornaCodNota(context);
                         notaFiscal.setCodnota(notaFiscal.formataCodNota(codigoBanco.toString()));
                     }
-                }else{
+                } else {
                     notaFiscal.setCodnota(pedido.getNotafisca());
                 }
                 notaFiscal.setCodemitente(1L);
@@ -223,13 +224,13 @@ public class GetSetDinamico {
             }
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return "";
         }
         return notaFiscal;
     }
 
-    public List<NotaProduto> colocaDadosNotaProduto(Context context, NotaFiscal notaFiscal, String codPedido){
+    public List<NotaProduto> colocaDadosNotaProduto(Context context, NotaFiscal notaFiscal, String codPedido) {
         List<NotaProduto> listNotaProduto = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         PedidoProduto pedidoProduto = new PedidoProduto();
@@ -250,26 +251,28 @@ public class GetSetDinamico {
 
         Cursor cursorPedidoProduto = pedidoProduto.retornaPedidoProdutoFiltradaCursor(context, pedido.getPedido());
 
-        if (cursorPedidoProduto.getCount() > 0){
+        if (cursorPedidoProduto.getCount() > 0) {
 
-            for(int i = 0; i > cursorPedidoProduto.getCount() -1 ; i++){
+            for (int i = 0; i < cursorPedidoProduto.getCount(); i++) {
                 pedidoProduto = new PedidoProduto();
                 produto = new Produto();
-                for (int j = 0; fieldsPedidoProduto.size() > j;j++) {
-                    if (fieldsPedido.get(j).getName().toLowerCase().equals("$change") ||
-                            fieldsPedido.get(j).getName().toLowerCase().equals("serialversionuid")) {
+                for (int j = 0; fieldsPedidoProduto.size() > j; j++) {
+                    if (fieldsPedidoProduto.get(j).getName().toLowerCase().equals("$change") ||
+                            fieldsPedidoProduto.get(j).getName().toLowerCase().equals("serialversionuid")) {
                     } else {
-                        pedidoProduto = (PedidoProduto) getSetDinamico.setValorObjetoCursor(fieldsPedido.get(j), pedidoProduto, cursorPedidoProduto);
+                        pedidoProduto = (PedidoProduto) getSetDinamico.setValorObjetoCursor(fieldsPedidoProduto.get(j), pedidoProduto, cursorPedidoProduto);
                     }
                 }
                 Cursor cursorProduto = produto.retornaProdutoFiltradaCursor(context, pedidoProduto.getCodproduto());
-                for (int j = 0; fieldsProduto.size() > j;j++) {
-                    if (fieldsPedido.get(j).getName().toLowerCase().equals("$change") ||
-                            fieldsPedido.get(j).getName().toLowerCase().equals("serialversionuid")) {
+                for (int j = 0; fieldsProduto.size() > j; j++) {
+                    if (fieldsProduto.get(j).getName().toLowerCase().equals("$change") ||
+                            fieldsProduto.get(j).getName().toLowerCase().equals("serialversionuid")) {
                     } else {
-                        produto = (Produto) getSetDinamico.setValorObjetoCursor(fieldsPedido.get(j), produto, cursorProduto);
+                        produto = (Produto) getSetDinamico.setValorObjetoCursor(fieldsProduto.get(j), produto, cursorProduto);
                     }
                 }
+                Icms icms = new Icms();
+                icms = icms.retornaIcmsObjeto(context, produto.getCodicms());
 
                 notaProduto = new NotaProduto();
                 notaProduto.setAliqicms(0D);
@@ -280,14 +283,47 @@ public class GetSetDinamico {
                 notaProduto.setQuantidade(pedidoProduto.getQuantidade());
                 notaProduto.setValorunitario(pedidoProduto.getValorunitario());
                 notaProduto.setValortotal(pedidoProduto.getValortotal());
+                notaProduto.setValornota(pedidoProduto.getValortotal() * icms.getPercen() / 100);
+                notaProduto.setValoripi(0D);
+                notaProduto.setAliqicms(Double.parseDouble(icms.getPercen().toString()));
+                notaProduto.setAliqipi(0D);
+                notaProduto.setCodicms(icms.getCodicms());
+                notaProduto.setPeso(0L);
+                notaProduto.setCfop(produto.getCfop());
+                notaProduto.setBicms(pedidoProduto.getValortotal());
+                notaProduto.setVicms(pedidoProduto.getValortotal() * icms.getPercen() / 100);
+                notaProduto.setDescopro(0D);
+                if (produto.getMva() > 0) {
+                    notaProduto.setMvap(produto.getMva().longValue());
+                    notaProduto.setVbcst((pedidoProduto.getValortotal() + (pedidoProduto.getValortotal() * produto.getMva() / 100)));
+                    notaProduto.setVsst((notaProduto.getVbcst() * icms.getPercen() / 100) - notaProduto.getVicms());
+                }
+                notaProduto.setVseguro(0D);
+                notaProduto.setDescri(produto.getMercadoria());
+                notaProduto.setVfrete(0D);
+                notaProduto.setCodtipo(1L);
+                notaProduto.setCodpis(produto.getCodpis());
+                notaProduto.setPorpis(produto.getPorpis().longValue());
+                notaProduto.setCodcofins(produto.getCodcofins());
+                notaProduto.setPorcofins(produto.getPorcofins().longValue());
+                notaProduto.setCodipi(produto.getCodipi());
+                notaProduto.setSst(produto.getSittrib());
+                notaProduto.setVoutros(0D);
+                notaProduto.setDatas(new Date());
+                notaProduto.setVcusto(produto.getCusto1());
+                notaProduto.setNcmproduto(produto.getNcm());
+                if (1 == 1){ //antes de sinronizar os dados do emitente vai ficar assim
+                    notaProduto.setBicms(0D);
+                    notaProduto.setVicms(0D);
+                }
+                notaProduto = notaProduto.cadastraNotaProduto(context, notaProduto);
 
-                notaProduto.cadastraNotaProduto(context, notaProduto);
                 listNotaProduto.add(notaProduto);
             }
 
 
         }
-        return null;
+        return listNotaProduto;
     }
 
 }

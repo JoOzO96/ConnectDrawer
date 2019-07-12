@@ -75,19 +75,17 @@ public class SincPedidoProduto {
                 e.printStackTrace();
             }
             if (retornoEnvio != null && retornoEnvio != "") {
-                if (retornoEnvio.contains("nada")) {
-                    pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
-                } else {
-                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                    if (conversao != null) {
-                        List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-                        pedidoProduto = new PedidoProduto();
-                        for (int i = 0; controleCodigoList.size() != i; i++) {
-//                    pedidoProduto.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-//                    pedidoProduto.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                            pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
-                        }
+
+                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                if (conversao != null) {
+                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+
+                    pedidoProduto = new PedidoProduto();
+                    for (int i = 0; controleCodigoList.size() != i; i++) {
+
                     }
+
+                    pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
                 }
             }
         }

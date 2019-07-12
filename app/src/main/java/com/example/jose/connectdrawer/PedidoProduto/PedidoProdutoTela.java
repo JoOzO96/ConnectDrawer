@@ -260,7 +260,7 @@ public class PedidoProdutoTela extends DialogFragment {
                 pedidoProduto.setComip(comissaoVendedor);
 
                 if (idPedidoProduto > 0) {
-                    pedidoProduto.setIdPedidoProduto(idPedidoProduto);
+                    pedidoProduto.setIdpedidoproduto(idPedidoProduto);
                 }
 
                 boolean retorno = pedidoProduto.cadastraPedidoProduto(myDb.getWritableDatabase(), pedidoProduto);

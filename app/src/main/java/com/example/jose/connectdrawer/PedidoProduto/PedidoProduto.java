@@ -25,7 +25,7 @@ import java.util.List;
 
 public class PedidoProduto {
 
-    private Long idPedidoProduto;
+    private Long idpedidoproduto;
     private String codmecanico;//Cód Mecanico
     private Double codpedido;//Cód Pedido
     private String codproduto;//Cód Produto
@@ -57,12 +57,12 @@ public class PedidoProduto {
     private Double valorunitario;//Valor Unitário
     private Double vcomi;
 
-    public Long getIdPedidoProduto() {
-        return idPedidoProduto;
+    public Long getIdpedidoproduto() {
+        return idpedidoproduto;
     }
 
-    public void setIdPedidoProduto(Long idPedidoProduto) {
-        this.idPedidoProduto = idPedidoProduto;
+    public void setIdpedidoproduto(Long idpedidoproduto) {
+        this.idpedidoproduto = idpedidoproduto;
     }
 
     public String getCodmecanico() {
@@ -350,7 +350,7 @@ public class PedidoProduto {
     public Cursor retornaItemPedido(Context context, Long idPedidoProduto){
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where idPedidoProduto = " + idPedidoProduto, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where idpedidoproduto = " + idPedidoProduto, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -361,7 +361,7 @@ public class PedidoProduto {
     public Cursor retornaPedidoProdutoFiltradaCursor(Context context, Long codPedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM pedido where pedidoproduto = " + codPedido, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM pedidoproduto where pedido = " + codPedido, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -374,7 +374,7 @@ public class PedidoProduto {
         List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto where pedido = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM pedidoproduto where pedido = " + codigo, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -404,7 +404,7 @@ public class PedidoProduto {
     public Cursor retornaPedidoProdutoAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM pedidoproduto  where " + tipo + " = 1",null);   // " + tipo + " = 1", null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM pedidoproduto  where " + tipo + " = 1",null);   // " + tipo + " = 1", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -433,12 +433,12 @@ public class PedidoProduto {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), pedidoProduto, valores);
         }
 
-        if (valores.get("idPedidoProduto") == null){
+        if (valores.get("idpedidoproduto") == null){
             long retorno = retornaMaiorCod(db);
             retorno = retorno + 1;
             valores.remove("idPedidoProduto");
             valores.remove("cadastroandroid");
-            valores.put("idPedidoProduto", retorno);
+            valores.put("idpedidoproduto", retorno);
             valores.put("cadastroandroid", true);
             retorno = db.insert("pedidoproduto", null, valores);
             valores.clear();
@@ -451,7 +451,7 @@ public class PedidoProduto {
         }else{
             valores.remove("alteradoandroid");
             valores.put("alteradoandroid", true);
-            long retorno = db.update("pedidoproduto", valores, "idPedidoProduto= " + valores.get("idPedidoProduto").toString(), null);
+            long retorno = db.update("pedidoproduto", valores, "idpedidoproduto= " + valores.get("idpedidoproduto").toString(), null);
             valores.clear();
             if (retorno == -1) {
                 return false;
@@ -461,7 +461,7 @@ public class PedidoProduto {
         }
     }
     public Long retornaMaiorCod(SQLiteDatabase db) {
-        Cursor cursor = db.rawQuery("SELECT rowid _id,max(idPedidoProduto) from pedidoproduto", null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,max(idpedidoproduto) from pedidoproduto", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getLong(1);

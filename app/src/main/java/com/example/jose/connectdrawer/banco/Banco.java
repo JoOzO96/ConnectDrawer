@@ -166,7 +166,7 @@ public class Banco extends SQLiteOpenHelper {
 
 
         sql = "CREATE TABLE pedidoproduto (" +
-                "idPedidoProduto long PRIMARY KEY,"+
+                "idpedidoproduto long PRIMARY KEY,"+
                 "codmecanico text,"+//cód mecanico
                 "codpedido double,"+//cód pedido
                 "codproduto text,"+//cód produto
@@ -442,9 +442,10 @@ public class Banco extends SQLiteOpenHelper {
                 "idnotaproduto long PRIMARY KEY," +
                 "codnota text, " +
                 "codemitente long, " +
+                "codigo text," +
                 "auto long, " +
                 "quantidade double, " +
-                "valorunitário double, " +
+                "valorunitario double, " +
                 "valortotal double, " +
                 "valornota double, " +
                 "valoripi double, " +
@@ -496,6 +497,31 @@ public class Banco extends SQLiteOpenHelper {
                 "fatura text, " +
                 "valorboleto double, " +
                 "gerarboleto boolean,"+
+                "cadastroandroid boolean, " +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
+        db.execSQL(sql);
+
+        sql = "CREATE TABLE ParcelaNE(" +
+                "idparcela long PRIMARY KEY," +
+                "codnota text, " +
+                "dvenci long, " +
+                "vparce double, " +
+                "diave long, " +
+                "fatura text, " +
+                "valorboleto double, " +
+                "gerarboleto boolean,"+
+                "cadastroandroid boolean, " +
+                "deletadoandroid boolean," +
+                "alteradoandroid boolean);";
+        db.execSQL(sql);
+
+        sql = "CREATE TABLE icms(" +
+                "codicms text, "+
+                "percentual text, "+
+                "percen long, "+
+                "percentualsimples long, "+
+                "percentualdificms long, "+
                 "cadastroandroid boolean, " +
                 "deletadoandroid boolean," +
                 "alteradoandroid boolean);";
@@ -607,6 +633,7 @@ public class Banco extends SQLiteOpenHelper {
             sql = "CREATE TABLE NotaProduto(" +
                     "idnotaproduto long PRIMARY KEY," +
                     "codnota text, " +
+                    "codigo text," +
                     "codemitente long, " +
                     "auto long, " +
                     "quantidade double, " +
@@ -658,6 +685,31 @@ public class Banco extends SQLiteOpenHelper {
             sql = "CREATE TABLE Parcela(" +
                     "idparcela long PRIMARY KEY," +
                     "codpedido text, " +
+                    "dvenci long, " +
+                    "vparce double, " +
+                    "diave long, " +
+                    "fatura text, " +
+                    "valorboleto double, " +
+                    "gerarboleto boolean,"+
+                    "cadastroandroid boolean, " +
+                    "deletadoandroid boolean," +
+                    "alteradoandroid boolean);";
+            db.execSQL(sql);
+
+            sql = "CREATE TABLE icms(" +
+                    "codicms text, "+
+                    "percentual text, "+
+                    "percen long, "+
+                    "percentualsimples long, "+
+                    "percentualdificms long, "+
+                    "cadastroandroid boolean, " +
+                    "deletadoandroid boolean," +
+                    "alteradoandroid boolean);";
+            db.execSQL(sql);
+
+            sql = "CREATE TABLE ParcelaNE(" +
+                    "idparcela long PRIMARY KEY," +
+                    "codnota text, " +
                     "dvenci long, " +
                     "vparce double, " +
                     "diave long, " +
