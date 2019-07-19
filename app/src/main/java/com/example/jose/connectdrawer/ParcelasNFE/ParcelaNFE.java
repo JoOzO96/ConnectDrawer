@@ -1,4 +1,4 @@
-package com.example.jose.connectdrawer.ParcelasNE;
+package com.example.jose.connectdrawer.ParcelasNFE;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class ParcelaNE {
+public class ParcelaNFE {
     Long idParcela;
     String codnota;
     Date dvenci;
@@ -94,7 +94,7 @@ public class ParcelaNE {
     public Long retornaMaiorCod(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT  rowid _id,  max(idParcela) from parcelane", null);
+        Cursor cursor = db.rawQuery("SELECT  rowid _id,  max(idParcela) from parcelanfe", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getLong(1);
@@ -103,13 +103,13 @@ public class ParcelaNE {
         }
     }
 
-    public Boolean cadastraParcela(Context context, ParcelaNE parcelaNE){
+    public Boolean cadastraParcela(Context context, ParcelaNFE parcelaNE){
         Banco myDb = new Banco(context);
 
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
         SQLiteDatabase db = myDb.getWritableDatabase();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(ParcelaNE.class.getDeclaredFields()));
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(ParcelaNFE.class.getDeclaredFields()));
 
         for (int i = 0 ; fieldList.size() != i ; i++){
             valores = dadosBanco.insereValoresContent(fieldList.get(i), parcelaNE, valores);
@@ -122,7 +122,7 @@ public class ParcelaNE {
             valores.remove("cadastroandroid");
             valores.put("idParcela", retorno);
             valores.put("cadastroandroid", true);
-            retorno = db.insert("parcela", null, valores);
+            retorno = db.insert("parcelanfe", null, valores);
             db.close();
             valores.clear();
             return retorno != -1;
@@ -132,7 +132,7 @@ public class ParcelaNE {
             if (cursor.getCount() > 0){
                 valores.remove("alteradoandroid");
                 valores.put("alteradoandroid", true);
-                long retorno = db.update("Parcela", valores, "idParcela= " + valores.get("idParcela").toString(), null);
+                long retorno = db.update("parcelanfe", valores, "idParcela= " + valores.get("idParcela").toString(), null);
                 db.close();
                 valores.clear();
                 return retorno != -1;
@@ -141,7 +141,7 @@ public class ParcelaNE {
                 retorno = retorno + 1;
                 valores.remove("cadastroandroid");
                 valores.put("cadastroandroid", true);
-                retorno = db.insert("parcela", null, valores);
+                retorno = db.insert("parcelanfe", null, valores);
                 db.close();
                 valores.clear();
                 return retorno != -1;
@@ -152,19 +152,19 @@ public class ParcelaNE {
     public void limpaParcelaNE(Context context, Long codnota) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        db.delete("parcelane","codnota="+codnota,null );
+        db.delete("parcelanfe","codnota="+codnota,null );
     }
 
-    public ParcelaNE retornaParcelaneObjeto(Context context, Long codigo) {
+    public ParcelaNFE retornaParcelaneObjeto(Context context, Long codigo) {
         Banco myDb = new Banco(context);
-        ParcelaNE parcelaNE = new ParcelaNE();
+        ParcelaNFE parcelaNE = new ParcelaNFE();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM parcelane where idParcela = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM parcelanfe where idParcela = " + codigo, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
-        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(ParcelaNE.class.getDeclaredFields()));
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(ParcelaNFE.class.getDeclaredFields()));
         for (int j = 0; cursor.getCount() != j; j++) {
             for (int f = 0; fieldListCliente.size() != f; f++) {
 
@@ -173,7 +173,7 @@ public class ParcelaNE {
                 Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
                 if (retorno != null) {
                     Object retParcelasNe = getSetDinamico.insereField(fieldListCliente.get(f), parcelaNE, retorno);
-                    parcelaNE = (ParcelaNE) retParcelasNe;
+                    parcelaNE = (ParcelaNFE) retParcelasNe;
                 }
             }
         }
@@ -184,7 +184,7 @@ public class ParcelaNE {
     public Cursor retornaParcelaFiltradaCursor(Context context, Long idParcela) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM parcela where idParcela = " + idParcela, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM parcelanfe where idParcela = " + idParcela, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -196,7 +196,7 @@ public class ParcelaNE {
         Boolean existe = false;
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM parcelane where codnota = " + codigoPedido, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM parcelanfe where codnota = " + codigoPedido, null);
         if (cursor.getCount() > 0) {
             existe = true;
         }
@@ -204,12 +204,12 @@ public class ParcelaNE {
         return  existe;
     }
 
-    public List<ParcelaNE> retornaListaDeParcelane(Context context, Long codnota) {
+    public List<ParcelaNFE> retornaListaDeParcelane(Context context, Long codnota) {
         Boolean existe = false;
-        List<ParcelaNE> parcelaneList = new ArrayList<>();
+        List<ParcelaNFE> parcelaneList = new ArrayList<>();
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM parcelane where codnota = " + codnota + " ORDER BY dvenci", null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM parcelanfe where codnota = " + codnota + " ORDER BY dvenci", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             for(int i = 0 ; i < cursor.getCount() ; i++) {
@@ -229,7 +229,7 @@ public class ParcelaNE {
         Pedido pedido = new Pedido();
         pedido = pedido.retornaPedidoObjeto(context, codnota);
         valorPedido = pedido.getValortotal();
-        List<ParcelaNE> parcelaneList = new ArrayList<>();
+        List<ParcelaNFE> parcelaneList = new ArrayList<>();
 
 
         parcelaneList = retornaListaDeParcelane(context, codnota);
@@ -251,7 +251,7 @@ public class ParcelaNE {
     public Cursor retornaParcelaneAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT codnota FROM parcelane where " + tipo + " = 1 GROUP BY codnota", null);
+        Cursor cursor = db.rawQuery("SELECT codnota FROM parcelanfe where " + tipo + " = 1 GROUP BY codnota", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
@@ -264,7 +264,7 @@ public class ParcelaNE {
         SQLiteDatabase db = myDb.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(campo, "0");
-        int retorno = db.update("parcelane", values, campo + " = 1", null);
+        int retorno = db.update("parcelanfe", values, campo + " = 1", null);
 
     }
 

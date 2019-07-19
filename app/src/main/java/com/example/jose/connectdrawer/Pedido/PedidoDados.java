@@ -32,6 +32,7 @@ import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscalService;
 import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
 import com.example.jose.connectdrawer.Parcelas.ParcelasDados;
+import com.example.jose.connectdrawer.ParcelasNFE.ParcelaNFE;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProdutoTela;
 import com.example.jose.connectdrawer.R;
@@ -649,7 +650,8 @@ public class PedidoDados extends Fragment {
                                 if (!controleCodigo[0].getMensagem().equals("NF-e atualizada, tentando novo envio.")) {
                                     mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
                                 } else {
-                                    List<NotaProduto> notaProdutoList = getSetDinamico.colocaDadosNotaProduto(getContext(), notaFiscal, txPedido.getText().toString());
+                                    NotaProduto notaProduto = new NotaProduto();
+                                    List<NotaProduto> notaProdutoList = notaProduto.retornaListaProdutosNota(context, notaFiscal.getCodnota());
                                     enviaJson = new EnviaJson();
                                     url = "http://192.168.0.199:45455/api/notaproduto";
                                     retorno = null;
@@ -671,12 +673,36 @@ public class PedidoDados extends Fragment {
                                         criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
                                     }
                                     controleCodigo = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                                    Log.e("TESTE", controleCodigo.toString());
                                     for (int i = 0 ; i < controleCodigo.length ; i ++){
-                                        NotaProduto notaProduto = new NotaProduto();
-                                        notaProdutoList.get(i).setAuto(controleCodigo[i].getCodigoBanco());
-                                        notaProduto.cadastraNotaProduto(context, notaProdutoList.get(i));
+                                        notaProduto = new NotaProduto();
+                                        if (notaProdutoList.get(i).getAuto() != controleCodigo[i].getCodigoBanco()) {
+                                            notaProdutoList.get(i).setAuto(controleCodigo[i].getCodigoBanco());
+                                            notaProduto.cadastraNotaProduto(context, notaProdutoList.get(i));
+                                        }
                                     }
+                                    List<ParcelaNFE> parcelasNFEList = getSetDinamico.colocaDadosParcelasNFE(getContext(), notaFiscal, txPedido.getText().toString());
+                                    enviaJson = new EnviaJson();
+                                    url = "http://192.168.0.199:45455/api/parcelasnfe";
+                                    retorno = null;
+                                    retornoEnvio = "";
+                                    gson = new Gson();
+                                    gsonRetorno = gson.toJson(parcelasNFEList);
+                                    try {
+                                        enviaJson.execute(gsonRetorno, url);
+                                        retornoEnvio = enviaJson.get();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                        CriaEmail criaEmail = new CriaEmail();
+                                        Mac mac = new Mac();
+                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                        CriaEmail criaEmail = new CriaEmail();
+                                        Mac mac = new Mac();
+                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                    }
+                                    Bluetooth impressaoA7 = new Bluetooth();
+                                    impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
                                 }
                             }
                         }
@@ -1139,7 +1165,7 @@ public class PedidoDados extends Fragment {
                 impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
                 impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO);
                 Bluetooth bluetooth = new Bluetooth();
-                impressao.imprimeimagem(bluetooth.imprimeNota());
+                impressao.imprimeimagem(bluetooth.imprimeNota(getContext(), "000000070"));
 
                 impressao.avanco(2);
 

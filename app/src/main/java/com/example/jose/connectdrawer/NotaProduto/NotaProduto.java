@@ -440,6 +440,26 @@ public class NotaProduto {
         return notaProduto;
     }
 
+    public List<NotaProduto> retornaListaProdutosNota(Context context, String codNota){
+
+        List<NotaProduto>notaProdutoList=new ArrayList<>();
+        Cursor cursor = retornaNotaProdutosFiltradaCursor(context, codNota);
+        NotaProduto notaProduto = new NotaProduto();
+        if (cursor.getCount() > 0 ){
+
+            for (int i = 0; i < cursor.getCount(); i++){
+                notaProduto = new NotaProduto();
+                notaProduto =  notaProduto.retornaNotaProdutoObjeto(context, cursor.getLong(cursor.getColumnIndex("idnotaproduto")));
+                notaProdutoList.add(notaProduto);
+                cursor.moveToNext();
+            }
+
+            return notaProdutoList;
+        }
+
+        return null;
+    }
+
 
     public NotaProduto cadastraNotaProduto(Context context, NotaProduto notaProduto) {
         Banco myDb = new Banco(context);
@@ -510,5 +530,22 @@ public class NotaProduto {
         }
         db.close();
         return cursor;
+    }
+
+    public Cursor retornaNotaProdutosFiltradaCursor(Context context, String codigo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM NotaProduto where codnota = '" + codigo + "'", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
+    public void limpaProdutos(Context context, String codnota) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        db.delete("notaproduto", "codnota = '" + codnota + "'", null);
     }
 }

@@ -1415,12 +1415,12 @@ public class Produto {
 
     }
 
-    public Produto retornaProdutoObjetoAtualizar(Context context, Long codigo) {
+    public Produto retornaProdutoObjetoAtualizar(Context context, String codigo) {
         Banco myDb = new Banco(context);
         Produto produto = new Produto();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where codigo = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM produto where codproduto = '" + codigo + "'", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }

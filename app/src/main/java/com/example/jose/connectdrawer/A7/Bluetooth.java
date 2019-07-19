@@ -3,6 +3,10 @@ package com.example.jose.connectdrawer.A7;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,6 +21,10 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
+import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
+import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
+import com.example.jose.connectdrawer.Produto.Produto;
+import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
@@ -39,16 +47,16 @@ public class Bluetooth {
     private static final UUID BLUETOOTH_SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
 
-    public boolean imprimeA7(Context context) {
+    public boolean imprimeA7(Context context, String codNota) {
         boolean imprimirnaA7 = false;
         imprimirnaA7 = checkBth(context);
-        Bitmap mBitmap = imprimeNota();
+        Bitmap mBitmap = imprimeNota(context, codNota);
         if (imprimirnaA7) {
 
-            ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
+            ESCP.ImageToEsc(mBitmap, Ostream, 5, 8);
 
             closeBth();
-        }else{
+        } else {
             CriaImpressao criaImpressao = new CriaImpressao();
             criaImpressao.imprimeimagem(mBitmap);
         }
@@ -117,7 +125,28 @@ public class Bluetooth {
         return texto;
     }
 
-    public Bitmap imprimeNota() {
+    public Bitmap imprimeNota(Context context, String codNota) {
+        NotaFiscal notaFiscal = new NotaFiscal();
+        NotaProduto notaProduto = new NotaProduto();
+        Cidade cidade = new Cidade();
+        notaFiscal = notaFiscal.retornaObjetoNota(context, notaFiscal.retornaIdnota(context, codNota));
+        cidade = cidade.retornaCidadeObjeto(context, notaFiscal.getCodcidade());
+
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        String dest_nome = Objects.toString(notaFiscal.getNomecliente(), "");
+        String dest_endereco = Objects.toString(notaFiscal.getEndereco(), "");
+        String dest_numero = Objects.toString(notaFiscal.getNumero(), "");
+        String dest_cep = Objects.toString(notaFiscal.getCep(), "");
+        String dest_cidade = Objects.toString(cidade.getNomecidade() + " - " + cidade.getUf(), "");
+        String dest_cpfcnpj = "";
+        if (notaFiscal.getCnpj() == null) {
+            dest_cpfcnpj = Objects.toString(notaFiscal.getCpf(), "");
+        } else {
+            dest_cpfcnpj = Objects.toString(notaFiscal.getCnpj(), "");
+        }
+        String dest_ie = Objects.toString(notaFiscal.getInscesta(), "");
+        List<NotaProduto> notaProdutoList = notaProduto.retornaListaProdutosNota(context, codNota);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         int i = 0;
         int yinicial = 0;
         int x = 0, y = 0, w = 576, h = w * 5;
@@ -169,7 +198,7 @@ public class Bluetooth {
         g.drawText(retornaFormatado("RECEBEMOS DE" + (char) 254 + "OS PRODUTOS DA NF-E", (int) texto.getTextSize(), BORDAS), x, y, texto);
 
         y += size_text;
-        g.drawText(retornaFormatado("ConnectSys" + (char) 254 + "NF-e: 652", (int) texto.getTextSize(), BORDAS), x, y, texto);
+        g.drawText(retornaFormatado("ConnectSys" + (char) 254 + "NF-e: " + Long.parseLong(notaFiscal.getCodnota()), (int) texto.getTextSize(), BORDAS), x, y, texto);
 
         y += size_text;
         g.drawText(retornaFormatado((char) 254 + "Serie: 1", (int) texto.getTextSize(), DIREITA), x, y, texto);
@@ -194,7 +223,7 @@ public class Bluetooth {
         g.drawText(retornaFormatado((char) 254 + "OPERAÇÃO  1 - SAÍDA", (int) tituloBold.getTextSize(), DIREITA), x, y, tituloBold);
         y += size_text;
         g.drawText("  DOCUMENTO AUXILIAR", x, y, texto);
-        g.drawText(retornaFormatado((char) 254 + "N° 652", (int) tituloBold.getTextSize(), DIREITA), x, y, tituloBold);
+        g.drawText(retornaFormatado((char) 254 + "N° " + Integer.parseInt(notaFiscal.getCodnota()), (int) tituloBold.getTextSize(), DIREITA), x, y, tituloBold);
         y += size_text;
         g.drawText("    DA NOTA FISCAL", x, y, texto);
         g.drawText(retornaFormatado((char) 254 + "SÉRIE 1", (int) tituloBold.getTextSize(), DIREITA), x, y, tituloBold);
@@ -216,7 +245,8 @@ public class Bluetooth {
         g.drawText(chave, x, y, texto);
 
         y += size_text;
-        g.drawText(retornaFormatado("SAÍDA 14/06/2019 15:10" + (char) 254 + "EMISSÃO 14/06/2019 15:10", (int) texto.getTextSize(), BORDAS), x, y, texto);
+
+        g.drawText(retornaFormatado("SAÍDA " + simpleDateFormat.format(notaFiscal.getDatasaida()) + (char) 254 + "EMISSÃO " + simpleDateFormat.format(notaFiscal.getDataemissao()), (int) texto.getTextSize(), BORDAS), x, y, texto);
         y += size_text;
         g.drawText("NATUREZA DE OPERAÇÃO", x, y, texto);
         y += size_text;
@@ -261,19 +291,19 @@ public class Bluetooth {
         g.drawLine(x, y, w, y, p);
 
         y += size_text;
-        g.drawText("ConnectSys", x, y, texto);
+        g.drawText(dest_nome, x, y, texto);
 
         y += size_text;
-        g.drawText("Av. 7 de Setembro N° 1000", x, y, texto);
+        g.drawText(dest_endereco + " " + dest_numero, x, y, texto);
+
+//        y += size_text;
+//        g.drawText(notaFiscal.getComplemento(), x, y, texto);
 
         y += size_text;
-        g.drawText("SALA 206 ED ATUALITTA", x, y, texto);
+        g.drawText(dest_cep + " " + dest_cidade, x, y, texto);
 
         y += size_text;
-        g.drawText("99950-000 Tapejara - RS", x, y, texto);
-
-        y += size_text;
-        g.drawText("CPF/CNPJ:06.354.976/0001-49 IE:1470049241", x, y, texto);
+        g.drawText("CPF/CNPJ:" + dest_cpfcnpj + " IE:" + dest_ie, x, y, texto);
 
         g.drawRect(x, yinicial, w, y, p);
 
@@ -288,13 +318,13 @@ public class Bluetooth {
         g.drawText(retornaFormatado("VL ICMS" + (char) 254 + "BC ICMS" + (char) 254 + "BC ICMS ST" + (char) 254 + "VL ICMS ST" + (char) 254 + "TOT PROD", (int) texto.getTextSize(), BORDAS), x, y, texto);
 
         y += size_text;
-        g.drawText(retornaFormatado("R$ 0,00" + (char) 254 + "R$ 0,00" + (char) 254 + "R$ 0,00" + (char) 254 + "R$ 0,00" + (char) 254 + "R$ 0,00", (int) texto.getTextSize(), BORDAS), x, y, texto);
+        g.drawText(retornaFormatado("R$ " + decimalFormat.format(notaFiscal.getValoricms()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getValoricms()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getValoricmssub()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getIcmssub()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getValordosprodutos()), (int) texto.getTextSize(), BORDAS), x, y, texto);
 
         y += size_text;
         g.drawText(retornaFormatado("VL FRETE" + (char) 254 + "VL SEGURO" + (char) 254 + "VL OUTROS" + (char) 254 + "VL IPI" + (char) 254 + "TOT NFE", (int) texto.getTextSize(), BORDAS), x, y, texto);
 
         y += size_text;
-        g.drawText(retornaFormatado("R$ 0,00" + (char) 254 + "R$ 0,00" + (char) 254 + "R$ 0,00" + (char) 254 + "R$ 0,00" + (char) 254 + "R$ 0,00", (int) texto.getTextSize(), BORDAS), x, y, texto);
+        g.drawText(retornaFormatado("R$ " + decimalFormat.format(notaFiscal.getValorfrete()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getValorseguro()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getDespesas()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getValordoipi()) + (char) 254 + "R$ " + decimalFormat.format(notaFiscal.getValornota()), (int) texto.getTextSize(), BORDAS), x, y, texto);
 
         g.drawRect(x, yinicial, w, y, p);
         yinicial = y;
@@ -302,14 +332,35 @@ public class Bluetooth {
         g.drawText(retornaFormatado("CÓD PRODUTO           PRODUTOS", (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
 
         y += size_text;
-        g.drawText(retornaFormatado("CST" + (char) 254 + "UN" + (char) 254 + "QUANT" + (char) 254 + "V. UNI." + (char) 254 + "DESC" + (char) 254 + "TOTAL" + (char) 254 + "ICMS", (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
-
-
+        g.drawText(retornaFormatado("CST" + (char) 254 + "UN" + (char) 254 + "QUANT" + (char) 254 + "V. UNI." + (char) 254 + "TOTAL", (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
 
         g.drawLine(x, y, w, y, p);
 
+        for (int j = 0; j < notaProdutoList.size(); j++) {
+            Produto produto = new Produto();
+            produto = produto.retornaProdutoObjetoAtualizar(context, notaProdutoList.get(j).getCodigo());
+            y += size_text;
+            g.drawText(retornaFormatado(notaProdutoList.get(j).getCodigo() + (char) 254 + notaProdutoList.get(j).getDescri(), (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+
+            y += size_text;
+            g.drawText(retornaFormatado(notaProdutoList.get(j).getSst() + " " + (char) 254 + produto.getUnid() + (char) 254 + decimalFormat.format(notaProdutoList.get(j).getQuantidade()) + (char) 254 + " R$ " + decimalFormat.format(notaProdutoList.get(j).getValorunitario()) + (char) 254 + " R$ " + decimalFormat.format(notaProdutoList.get(j).getValortotal()), (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+
+        }
+
         y += size_text;
         g.drawRect(x, yinicial, w, y, p);
+
+        yinicial = y;
+
+        y += size_text;
+        g.drawText("DADOS ADICIONAIS", x, y, tituloBold);
+
+        g.drawRect(x, yinicial, w, y, p);
+
+        y += size_text;
+        tituloBold.setTextSize(15);
+        g.drawText(retornaFormatado("Desenvolvido por ConnectSys Informatica - (54) 3344 3036", (int) tituloBold.getTextSize(),CENTRALIZADO), x, y, tituloBold);
+
 
         y += size_text;
         g.drawText(" ", x, y, texto);

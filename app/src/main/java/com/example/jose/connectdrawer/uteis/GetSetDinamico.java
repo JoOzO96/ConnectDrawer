@@ -2,12 +2,15 @@ package com.example.jose.connectdrawer.uteis;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Parcel;
 import android.support.annotation.RestrictTo;
 import android.util.Log;
 
 import com.example.jose.connectdrawer.Icms.Icms;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
+import com.example.jose.connectdrawer.Parcelas.Parcelas;
+import com.example.jose.connectdrawer.ParcelasNFE.ParcelaNFE;
 import com.example.jose.connectdrawer.Pedido.Pedido;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.Produto.Produto;
@@ -176,8 +179,7 @@ public class GetSetDinamico {
             Produto produto;
             List<Field> fieldsPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
             Cursor cursorPedido = pedido.retornaPedidoFiltradaCursor(context, Long.parseLong(numeroPedido));
-
-
+            List<NotaProduto> notaProdutoList = new ArrayList<>();
             for (int i = 0; fieldsPedido.size() > i; i++) {
                 if (fieldsPedido.get(i).getName().toLowerCase().equals("$change") ||
                         fieldsPedido.get(i).getName().toLowerCase().equals("serialversionuid")) {
@@ -195,13 +197,23 @@ public class GetSetDinamico {
                         notaFiscal.setCodnota(notaFiscal.formataCodNota(codigoBanco.toString()));
                     }
                 } else {
+                    notaFiscal = notaFiscal.retornaObjetoNota(context, notaFiscal.retornaIdnota(context, pedido.getNotafisca()));
+
                     notaFiscal.setCodnota(pedido.getNotafisca());
+
                 }
                 notaFiscal.setCodemitente(1L);
                 notaFiscal.setCodtipo(1L);
                 notaFiscal.setCodcliente(pedido.getCodcliente());
                 notaFiscal.setNomecliente(cliente.getNomecliente());
-                notaFiscal.setCgccpf(cliente.getCpf());
+                if (cliente.getCpf() == null) {
+                    notaFiscal.setCgccpf(cliente.getCgc());
+                } else {
+                    notaFiscal.setCgccpf(cliente.getCpf());
+                }
+                notaFiscal.setCodcidade(cliente.getCodcidade());
+                notaFiscal.setNumero(cliente.getNume());
+                notaFiscal.setInscesta(cliente.getIncest());
                 notaFiscal.setMarc(false);
                 notaFiscal.setCnpj(cliente.getCgc());
                 notaFiscal.setEndereco(cliente.getEndereco());
@@ -212,14 +224,32 @@ public class GetSetDinamico {
                 notaFiscal.setDataemissao(new Date());
                 notaFiscal.setDatasaida(new Date());
                 notaFiscal.setHora(new Date());
+                notaFiscal.setCodpgto(pedido.getPgto());
+                notaFiscal.setFinalidade("1");
+                notaFiscal.setNorconti("1");
+
+                notaFiscal = notaFiscal.cadastraNota(context, notaFiscal);
 
 
-                boolean sucesso = notaFiscal.cadastraNota(context, notaFiscal);
+                notaProdutoList = colocaDadosNotaProduto(context, notaFiscal, numeroPedido);
 
-                if (sucesso) {
-                    pedido.setNotafisca(notaFiscal.getCodnota());
-                    pedido.cadastraPedido(context, pedido);
+                if (notaProdutoList.size() > 0) {
+                    for (int i = 0; i < notaProdutoList.size(); i++) {
+
+                        notaFiscal.setBaseicms(notaFiscal.getBaseicms() + notaProdutoList.get(i).getBicms());
+                        notaFiscal.setValoricms(notaFiscal.getValoricms() + notaProdutoList.get(i).getValornota());
+                        notaFiscal.setIcmssub(notaFiscal.getIcmssub() + notaProdutoList.get(i).getVbcst());
+                        notaFiscal.setValoricmssub(notaFiscal.getValoricmssub() + notaProdutoList.get(i).getVsst());
+                        notaFiscal.setValorseguro(notaFiscal.getValorseguro() + notaProdutoList.get(i).getVseguro());
+                        notaFiscal.setValordoipi(notaFiscal.getValordoipi() + notaProdutoList.get(i).getValoripi());
+                        notaFiscal.setValordoipi(notaFiscal.getValordoipi() + notaProdutoList.get(i).getValoripi());
+                        notaFiscal.setValornota(notaFiscal.getValornota() + notaProdutoList.get(i).getValortotal());
+                    }
                 }
+                notaFiscal = notaFiscal.cadastraNota(context, notaFiscal);
+                pedido.setNotafisca(notaFiscal.getCodnota());
+                pedido.cadastraPedido(context, pedido);
+
 
             }
 
@@ -240,7 +270,8 @@ public class GetSetDinamico {
         List<Field> fieldsPedidoProduto = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
         List<Field> fieldsProduto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
         Produto produto;
-        NotaProduto notaProduto;
+        NotaProduto notaProduto = new NotaProduto();
+        notaProduto.limpaProdutos(context, notaFiscal.getCodnota());
         for (int i = 0; fieldsPedido.size() > i; i++) {
             if (fieldsPedido.get(i).getName().toLowerCase().equals("$change") ||
                     fieldsPedido.get(i).getName().toLowerCase().equals("serialversionuid")) {
@@ -312,7 +343,7 @@ public class GetSetDinamico {
                 notaProduto.setDatas(new Date());
                 notaProduto.setVcusto(produto.getCusto1());
                 notaProduto.setNcmproduto(produto.getNcm());
-                if (1 == 1){ //antes de sinronizar os dados do emitente vai ficar assim
+                if (1 == 1) { //antes de sinronizar os dados do emitente vai ficar assim
                     notaProduto.setBicms(0D);
                     notaProduto.setVicms(0D);
                 }
@@ -323,7 +354,26 @@ public class GetSetDinamico {
 
 
         }
+
+
         return listNotaProduto;
     }
 
+    public List<ParcelaNFE> colocaDadosParcelasNFE(Context context, NotaFiscal notaFiscal, String codPedido) {
+        List<ParcelaNFE> parcelaNFEList = new ArrayList<>();
+        Parcelas parcelas = new Parcelas();
+        List<Parcelas> parcelasList = parcelas.retornaListaDeParcelas(context, Long.parseLong(codPedido));
+
+        for (int i = 0; i < parcelasList.size(); i++) {
+            ParcelaNFE parcelaNFE = new ParcelaNFE();
+            parcelaNFE.setCodnota(notaFiscal.getCodnota());
+            parcelaNFE.setDiave(parcelasList.get(i).getDiave());
+            parcelaNFE.setDvenci(parcelasList.get(i).getDvenci());
+            parcelaNFE.setFatura(parcelasList.get(i).getFatura());
+            parcelaNFE.setValorboleto(parcelasList.get(i).getValorboleto());
+            parcelaNFE.setVparce(parcelasList.get(i).getVparce());
+            parcelaNFEList.add(parcelaNFE);
+        }
+        return parcelaNFEList;
+    }
 }

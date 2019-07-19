@@ -343,7 +343,7 @@ public class Banco extends SQLiteOpenHelper {
 
         sql = "CREATE TABLE NotaFiscal(" +
                 "idnota long PRIMARY KEY," +
-                "codnota long," +
+                "codnota text," +
                 "codemitente long, " +
                 "codigo long," +
                 "codtipo long," +
@@ -358,7 +358,7 @@ public class Banco extends SQLiteOpenHelper {
                 "codcidade long," +
                 "bairro text," +
                 "fonefax text," +
-                "inscest text," +
+                "inscesta text," +
                 "saida text," +
                 "venda text," +
                 "materia text," +
@@ -399,6 +399,7 @@ public class Banco extends SQLiteOpenHelper {
                 "nnota text," +
                 "dupli boolean," +
                 "norconti text," +
+                "chaveref text," +
                 "chave text," +
                 "protocolo text," +
                 "recibo text," +
@@ -502,7 +503,7 @@ public class Banco extends SQLiteOpenHelper {
                 "alteradoandroid boolean);";
         db.execSQL(sql);
 
-        sql = "CREATE TABLE ParcelaNE(" +
+        sql = "CREATE TABLE ParcelaNFE(" +
                 "idparcela long PRIMARY KEY," +
                 "codnota text, " +
                 "dvenci long, " +
@@ -535,7 +536,7 @@ public class Banco extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             sql = "CREATE TABLE NotaFiscal(" +
                     "idnota long PRIMARY KEY," +
-                    "codnota long," +
+                    "codnota text," +
                     "codemitente long, " +
                     "codigo long," +
                     "codtipo long," +
@@ -550,7 +551,7 @@ public class Banco extends SQLiteOpenHelper {
                     "codcidade long," +
                     "bairro text," +
                     "fonefax text," +
-                    "inscest text," +
+                    "inscesta text," +
                     "saida text," +
                     "venda text," +
                     "materia text," +
@@ -592,6 +593,8 @@ public class Banco extends SQLiteOpenHelper {
                     "dupli boolean," +
                     "norconti text," +
                     "chave text," +
+                    "chaveref text," +
+                    "inscesta text,"+
                     "protocolo text," +
                     "recibo text," +
                     "emidesti text," +
@@ -707,7 +710,7 @@ public class Banco extends SQLiteOpenHelper {
                     "alteradoandroid boolean);";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE ParcelaNE(" +
+            sql = "CREATE TABLE ParcelaNFE(" +
                     "idparcela long PRIMARY KEY," +
                     "codnota text, " +
                     "dvenci long, " +

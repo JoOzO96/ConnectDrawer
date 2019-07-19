@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class NotaFiscal {
-    Long idNota;
+    Long idnota;
     String codnota;
     Long codemitente;
     Long codtipo;
@@ -40,7 +41,7 @@ public class NotaFiscal {
     Long codinstituicao;
     String praca;
     String fatura;
-    Long vencimento;
+    Date vencimento;
     Double valor;
     Double baseicms;
     Double valoricms;
@@ -106,12 +107,12 @@ public class NotaFiscal {
     String placavei;
     Boolean operacaosefaz;
 
-    public Long getIdNota() {
-        return idNota;
+    public Long getIdnota() {
+        return idnota;
     }
 
-    public void setIdNota(Long idNota) {
-        this.idNota = idNota;
+    public void setIdnota(Long idnota) {
+        this.idnota = idnota;
     }
 
     public String getCodnota() {
@@ -306,11 +307,11 @@ public class NotaFiscal {
         this.fatura = fatura;
     }
 
-    public Long getVencimento() {
+    public Date getVencimento() {
         return vencimento;
     }
 
-    public void setVencimento(Long vencimento) {
+    public void setVencimento(Date vencimento) {
         this.vencimento = vencimento;
     }
 
@@ -839,14 +840,14 @@ public class NotaFiscal {
     public String retornaCodNota(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Integer codNota = 0;
+        String codNota = "";
         Cursor cursor = db.rawQuery("SELECT * FROM NotaFiscal", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             db.close();
-            codNota = Integer.parseInt(cursor.getString(cursor.getColumnIndex("codnota")));
-            codNota++;
-            return formataCodNota(codNota.toString());
+            codNota = cursor.getString(cursor.getColumnIndex("codnota"));
+            codnota = String.valueOf(Integer.parseInt(codNota) + 1);
+            return formataCodNota(codNota);
         } else {
             db.close();
             return formataCodNota("1");
@@ -872,19 +873,23 @@ public class NotaFiscal {
         }
     }
 
-    private Cursor retornaClienteFiltradaCursor(Context context, Long codigo) {
+    public Long retornaIdnota(Context context, String codnota) {
         Banco myDb = new Banco(context);
+
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT idnota FROM notafiscal where idnota = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT idnota FROM notafiscal where codnota = '" + codnota + "'", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
+            idnota =  cursor.getLong(cursor.getColumnIndex("idnota"));
+        }else{
+            idnota = 0L;
         }
         db.close();
-        return cursor;
+        return idnota;
     }
 
 
-    public Boolean cadastraNota(Context context, NotaFiscal notaFiscal) {
+    public NotaFiscal cadastraNota(Context context, NotaFiscal notaFiscal) {
         Banco myDb = new Banco(context);
         DadosBanco dadosBanco = new DadosBanco();
         ContentValues valores = new ContentValues();
@@ -895,27 +900,28 @@ public class NotaFiscal {
             valores = dadosBanco.insereValoresContent(fieldList.get(i), notaFiscal, valores);
         }
 
-        if (valores.get("idNota") == null) {
+        if (valores.get("idnota") == null) {
             long retorno = retornaMaiorCod(context);
             retorno = retorno + 1;
-            valores.remove("codigo");
+            valores.remove("idnota");
             valores.remove("cadastroandroid");
-            valores.put("codigo", retorno);
+            valores.put("idnota", retorno);
             valores.put("cadastroandroid", true);
+            notaFiscal.setIdnota(retorno);
             retorno = db.insert("notafiscal", null, valores);
             db.close();
             valores.clear();
-            return retorno != -1;
+            return notaFiscal;
         } else {
-            Cursor cursor = notaFiscal.retornaClienteFiltradaCursor(context, Long.parseLong(valores.get("idnota").toString()));
+            Long cursor = notaFiscal.retornaIdnota(context, valores.get("codnota").toString());
 
-            if (cursor.getCount() > 0) {
+            if (cursor > 0) {
                 valores.remove("alteradoandroid");
                 valores.put("alteradoandroid", true);
                 long retorno = db.update("NotaFiscal", valores, "idnota= " + valores.get("idnota").toString(), null);
                 db.close();
                 valores.clear();
-                return retorno != -1;
+                return notaFiscal;
             } else {
                 long retorno = retornaMaiorCod(context);
                 retorno = retorno + 1;
@@ -923,10 +929,38 @@ public class NotaFiscal {
                 retorno = db.insert("notafiscal", null, valores);
                 db.close();
                 valores.clear();
-                return retorno != -1;
+                return notaFiscal;
             }
         }
     }
 
 
+    public NotaFiscal retornaObjetoNota(Context context, Long idnota) {
+        Banco myDb = new Banco(context);
+        NotaFiscal notaFiscal = new NotaFiscal();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM notafiscal where idnota = " + idnota , null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(NotaFiscal.class.getDeclaredFields()));
+            for (int j = 0; cursor.getCount() != j; j++) {
+                for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                    String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                    String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                    if (retorno != null) {
+                        Object retNotaFiscal = getSetDinamico.insereField(fieldListCliente.get(f), notaFiscal, retorno);
+                        notaFiscal = (NotaFiscal) retNotaFiscal;
+
+                    }
+                }
+            }
+            db.close();
+        }
+
+        return notaFiscal;
+
+    }
 }
