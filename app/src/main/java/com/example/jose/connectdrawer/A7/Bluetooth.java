@@ -53,7 +53,7 @@ public class Bluetooth {
         Bitmap mBitmap = imprimeNota(context, codNota);
         if (imprimirnaA7) {
 
-            ESCP.ImageToEsc(mBitmap, Ostream, 5, 8);
+            ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
 
             closeBth();
         } else {
@@ -234,7 +234,7 @@ public class Bluetooth {
         y += size_text;
         g.drawText(" ", x, y, texto);
 
-        chave = "00123789456963258741147852369987456321015973";
+        chave = notaFiscal.getChave();
         y += 20;
         BarCode.drawBarCode128C(g, chave, x, y, w, 80);
 
@@ -361,17 +361,18 @@ public class Bluetooth {
         tituloBold.setTextSize(15);
         g.drawText(retornaFormatado("Desenvolvido por ConnectSys Informatica - (54) 3344 3036", (int) tituloBold.getTextSize(),CENTRALIZADO), x, y, tituloBold);
 
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
 
-        y += size_text;
-        g.drawText(" ", x, y, texto);
-        y += size_text;
-        g.drawText(" ", x, y, texto);
-        y += size_text;
-        g.drawText(" ", x, y, texto);
-        y += size_text;
-        g.drawText(" ", x, y, texto);
-        y += size_text;
-        g.drawText(" ", x, y, texto);
+
 
         h = (int) (y / 64);
         h = ((h + 1) * 64);

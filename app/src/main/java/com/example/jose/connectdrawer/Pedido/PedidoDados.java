@@ -44,6 +44,7 @@ import com.example.jose.connectdrawer.sincronizacao.EnviaJson;
 import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
 import com.example.jose.connectdrawer.sincronizacao.SincMac;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
+import com.example.jose.connectdrawer.uteis.DateDeserializer;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.Mac;
@@ -136,7 +137,7 @@ public class PedidoDados extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final MostraToast mostraToast = new MostraToast();
@@ -622,91 +623,138 @@ public class PedidoDados extends Fragment {
                         if (controleCodigo1 != null) {
                             txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
                             notaFiscal = (NotaFiscal) getSetDinamico.colocaDadosNotaFiscal(getContext(), notaFiscal, txPedido.getText().toString(), controleCodigo1.getCodigoBanco() + 1);
-                            List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
-                            listaNotaFiscal.add(notaFiscal);
-                            EnviaJson enviaJson = new EnviaJson();
-                            String url = "http://192.168.0.199:45455/api/notafiscal";
-                            List<ControleCodigo> retorno = null;
-                            String retornoEnvio = "";
-                            Gson gson = new Gson();
-                            String gsonRetorno = gson.toJson(listaNotaFiscal);
-                            try {
-                                enviaJson.execute(gsonRetorno, url);
-                                retornoEnvio = enviaJson.get();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                                CriaEmail criaEmail = new CriaEmail();
-                                Mac mac = new Mac();
-                                criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                                CriaEmail criaEmail = new CriaEmail();
-                                Mac mac = new Mac();
-                                criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                            }
-                            ControleCodigo controleCodigo[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
 
-                            if (controleCodigo[0].getMensagem() != null) {
-                                if (!controleCodigo[0].getMensagem().equals("NF-e atualizada, tentando novo envio.")) {
-                                    mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
-                                } else {
-                                    NotaProduto notaProduto = new NotaProduto();
-                                    List<NotaProduto> notaProdutoList = notaProduto.retornaListaProdutosNota(context, notaFiscal.getCodnota());
-                                    enviaJson = new EnviaJson();
-                                    url = "http://192.168.0.199:45455/api/notaproduto";
-                                    retorno = null;
-                                    retornoEnvio = "";
-                                    gson = new Gson();
-                                    gsonRetorno = gson.toJson(notaProdutoList);
-                                    try {
-                                        enviaJson.execute(gsonRetorno, url);
-                                        retornoEnvio = enviaJson.get();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                        CriaEmail criaEmail = new CriaEmail();
-                                        Mac mac = new Mac();
-                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                                    } catch (ExecutionException e) {
-                                        e.printStackTrace();
-                                        CriaEmail criaEmail = new CriaEmail();
-                                        Mac mac = new Mac();
-                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                                    }
-                                    controleCodigo = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                                    for (int i = 0 ; i < controleCodigo.length ; i ++){
-                                        notaProduto = new NotaProduto();
-                                        if (notaProdutoList.get(i).getAuto() != controleCodigo[i].getCodigoBanco()) {
-                                            notaProdutoList.get(i).setAuto(controleCodigo[i].getCodigoBanco());
-                                            notaProduto.cadastraNotaProduto(context, notaProdutoList.get(i));
-                                        }
-                                    }
-                                    List<ParcelaNFE> parcelasNFEList = getSetDinamico.colocaDadosParcelasNFE(getContext(), notaFiscal, txPedido.getText().toString());
-                                    enviaJson = new EnviaJson();
-                                    url = "http://192.168.0.199:45455/api/parcelasnfe";
-                                    retorno = null;
-                                    retornoEnvio = "";
-                                    gson = new Gson();
-                                    gsonRetorno = gson.toJson(parcelasNFEList);
-                                    try {
-                                        enviaJson.execute(gsonRetorno, url);
-                                        retornoEnvio = enviaJson.get();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                        CriaEmail criaEmail = new CriaEmail();
-                                        Mac mac = new Mac();
-                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                                    } catch (ExecutionException e) {
-                                        e.printStackTrace();
-                                        CriaEmail criaEmail = new CriaEmail();
-                                        Mac mac = new Mac();
-                                        criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                                    }
-                                    Bluetooth impressaoA7 = new Bluetooth();
-                                    impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
+                            if (!notaFiscal.getNomecliente().equals("NOTA JA ENVIADA")) {
+
+                                List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
+                                listaNotaFiscal.add(notaFiscal);
+                                EnviaJson enviaJson = new EnviaJson();
+                                String url = "http://192.168.0.199:45455/api/notafiscal";
+                                List<ControleCodigo> retorno = null;
+                                String retornoEnvio = "";
+                                GsonBuilder gsonBuilder = new GsonBuilder()
+                                        .setDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+                                gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+                                Gson gson = gsonBuilder.create();
+                                String gsonRetorno = gson.toJson(listaNotaFiscal);
+                                try {
+                                    enviaJson.execute(gsonRetorno, url);
+                                    retornoEnvio = enviaJson.get();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                    CriaEmail criaEmail = new CriaEmail();
+                                    Mac mac = new Mac();
+                                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                    CriaEmail criaEmail = new CriaEmail();
+                                    Mac mac = new Mac();
+                                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
                                 }
+                                ControleCodigo controleCodigo[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+
+                                if (controleCodigo[0].getMensagem() != null) {
+                                    if (!controleCodigo[0].getMensagem().equals("NF-e atualizada, tentando novo envio.")) {
+                                        mostraToast.mostraToastLong(context, controleCodigo[0].getMensagem());
+                                    } else {
+                                        NotaProduto notaProduto = new NotaProduto();
+                                        List<NotaProduto> notaProdutoList = notaProduto.retornaListaProdutosNota(context, notaFiscal.getCodnota());
+                                        enviaJson = new EnviaJson();
+                                        url = "http://192.168.0.199:45455/api/notaproduto";
+                                        retorno = null;
+                                        retornoEnvio = "";
+                                        gsonRetorno = gson.toJson(notaProdutoList);
+                                        try {
+                                            enviaJson.execute(gsonRetorno, url);
+                                            retornoEnvio = enviaJson.get();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        } catch (ExecutionException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        }
+                                        controleCodigo = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                                        for (int i = 0; i < controleCodigo.length; i++) {
+                                            notaProduto = new NotaProduto();
+                                            if (notaProdutoList.get(i).getAuto() != controleCodigo[i].getCodigoBanco()) {
+                                                notaProdutoList.get(i).setAuto(controleCodigo[i].getCodigoBanco());
+                                                notaProduto.cadastraNotaProduto(context, notaProdutoList.get(i));
+                                            }
+                                        }
+                                        List<ParcelaNFE> parcelasNFEList = getSetDinamico.colocaDadosParcelasNFE(getContext(), notaFiscal, txPedido.getText().toString());
+                                        enviaJson = new EnviaJson();
+                                        url = "http://192.168.0.199:45455/api/parcelasnfe";
+                                        retorno = null;
+                                        retornoEnvio = "";
+                                        gsonRetorno = gson.toJson(parcelasNFEList);
+                                        try {
+                                            enviaJson.execute(gsonRetorno, url);
+                                            retornoEnvio = enviaJson.get();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        } catch (ExecutionException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        }
+
+                                        enviaJson = new EnviaJson();
+                                        url = "http://192.168.0.199:45455/api/envianfe";
+                                        retorno = null;
+                                        retornoEnvio = "";
+                                        gsonRetorno = gson.toJson(notaFiscal);
+                                        try {
+                                            enviaJson.execute(gsonRetorno, url);
+                                            retornoEnvio = enviaJson.get();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        } catch (ExecutionException e) {
+                                            e.printStackTrace();
+                                            CriaEmail criaEmail = new CriaEmail();
+                                            Mac mac = new Mac();
+                                            criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+                                        }
+
+                                        ControleCodigo controle = new ControleCodigo();
+                                        controle = gson.fromJson(retornoEnvio, ControleCodigo.class);
+
+                                        try {
+                                            String jsonretorno = "";
+                                            jsonretorno = controle.getMensagem();
+                                            NotaFiscal notaFiscalFinal = new NotaFiscal();
+
+                                            notaFiscalFinal = gson.fromJson(controle.getMensagem(), NotaFiscal.class);
+                                            notaFiscalFinal.setIdnota(notaFiscal.getIdnota());
+                                            notaFiscalFinal = notaFiscal.cadastraNota(context, notaFiscalFinal);
+                                            Bluetooth impressaoA7 = new Bluetooth();
+                                            impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
+                                            mostraToast.mostraToastLong(context, controle.getMensagem());
+                                        }
+
+//                                    Bluetooth impressaoA7 = new Bluetooth();
+//                                    impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
+                                    }
+                                }
+
+                            } else {
+                                Bluetooth impressaoA7 = new Bluetooth();
+                                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
                             }
                         }
-
                     } else {
                         mostraToast.mostraToastLong(getContext(), "Não foi possivel verificar a sequencia da NF-e");
                     }

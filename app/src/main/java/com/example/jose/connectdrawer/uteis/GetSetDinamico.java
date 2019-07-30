@@ -200,16 +200,26 @@ public class GetSetDinamico {
                     notaFiscal = notaFiscal.retornaObjetoNota(context, notaFiscal.retornaIdnota(context, pedido.getNotafisca()));
 
                     notaFiscal.setCodnota(pedido.getNotafisca());
+                    if (notaFiscal.getProtocolo() != null){
+                        notaFiscal.setNomecliente("NOTA JA ENVIADA");
+                        return notaFiscal;
+                    }else{
 
+                    }
                 }
+
+                notaFiscal.setCodtipo(1L);
+                notaFiscal.setCodtransportador(1L);
                 notaFiscal.setCodemitente(1L);
                 notaFiscal.setCodtipo(1L);
                 notaFiscal.setCodcliente(pedido.getCodcliente());
                 notaFiscal.setNomecliente(cliente.getNomecliente());
-                if (cliente.getCpf() == null) {
-                    notaFiscal.setCgccpf(cliente.getCgc());
+                notaFiscal.setEmidesti("0");
+                if (cliente.getCpf() != null) {
+                    notaFiscal.setCpf(cliente.getCpf());
+                    notaFiscal.setMarc(true);
                 } else {
-                    notaFiscal.setCgccpf(cliente.getCpf());
+                    notaFiscal.setCnpj(cliente.getCgc());
                 }
                 notaFiscal.setCodcidade(cliente.getCodcidade());
                 notaFiscal.setNumero(cliente.getNume());
@@ -227,6 +237,13 @@ public class GetSetDinamico {
                 notaFiscal.setCodpgto(pedido.getPgto());
                 notaFiscal.setFinalidade("1");
                 notaFiscal.setNorconti("1");
+                notaFiscal.setBaseicms(0D);
+                notaFiscal.setValoricms(0D);
+                notaFiscal.setIcmssub(0D);
+                notaFiscal.setValoricmssub(0D);
+                notaFiscal.setValorseguro(0D);
+                notaFiscal.setValordoipi(0D);
+                notaFiscal.setValornota(0D);
 
                 notaFiscal = notaFiscal.cadastraNota(context, notaFiscal);
 
@@ -242,7 +259,6 @@ public class GetSetDinamico {
                         notaFiscal.setValoricmssub(notaFiscal.getValoricmssub() + notaProdutoList.get(i).getVsst());
                         notaFiscal.setValorseguro(notaFiscal.getValorseguro() + notaProdutoList.get(i).getVseguro());
                         notaFiscal.setValordoipi(notaFiscal.getValordoipi() + notaProdutoList.get(i).getValoripi());
-                        notaFiscal.setValordoipi(notaFiscal.getValordoipi() + notaProdutoList.get(i).getValoripi());
                         notaFiscal.setValornota(notaFiscal.getValornota() + notaProdutoList.get(i).getValortotal());
                     }
                 }
@@ -255,7 +271,8 @@ public class GetSetDinamico {
 
 
         } catch (Exception ex) {
-            return "";
+            ex.printStackTrace();
+            return null;
         }
         return notaFiscal;
     }
@@ -318,6 +335,7 @@ public class GetSetDinamico {
                 notaProduto.setValoripi(0D);
                 notaProduto.setAliqicms(Double.parseDouble(icms.getPercen().toString()));
                 notaProduto.setAliqipi(0D);
+
                 notaProduto.setCodicms(icms.getCodicms());
                 notaProduto.setPeso(0L);
                 notaProduto.setCfop(produto.getCfop());
@@ -327,7 +345,7 @@ public class GetSetDinamico {
                 if (produto.getMva() > 0) {
                     notaProduto.setMvap(produto.getMva().longValue());
                     notaProduto.setVbcst((pedidoProduto.getValortotal() + (pedidoProduto.getValortotal() * produto.getMva() / 100)));
-                    notaProduto.setVsst((notaProduto.getVbcst() * icms.getPercen() / 100) - notaProduto.getVicms());
+                    notaProduto.setVsst((notaProduto.getVbcst() * 18 / 100) - notaProduto.getVicms());
                 }
                 notaProduto.setVseguro(0D);
                 notaProduto.setDescri(produto.getMercadoria());
