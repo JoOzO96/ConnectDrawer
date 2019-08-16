@@ -336,4 +336,16 @@ public class Cidade {
         int retorno = db.update("cidade", values, campo + " = 1", null);
 
     }
+
+    public Long retornaNumeroDeCidades(Context context) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM cidade", null);
+        if (cursor.getCount() > 0){
+            cursor.moveToFirst();
+            return cursor.getLong(0);
+        }else{
+            return 0L;
+        }
+    }
 }

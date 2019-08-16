@@ -60,43 +60,45 @@ public class SincCidade {
                 i = 0;
             }
         }
-        ProgressDialog progressDialog = Sessao.getProgress();
 //        progressDialog.setMessage("Cadastro de Cidade   0 de " + cidadeList.size());
         Cursor cursor = null;
         Object valorCampo = null;
         Object teste = null;
 //        String tipo = null;
         String nomeCampo = null;
-        for (int cid = 0; cidadeList.size() != cid; cid++) {
-            //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
-            if (cidadeList.get(cid).getCodcidade() == null){
 
-            }else {
-                cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cid).getCodcidade());
-                Sessao.colocaTexto("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
-//            progressDialog.setMessage("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
-                if (cursor.getCount() > 0) {
-                    cursor.close();
+        if (cidadeList.size() != cidade.retornaNumeroDeCidades(context1)) {
+            for (int cid = 0; cidadeList.size() != cid; cid++) {
+                //TESTE SE O CODIGO JA ESTA NO BANCO DO CELULAR, SE NAO ESTIVER ELE IRA CADASTRAR
+                if (cidadeList.get(cid).getCodcidade() == null) {
+
                 } else {
-                    //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
+                    cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cid).getCodcidade());
+                    Sessao.colocaTexto("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
+//            progressDialog.setMessage("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
+                    if (cursor.getCount() > 0) {
+                        cursor.close();
+                    } else {
+                        //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
 
-                    cidade = new Cidade();
+                        cidade = new Cidade();
+                        cidade = cidadeList.get(cid);
 
-                    for (int f = 0; fieldList.size() != f; f++) {
-
-//                    tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-                        nomeCampo = fieldList.get(f).getName();
-
-                        if (nomeCampo.equals("UF")) {
-                            nomeCampo = "uf";
-                        }
-                        valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
-                        teste = getSetDinamico.insereField(fieldList.get(f), cidade, valorCampo);
-                        cidade = (Cidade) teste;
-
-                    }
-                    teste = null;
-                    valorCampo = null;
+//                    for (int f = 0; fieldList.size() != f; f++) {
+//
+////                    tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+//                        nomeCampo = fieldList.get(f).getName();
+//
+//                        if (nomeCampo.equals("UF")) {
+//                            nomeCampo = "uf";
+//                        }
+//                        valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), cidadeList.get(cid));
+//                        teste = getSetDinamico.insereField(fieldList.get(f), cidade, valorCampo);
+//                        cidade = (Cidade) teste;
+//
+//                    }
+                        teste = null;
+                        valorCampo = null;
 //                        aqui tenho a cidade completa;
 //                        cidade1.setCep(cidadeList.get(cid).getCep());
 //                        cidade1.setCodnacionalcidade(cidadeList.get(cid).getCodnacionalcidade());
@@ -106,19 +108,22 @@ public class SincCidade {
 //                        cidade1.setPais(cidadeList.get(cid).getPais());
 //                        cidade1.setUf(cidadeList.get(cid).getUf());
 //                        cidade1.setCodcidade(cidadeList.get(cid).getCodcidade());
-                    cursor.moveToNext();
-                    ///
-                    //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
-                    //
-                    //
-                    //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
-                    //
-                    boolean retorno = cidade.cadastraCidade(context, cidade);
+                        cursor.moveToNext();
+                        ///
+                        //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
+                        //
+                        //
+                        //INSERE NO BANCO DE DADOS DO ANDROID OS DADOS QUE VIERAM DO SERVIDOR
+                        //
+                        boolean retorno = cidade.cadastraCidade(context, cidade);
 //                    cidade = null;
-                    cursor.close();
+                        cursor.close();
+                    }
                 }
             }
         }
+
+
 //            }
 //
 //            @Override
@@ -165,12 +170,11 @@ public class SincCidade {
         try {
             thread.join(120000);
 
-        if (thread.isAlive()){
-            thread.interrupt();
-            MostraToast mostraToast = new MostraToast();
-            mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar cidades.");
-        }
-
+            if (thread.isAlive()) {
+                thread.interrupt();
+                MostraToast mostraToast = new MostraToast();
+                mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro ao consultar cidades.");
+            }
 
 
 //        while (response[0] == null) {
@@ -190,9 +194,9 @@ public class SincCidade {
 //        }
 
 //        if (thread.getState() == Thread.State.TERMINATED) {
-        if (response[0] != null) {
-            listaCidade = new ArrayList<>(response[0].body());
-        }
+            if (response[0] != null) {
+                listaCidade = new ArrayList<>(response[0].body());
+            }
 
 //        for (int i = 0 ; listaCampos.size() != i ; i++){
 //            if (listaCampos.get(i).getName().toUpperCase().equals(""));

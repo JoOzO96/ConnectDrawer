@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -87,6 +88,7 @@ public class PedidoDados extends Fragment {
 //    private BluetoothService mService = null;
 //    private BluetoothAdapter mBluetoothAdapter = null;
     private EditText txPedido;
+    private EditText txObs;
     private Spinner spCodcliente;
     //    private EditText txdata;
     private Spinner spCodvendedor;
@@ -96,6 +98,7 @@ public class PedidoDados extends Fragment {
     private TextView porc_lucro;
     private Long codClienteTela;
     private Double comissaoVendedor;
+    private CheckBox ckNfe;
     //    private EditText txcodvendedor;
 //    private EditText txformadepagamento;
 //    private EditText txfrete;
@@ -149,6 +152,7 @@ public class PedidoDados extends Fragment {
         btGerarParcelas = (Button) view.findViewById(R.id.btgerarparcelas);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
+        ckNfe = (CheckBox) view.findViewById(R.id.ckNfe);
         spFormadepagamento = (Spinner) view.findViewById(R.id.spFormadepagamento);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -325,6 +329,13 @@ public class PedidoDados extends Fragment {
                                     }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, formaPagamentoList, getContext(), posicao);
+                            }
+                        } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("ck")) {
+                            String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
+                            String nomecampo = "nfe";
+                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
+                            if (fieldListPassar.get(i).getName().equals("ckNfe")) {
+                                ckNfe.setChecked(Boolean.parseBoolean(retorno.toString()));
                             }
                         }
                     }
@@ -890,6 +901,7 @@ public class PedidoDados extends Fragment {
             pedido.setCodemitente(1L);
             pedido.setOrpedi("2");
             pedido.setCodstatus(1L);
+            pedido.setNfe(ckNfe.isChecked());
             for (int f = 0; fieldListPedidoDados.size() != f; f++) {
 
                 if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
@@ -1019,6 +1031,7 @@ public class PedidoDados extends Fragment {
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
             Pedido pedido = new Pedido();
+            pedido.setNfe(ckNfe.isChecked());
             for (int f = 0; fieldListPedidoDados.size() != f; f++) {
 
                 if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {

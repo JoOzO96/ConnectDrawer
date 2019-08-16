@@ -135,7 +135,7 @@ public class PedidoProdutoTela extends DialogFragment {
 
                             //COLOCA VALOR NO SPINNER DO PRODUTO
                             if (fieldListPassar.get(i).getName().toLowerCase().equals("auproduto")) {
-                                cursorProduto = produto.retornaProdutoFiltradaCursor(getContext(), codigoProduto.toString());
+                                cursorProduto = produto.retornaProdutoFiltradaCursor(getContext(), codItem);
                                 for (int f = fieldListProduto.size() - 1; -1 != f; f--) {
                                     if (fieldListProduto.get(f).getName().toLowerCase().equals("codproduto") || fieldListProduto.get(f).getName().toLowerCase().equals("mercadoria")) {
                                     } else {

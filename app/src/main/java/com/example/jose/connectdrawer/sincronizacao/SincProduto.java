@@ -65,20 +65,20 @@ public class SincProduto {
                 //PEGA OS DADOS QUE VIERAM DO SERVIDOR
 
 
-                produto = new Produto();
-                for (int i = 0; fieldListClasse.size() != i; i++) {
-                    if (fieldListClasse.get(i).getName().toLowerCase().equals("$change") ||
-                            fieldListClasse.get(i).getName().toLowerCase().equals("serialversionuid")) {
-                    } else {
-                        Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(i), listaProduto.get(pro));
-                        if (valorCampo != null) {
-                            Object produtoRetorno;
-                            produtoRetorno = getSetDinamico.insereField(fieldListClasse.get(i), produto, valorCampo);
-                            produto = (Produto) produtoRetorno;
-                        }
-                    }
-                }
-                boolean retorno = produto.cadastraProdutoSincro(db, produto);
+//                produto = new Produto();
+//                for (int i = 0; fieldListClasse.size() != i; i++) {
+//                    if (fieldListClasse.get(i).getName().toLowerCase().equals("$change") ||
+//                            fieldListClasse.get(i).getName().toLowerCase().equals("serialversionuid")) {
+//                    } else {
+//                        Object valorCampo = getSetDinamico.retornaValorCampo(fieldListClasse.get(i), listaProduto.get(pro));
+//                        if (valorCampo != null) {
+//                            Object produtoRetorno;
+//                            produtoRetorno = getSetDinamico.insereField(fieldListClasse.get(i), produto, valorCampo);
+//                            produto = (Produto) produtoRetorno;
+//                        }
+//                    }
+//                }
+                boolean retorno = produto.cadastraProdutoSincro(db, listaProduto.get(pro));
 
                 cursor.close();
 

@@ -95,19 +95,19 @@ public class SincCliente extends Activity {
             });
             if (cursor.getCount() > 0) {
                 Cliente clienteConsulta = new Cliente();
-                for (int f = 0; fieldList.size() != f; f++) {
+//                for (int f = 0; fieldList.size() != f; f++) {
+//
+////                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+//                    String nomeCampo = fieldList.get(f).getName();
+//                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
+//                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
+//                    cliente = (Cliente) teste;
+//
+//                }
 
-//                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-                    String nomeCampo = fieldList.get(f).getName();
-                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
-                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
-                    cliente = (Cliente) teste;
-
-                }
-
-                clienteConsulta = clienteConsulta.retornaClienteObjetoAtualizar(context, cursor.getLong(cursor.getColumnIndex("codigo")));
-                String clienteS = new Gson().toJson(cliente);
-                String clienteConsultaS = new Gson().toJson(clienteConsulta);
+//                clienteConsulta = clienteConsulta.retornaClienteObjetoAtualizar(context, cursor.getLong(cursor.getColumnIndex("codigo")));
+//                String clienteS = new Gson().toJson(cliente);
+//                String clienteConsultaS = new Gson().toJson(clienteConsulta);
 
                 cursor.close();
 
@@ -117,15 +117,15 @@ public class SincCliente extends Activity {
                 //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
 
 
-                for (int f = 0; fieldList.size() != f; f++) {
-
-//                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
-                    String nomeCampo = fieldList.get(f).getName();
-                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
-                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
-                    cliente = (Cliente) teste;
-
-                }
+//                for (int f = 0; fieldList.size() != f; f++) {
+//
+////                            String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+//                    String nomeCampo = fieldList.get(f).getName();
+//                    Object valorCampo = getSetDinamico.retornaValorCampo(fieldList.get(f), requestCliente.get(cli));
+//                    Object teste = getSetDinamico.insereField(fieldList.get(f), cliente, valorCampo);
+//                    cliente = (Cliente) teste;
+//
+//                }
                 cursor.moveToNext();
 //                cliente.setCodigo(requestCliente.get(cli).getCodigo());
 //                cliente.setNomecliente(requestCliente.get(cli).getNomecliente());
@@ -191,7 +191,7 @@ public class SincCliente extends Activity {
                 //
 
                 boolean status = cliInsere.cadastraCliente(
-                        context, cliente
+                        context, requestCliente.get(cli)
                 );
 
 
@@ -426,12 +426,13 @@ public class SincCliente extends Activity {
                 cursor.moveToNext();
             }
         }
+
+        RetRetrofit retRetrofit = new RetRetrofit();
         if (clienteList.size() > 0) {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
             Log.e("JSON", gsonRetorno);
             EnviaJson enviaJson = new EnviaJson();
-            RetRetrofit retRetrofit = new RetRetrofit();
             String url = retRetrofit.retornaSring("cliente", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
@@ -448,13 +449,18 @@ public class SincCliente extends Activity {
                 List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
                 cliente = new Cliente();
                 for (int i = 0; controleCodigoList.size() != i; i++) {
-                    cliente.alteraPedidoCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    cliente.alteraCodCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    cliente.removeClienteAlteradaAndroid(context, "cadastroandroid");
+                    if (controleCodigoList.get(i).getCodigoBanco() == 0) {
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro: " + controleCodigoList.get(i).getMensagem());
+                    } else {
+                        cliente.alteraPedidoCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                        cliente.alteraCodCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                        cliente.removeClienteAlteradaAndroid(context, "cadastroandroid");
+                    }
+
                 }
             }
         }
-
 
         //
         //
@@ -491,7 +497,7 @@ public class SincCliente extends Activity {
             Gson gson = new Gson();
             String gsonRetorno = gson.toJson(clienteList);
             EnviaJson enviaJson = new EnviaJson();
-            String url = "http://177.92.186.84:15101/ConnectServices/recebeClienteAtualizado";
+            String url = retRetrofit.retornaSring("cliente", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {
@@ -502,7 +508,19 @@ public class SincCliente extends Activity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            cliente.removeClienteAlteradaAndroid(context, "alteradoandroid");
+            ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+            List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+            cliente = new Cliente();
+            for (int i = 0; controleCodigoList.size() != i; i++) {
+                if (controleCodigoList.get(i).getCodigoBanco() == 0) {
+                    MostraToast mostraToast = new MostraToast();
+                    mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro: " + controleCodigoList.get(i).getMensagem());
+                } else {
+                    cliente.removeClienteAlteradaAndroid(context, "alteradoandroid");
+                }
+
+            }
+
         }
     }
 

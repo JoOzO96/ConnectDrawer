@@ -110,7 +110,7 @@ public class GetSetDinamico {
                 objeto = cursor1.getInt(cursor1.getColumnIndex(nome));
             } else if (tipo.equals("DOUBLE")) {
                 objeto = cursor1.getDouble(cursor1.getColumnIndex(nome));
-            } else if (tipo.equals("BOOLEAN")) {
+            } else if (tipo.equals("BOOLEAN") || tipo.equals("CHECKBOX")) {
                 objeto = cursor1.getInt(cursor1.getColumnIndex(nome)) == 1;
             }
         }
@@ -243,6 +243,7 @@ public class GetSetDinamico {
                 notaFiscal.setValoricmssub(0D);
                 notaFiscal.setValorseguro(0D);
                 notaFiscal.setValordoipi(0D);
+                notaFiscal.setValordosprodutos(0D);
                 notaFiscal.setValornota(0D);
 
                 notaFiscal = notaFiscal.cadastraNota(context, notaFiscal);
@@ -259,7 +260,8 @@ public class GetSetDinamico {
                         notaFiscal.setValoricmssub(notaFiscal.getValoricmssub() + notaProdutoList.get(i).getVsst());
                         notaFiscal.setValorseguro(notaFiscal.getValorseguro() + notaProdutoList.get(i).getVseguro());
                         notaFiscal.setValordoipi(notaFiscal.getValordoipi() + notaProdutoList.get(i).getValoripi());
-                        notaFiscal.setValornota(notaFiscal.getValornota() + notaProdutoList.get(i).getValortotal());
+                        notaFiscal.setValordosprodutos(notaFiscal.getValordosprodutos() + notaProdutoList.get(i).getValortotal());
+                        notaFiscal.setValornota(notaFiscal.getValornota() + notaProdutoList.get(i).getValortotal() + notaProdutoList.get(i).getVsst());
                     }
                 }
                 notaFiscal = notaFiscal.cadastraNota(context, notaFiscal);

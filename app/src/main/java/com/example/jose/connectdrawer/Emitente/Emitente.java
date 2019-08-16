@@ -1,15 +1,86 @@
 package com.example.jose.connectdrawer.Emitente;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Emitente {
-    Long numerocaracter;
+
+
+    Long codigoemitente;
     String serie;
+    String cnpjemi;
+    String cpfemi;
+    String emitente;
+    String fantasia;
+    String endereco;
+    String numero;
+    String complemento;
+    String bairro;
+    String codmuni;
+    String municipio;
+    String uf;
+    String cep;
+    String codpais;
+    String pais;
+    String fone;
+    String ieemi;
+    String iesub;
+    String imemi;
+    String cnaeemi;
+    String tributa;
+    String certiemi;
+    String licenca;
+    String hambiente;
+    String emailemi;
+    String server;
+    Long porta;
+    Long autenticacao;
+    String usuario;
+    String senha;
+    Long copiadanfe;
+    String csosn;
+    Long perapro;
+    String user;
+    Long modulo;
+    Long cupomnfe;
+    String portaimpre;
+    String nporta;
+    Boolean duplicata;
+    String emailcontador;
+    Boolean mecanica;
+    String dadosobs;
+    Boolean descpedidopor;
+    Boolean descprodutopor;
+    Boolean textologo;
+    Boolean calprodutosimples;
+    Boolean pedidoean;
+    Boolean listainicio;
+    String tipoimpfiscal;
+    Boolean geracodigogrupo;
+    Boolean ipipeso;
+    Boolean usaleitor;
+    Boolean calculajuro;
+    Boolean carne;
+    Long numerocaracter;
+    Boolean emite;
     Boolean pedisimples;
-    Boolean entradaresumida;
-    Boolean industria;
+    boolean entradaresumida;
     String tipoetiqueta;
+    Boolean industria;
     Boolean mostratamanho;
-    Boolean recibofiscal;
     Boolean placacf;
+    Boolean recibofiscal;
     Boolean precopedido;
     Boolean pedidofiscal;
     Boolean servicocupom;
@@ -25,7 +96,6 @@ public class Emitente {
     Long viarecibo;
     Long viaduplicata;
     String codcedente;
-    Long juromes;
     Long codpraca;
     String agencia;
     String conta;
@@ -43,20 +113,17 @@ public class Emitente {
     String tipodesconto;
     String tipojuro;
     String postoagencia;
+    Long juromes;
     String versaosistema;
     Long clientepedido;
     String fusohorario;
     Long numeparcela;
     Boolean naolancacaixa;
-    String senhadesconto;
-    String senhaparcela;
-    String senhaproduto;
-    String senhacaixa;
-    String senhadevedor;
     Boolean dadosimpressora;
     Boolean produtocomprar;
     Boolean mostrafunrural;
     String codhistorico;
+    Long lemitedesconto;
     Long limitedesconto;
     Boolean alterarvalorunitario;
     Boolean imprimeobs020;
@@ -105,7 +172,7 @@ public class Emitente {
     Boolean usarbarrabalanca;
     String licencamdfe;
     String versaomdfe;
-    Long numerocopiacfe;
+    String numerocopiacfe;
     Boolean baixacomposicaosaida;
     String vendedorpadrao;
     Boolean ocultardadosemitente;
@@ -117,6 +184,7 @@ public class Emitente {
     Boolean liberartotalprodupedido;
     Boolean mostraendepedido;
     Long taxaimpostolucro;
+    Boolean alteraprecopgto;
     Long menucereais;
     String natentradapadrao;
     Boolean bloquearcondicional;
@@ -148,13 +216,21 @@ public class Emitente {
     Boolean exibirdadoszanatta;
     Boolean exibirselosetiquetas;
     Boolean confirmarimpressaonfce;
-    String codigomovimento;
     Boolean exibirdadospadrao;
     Boolean utilizarsalvamentoauto;
     Boolean exibirdadosfoco;
     Boolean emitirncfepedidosempre;
     Boolean exibirdadosbenevenuto;
     Boolean exibirdadoslaquent;
+    String codigomovimento;
+    Boolean exibirdadosalencastro;
+    Boolean mantervalormaiorentrada;
+    Boolean exibirdadosclauciane;
+    Long bancopadraoentrada;
+    Long profissaopadrao;
+    Long pgtopadrao;
+    Boolean exibirdadostruck;
+    Boolean emitedanfea4;
     Boolean exibirdadoscrol;
     String formatadecimais;
     Boolean buscarvendedorcliente;
@@ -171,18 +247,10 @@ public class Emitente {
     Boolean exibirdataentrega;
     Boolean chamaimportaarquivos;
     Boolean exibirdadoskadini;
-    String emailextranotas;
-    Boolean emitedanfea4;
-    Long profissaopadrao;
-    Long pgtopadrao;
-    Boolean exibirdadostruck;
-    Boolean exibirdadosmannes;
-    Boolean exibirdadosalencastro;
-    Boolean mantervalormaiorentrada;
-    Boolean exibirdadosclauciane;
-    Long bancopadraoentrada;
     Boolean exibirdadoselizandra;
+    String emailextranotas;
     Long quantidadefixapedido;
+    Boolean exibirdadosmannes;
     Boolean exibirdadosagrocampo;
     Boolean recalcularparcelanfe;
     Boolean exibirdadoslubritap;
@@ -191,15 +259,18 @@ public class Emitente {
     Boolean exibirdadosstilo;
     Boolean exibirdadosgasparin;
     Boolean exibirdadosmarcolin;
-    Long aliquotaiss;
     String nomecertificadonfse;
+    Long aliquotaiss;
+    String senhadesconto;
+    String senhaparcela;
+    String senhaproduto;
 
-    public Long getNumerocaracter() {
-        return numerocaracter;
+    public Long getCodigoemitente() {
+        return codigoemitente;
     }
 
-    public void setNumerocaracter(Long numerocaracter) {
-        this.numerocaracter = numerocaracter;
+    public void setCodigoemitente(Long codigoemitente) {
+        this.codigoemitente = codigoemitente;
     }
 
     public String getSerie() {
@@ -210,6 +281,446 @@ public class Emitente {
         this.serie = serie;
     }
 
+    public String getCnpjemi() {
+        return cnpjemi;
+    }
+
+    public void setCnpjemi(String cnpjemi) {
+        this.cnpjemi = cnpjemi;
+    }
+
+    public String getCpfemi() {
+        return cpfemi;
+    }
+
+    public void setCpfemi(String cpfemi) {
+        this.cpfemi = cpfemi;
+    }
+
+    public String getEmitente() {
+        return emitente;
+    }
+
+    public void setEmitente(String emitente) {
+        this.emitente = emitente;
+    }
+
+    public String getFantasia() {
+        return fantasia;
+    }
+
+    public void setFantasia(String fantasia) {
+        this.fantasia = fantasia;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCodmuni() {
+        return codmuni;
+    }
+
+    public void setCodmuni(String codmuni) {
+        this.codmuni = codmuni;
+    }
+
+    public String getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(String municipio) {
+        this.municipio = municipio;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getCodpais() {
+        return codpais;
+    }
+
+    public void setCodpais(String codpais) {
+        this.codpais = codpais;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getFone() {
+        return fone;
+    }
+
+    public void setFone(String fone) {
+        this.fone = fone;
+    }
+
+    public String getIeemi() {
+        return ieemi;
+    }
+
+    public void setIeemi(String ieemi) {
+        this.ieemi = ieemi;
+    }
+
+    public String getIesub() {
+        return iesub;
+    }
+
+    public void setIesub(String iesub) {
+        this.iesub = iesub;
+    }
+
+    public String getImemi() {
+        return imemi;
+    }
+
+    public void setImemi(String imemi) {
+        this.imemi = imemi;
+    }
+
+    public String getCnaeemi() {
+        return cnaeemi;
+    }
+
+    public void setCnaeemi(String cnaeemi) {
+        this.cnaeemi = cnaeemi;
+    }
+
+    public String getTributa() {
+        return tributa;
+    }
+
+    public void setTributa(String tributa) {
+        this.tributa = tributa;
+    }
+
+    public String getCertiemi() {
+        return certiemi;
+    }
+
+    public void setCertiemi(String certiemi) {
+        this.certiemi = certiemi;
+    }
+
+    public String getLicenca() {
+        return licenca;
+    }
+
+    public void setLicenca(String licenca) {
+        this.licenca = licenca;
+    }
+
+    public String getHambiente() {
+        return hambiente;
+    }
+
+    public void setHambiente(String hambiente) {
+        this.hambiente = hambiente;
+    }
+
+    public String getEmailemi() {
+        return emailemi;
+    }
+
+    public void setEmailemi(String emailemi) {
+        this.emailemi = emailemi;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
+    }
+
+    public Long getPorta() {
+        return porta;
+    }
+
+    public void setPorta(Long porta) {
+        this.porta = porta;
+    }
+
+    public Long getAutenticacao() {
+        return autenticacao;
+    }
+
+    public void setAutenticacao(Long autenticacao) {
+        this.autenticacao = autenticacao;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Long getCopiadanfe() {
+        return copiadanfe;
+    }
+
+    public void setCopiadanfe(Long copiadanfe) {
+        this.copiadanfe = copiadanfe;
+    }
+
+    public String getCsosn() {
+        return csosn;
+    }
+
+    public void setCsosn(String csosn) {
+        this.csosn = csosn;
+    }
+
+    public Long getPerapro() {
+        return perapro;
+    }
+
+    public void setPerapro(Long perapro) {
+        this.perapro = perapro;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public Long getModulo() {
+        return modulo;
+    }
+
+    public void setModulo(Long modulo) {
+        this.modulo = modulo;
+    }
+
+    public Long getCupomnfe() {
+        return cupomnfe;
+    }
+
+    public void setCupomnfe(Long cupomnfe) {
+        this.cupomnfe = cupomnfe;
+    }
+
+    public String getPortaimpre() {
+        return portaimpre;
+    }
+
+    public void setPortaimpre(String portaimpre) {
+        this.portaimpre = portaimpre;
+    }
+
+    public String getNporta() {
+        return nporta;
+    }
+
+    public void setNporta(String nporta) {
+        this.nporta = nporta;
+    }
+
+    public Boolean getDuplicata() {
+        return duplicata;
+    }
+
+    public void setDuplicata(Boolean duplicata) {
+        this.duplicata = duplicata;
+    }
+
+    public String getEmailcontador() {
+        return emailcontador;
+    }
+
+    public void setEmailcontador(String emailcontador) {
+        this.emailcontador = emailcontador;
+    }
+
+    public Boolean getMecanica() {
+        return mecanica;
+    }
+
+    public void setMecanica(Boolean mecanica) {
+        this.mecanica = mecanica;
+    }
+
+    public String getDadosobs() {
+        return dadosobs;
+    }
+
+    public void setDadosobs(String dadosobs) {
+        this.dadosobs = dadosobs;
+    }
+
+    public Boolean getDescpedidopor() {
+        return descpedidopor;
+    }
+
+    public void setDescpedidopor(Boolean descpedidopor) {
+        this.descpedidopor = descpedidopor;
+    }
+
+    public Boolean getDescprodutopor() {
+        return descprodutopor;
+    }
+
+    public void setDescprodutopor(Boolean descprodutopor) {
+        this.descprodutopor = descprodutopor;
+    }
+
+    public Boolean getTextologo() {
+        return textologo;
+    }
+
+    public void setTextologo(Boolean textologo) {
+        this.textologo = textologo;
+    }
+
+    public Boolean getCalprodutosimples() {
+        return calprodutosimples;
+    }
+
+    public void setCalprodutosimples(Boolean calprodutosimples) {
+        this.calprodutosimples = calprodutosimples;
+    }
+
+    public Boolean getPedidoean() {
+        return pedidoean;
+    }
+
+    public void setPedidoean(Boolean pedidoean) {
+        this.pedidoean = pedidoean;
+    }
+
+    public Boolean getListainicio() {
+        return listainicio;
+    }
+
+    public void setListainicio(Boolean listainicio) {
+        this.listainicio = listainicio;
+    }
+
+    public String getTipoimpfiscal() {
+        return tipoimpfiscal;
+    }
+
+    public void setTipoimpfiscal(String tipoimpfiscal) {
+        this.tipoimpfiscal = tipoimpfiscal;
+    }
+
+    public Boolean getGeracodigogrupo() {
+        return geracodigogrupo;
+    }
+
+    public void setGeracodigogrupo(Boolean geracodigogrupo) {
+        this.geracodigogrupo = geracodigogrupo;
+    }
+
+    public Boolean getIpipeso() {
+        return ipipeso;
+    }
+
+    public void setIpipeso(Boolean ipipeso) {
+        this.ipipeso = ipipeso;
+    }
+
+    public Boolean getUsaleitor() {
+        return usaleitor;
+    }
+
+    public void setUsaleitor(Boolean usaleitor) {
+        this.usaleitor = usaleitor;
+    }
+
+    public Boolean getCalculajuro() {
+        return calculajuro;
+    }
+
+    public void setCalculajuro(Boolean calculajuro) {
+        this.calculajuro = calculajuro;
+    }
+
+    public Boolean getCarne() {
+        return carne;
+    }
+
+    public void setCarne(Boolean carne) {
+        this.carne = carne;
+    }
+
+    public Long getNumerocaracter() {
+        return numerocaracter;
+    }
+
+    public void setNumerocaracter(Long numerocaracter) {
+        this.numerocaracter = numerocaracter;
+    }
+
+    public Boolean getEmite() {
+        return emite;
+    }
+
+    public void setEmite(Boolean emite) {
+        this.emite = emite;
+    }
+
     public Boolean getPedisimples() {
         return pedisimples;
     }
@@ -218,20 +729,12 @@ public class Emitente {
         this.pedisimples = pedisimples;
     }
 
-    public Boolean getEntradaresumida() {
+    public Boolean  getEntradaresumida() {
         return entradaresumida;
     }
 
     public void setEntradaresumida(Boolean entradaresumida) {
         this.entradaresumida = entradaresumida;
-    }
-
-    public Boolean getIndustria() {
-        return industria;
-    }
-
-    public void setIndustria(Boolean industria) {
-        this.industria = industria;
     }
 
     public String getTipoetiqueta() {
@@ -242,6 +745,14 @@ public class Emitente {
         this.tipoetiqueta = tipoetiqueta;
     }
 
+    public Boolean getIndustria() {
+        return industria;
+    }
+
+    public void setIndustria(Boolean industria) {
+        this.industria = industria;
+    }
+
     public Boolean getMostratamanho() {
         return mostratamanho;
     }
@@ -250,20 +761,20 @@ public class Emitente {
         this.mostratamanho = mostratamanho;
     }
 
-    public Boolean getRecibofiscal() {
-        return recibofiscal;
-    }
-
-    public void setRecibofiscal(Boolean recibofiscal) {
-        this.recibofiscal = recibofiscal;
-    }
-
     public Boolean getPlacacf() {
         return placacf;
     }
 
     public void setPlacacf(Boolean placacf) {
         this.placacf = placacf;
+    }
+
+    public Boolean getRecibofiscal() {
+        return recibofiscal;
+    }
+
+    public void setRecibofiscal(Boolean recibofiscal) {
+        this.recibofiscal = recibofiscal;
     }
 
     public Boolean getPrecopedido() {
@@ -384,14 +895,6 @@ public class Emitente {
 
     public void setCodcedente(String codcedente) {
         this.codcedente = codcedente;
-    }
-
-    public Long getJuromes() {
-        return juromes;
-    }
-
-    public void setJuromes(Long juromes) {
-        this.juromes = juromes;
     }
 
     public Long getCodpraca() {
@@ -530,6 +1033,14 @@ public class Emitente {
         this.postoagencia = postoagencia;
     }
 
+    public Long getJuromes() {
+        return juromes;
+    }
+
+    public void setJuromes(Long juromes) {
+        this.juromes = juromes;
+    }
+
     public String getVersaosistema() {
         return versaosistema;
     }
@@ -570,46 +1081,6 @@ public class Emitente {
         this.naolancacaixa = naolancacaixa;
     }
 
-    public String getSenhadesconto() {
-        return senhadesconto;
-    }
-
-    public void setSenhadesconto(String senhadesconto) {
-        this.senhadesconto = senhadesconto;
-    }
-
-    public String getSenhaparcela() {
-        return senhaparcela;
-    }
-
-    public void setSenhaparcela(String senhaparcela) {
-        this.senhaparcela = senhaparcela;
-    }
-
-    public String getSenhaproduto() {
-        return senhaproduto;
-    }
-
-    public void setSenhaproduto(String senhaproduto) {
-        this.senhaproduto = senhaproduto;
-    }
-
-    public String getSenhacaixa() {
-        return senhacaixa;
-    }
-
-    public void setSenhacaixa(String senhacaixa) {
-        this.senhacaixa = senhacaixa;
-    }
-
-    public String getSenhadevedor() {
-        return senhadevedor;
-    }
-
-    public void setSenhadevedor(String senhadevedor) {
-        this.senhadevedor = senhadevedor;
-    }
-
     public Boolean getDadosimpressora() {
         return dadosimpressora;
     }
@@ -640,6 +1111,14 @@ public class Emitente {
 
     public void setCodhistorico(String codhistorico) {
         this.codhistorico = codhistorico;
+    }
+
+    public Long getLemitedesconto() {
+        return lemitedesconto;
+    }
+
+    public void setLemitedesconto(Long lemitedesconto) {
+        this.lemitedesconto = lemitedesconto;
     }
 
     public Long getLimitedesconto() {
@@ -1026,11 +1505,11 @@ public class Emitente {
         this.versaomdfe = versaomdfe;
     }
 
-    public Long getNumerocopiacfe() {
+    public String getNumerocopiacfe() {
         return numerocopiacfe;
     }
 
-    public void setNumerocopiacfe(Long numerocopiacfe) {
+    public void setNumerocopiacfe(String numerocopiacfe) {
         this.numerocopiacfe = numerocopiacfe;
     }
 
@@ -1120,6 +1599,14 @@ public class Emitente {
 
     public void setTaxaimpostolucro(Long taxaimpostolucro) {
         this.taxaimpostolucro = taxaimpostolucro;
+    }
+
+    public Boolean getAlteraprecopgto() {
+        return alteraprecopgto;
+    }
+
+    public void setAlteraprecopgto(Boolean alteraprecopgto) {
+        this.alteraprecopgto = alteraprecopgto;
     }
 
     public Long getMenucereais() {
@@ -1370,14 +1857,6 @@ public class Emitente {
         this.confirmarimpressaonfce = confirmarimpressaonfce;
     }
 
-    public String getCodigomovimento() {
-        return codigomovimento;
-    }
-
-    public void setCodigomovimento(String codigomovimento) {
-        this.codigomovimento = codigomovimento;
-    }
-
     public Boolean getExibirdadospadrao() {
         return exibirdadospadrao;
     }
@@ -1424,6 +1903,78 @@ public class Emitente {
 
     public void setExibirdadoslaquent(Boolean exibirdadoslaquent) {
         this.exibirdadoslaquent = exibirdadoslaquent;
+    }
+
+    public String getCodigomovimento() {
+        return codigomovimento;
+    }
+
+    public void setCodigomovimento(String codigomovimento) {
+        this.codigomovimento = codigomovimento;
+    }
+
+    public Boolean getExibirdadosalencastro() {
+        return exibirdadosalencastro;
+    }
+
+    public void setExibirdadosalencastro(Boolean exibirdadosalencastro) {
+        this.exibirdadosalencastro = exibirdadosalencastro;
+    }
+
+    public Boolean getMantervalormaiorentrada() {
+        return mantervalormaiorentrada;
+    }
+
+    public void setMantervalormaiorentrada(Boolean mantervalormaiorentrada) {
+        this.mantervalormaiorentrada = mantervalormaiorentrada;
+    }
+
+    public Boolean getExibirdadosclauciane() {
+        return exibirdadosclauciane;
+    }
+
+    public void setExibirdadosclauciane(Boolean exibirdadosclauciane) {
+        this.exibirdadosclauciane = exibirdadosclauciane;
+    }
+
+    public Long getBancopadraoentrada() {
+        return bancopadraoentrada;
+    }
+
+    public void setBancopadraoentrada(Long bancopadraoentrada) {
+        this.bancopadraoentrada = bancopadraoentrada;
+    }
+
+    public Long getProfissaopadrao() {
+        return profissaopadrao;
+    }
+
+    public void setProfissaopadrao(Long profissaopadrao) {
+        this.profissaopadrao = profissaopadrao;
+    }
+
+    public Long getPgtopadrao() {
+        return pgtopadrao;
+    }
+
+    public void setPgtopadrao(Long pgtopadrao) {
+        this.pgtopadrao = pgtopadrao;
+    }
+
+    public Boolean getExibirdadostruck() {
+        return exibirdadostruck;
+    }
+
+    public void setExibirdadostruck(Boolean exibirdadostruck) {
+        this.exibirdadostruck = exibirdadostruck;
+    }
+
+    public Boolean getEmitedanfea4() {
+        return emitedanfea4;
+    }
+
+    public void setEmitedanfea4(Boolean emitedanfea4) {
+        this.emitedanfea4 = emitedanfea4;
     }
 
     public Boolean getExibirdadoscrol() {
@@ -1554,86 +2105,6 @@ public class Emitente {
         this.exibirdadoskadini = exibirdadoskadini;
     }
 
-    public String getEmailextranotas() {
-        return emailextranotas;
-    }
-
-    public void setEmailextranotas(String emailextranotas) {
-        this.emailextranotas = emailextranotas;
-    }
-
-    public Boolean getEmitedanfea4() {
-        return emitedanfea4;
-    }
-
-    public void setEmitedanfea4(Boolean emitedanfea4) {
-        this.emitedanfea4 = emitedanfea4;
-    }
-
-    public Long getProfissaopadrao() {
-        return profissaopadrao;
-    }
-
-    public void setProfissaopadrao(Long profissaopadrao) {
-        this.profissaopadrao = profissaopadrao;
-    }
-
-    public Long getPgtopadrao() {
-        return pgtopadrao;
-    }
-
-    public void setPgtopadrao(Long pgtopadrao) {
-        this.pgtopadrao = pgtopadrao;
-    }
-
-    public Boolean getExibirdadostruck() {
-        return exibirdadostruck;
-    }
-
-    public void setExibirdadostruck(Boolean exibirdadostruck) {
-        this.exibirdadostruck = exibirdadostruck;
-    }
-
-    public Boolean getExibirdadosmannes() {
-        return exibirdadosmannes;
-    }
-
-    public void setExibirdadosmannes(Boolean exibirdadosmannes) {
-        this.exibirdadosmannes = exibirdadosmannes;
-    }
-
-    public Boolean getExibirdadosalencastro() {
-        return exibirdadosalencastro;
-    }
-
-    public void setExibirdadosalencastro(Boolean exibirdadosalencastro) {
-        this.exibirdadosalencastro = exibirdadosalencastro;
-    }
-
-    public Boolean getMantervalormaiorentrada() {
-        return mantervalormaiorentrada;
-    }
-
-    public void setMantervalormaiorentrada(Boolean mantervalormaiorentrada) {
-        this.mantervalormaiorentrada = mantervalormaiorentrada;
-    }
-
-    public Boolean getExibirdadosclauciane() {
-        return exibirdadosclauciane;
-    }
-
-    public void setExibirdadosclauciane(Boolean exibirdadosclauciane) {
-        this.exibirdadosclauciane = exibirdadosclauciane;
-    }
-
-    public Long getBancopadraoentrada() {
-        return bancopadraoentrada;
-    }
-
-    public void setBancopadraoentrada(Long bancopadraoentrada) {
-        this.bancopadraoentrada = bancopadraoentrada;
-    }
-
     public Boolean getExibirdadoselizandra() {
         return exibirdadoselizandra;
     }
@@ -1642,12 +2113,28 @@ public class Emitente {
         this.exibirdadoselizandra = exibirdadoselizandra;
     }
 
+    public String getEmailextranotas() {
+        return emailextranotas;
+    }
+
+    public void setEmailextranotas(String emailextranotas) {
+        this.emailextranotas = emailextranotas;
+    }
+
     public Long getQuantidadefixapedido() {
         return quantidadefixapedido;
     }
 
     public void setQuantidadefixapedido(Long quantidadefixapedido) {
         this.quantidadefixapedido = quantidadefixapedido;
+    }
+
+    public Boolean getExibirdadosmannes() {
+        return exibirdadosmannes;
+    }
+
+    public void setExibirdadosmannes(Boolean exibirdadosmannes) {
+        this.exibirdadosmannes = exibirdadosmannes;
     }
 
     public Boolean getExibirdadosagrocampo() {
@@ -1714,6 +2201,14 @@ public class Emitente {
         this.exibirdadosmarcolin = exibirdadosmarcolin;
     }
 
+    public String getNomecertificadonfse() {
+        return nomecertificadonfse;
+    }
+
+    public void setNomecertificadonfse(String nomecertificadonfse) {
+        this.nomecertificadonfse = nomecertificadonfse;
+    }
+
     public Long getAliquotaiss() {
         return aliquotaiss;
     }
@@ -1722,11 +2217,113 @@ public class Emitente {
         this.aliquotaiss = aliquotaiss;
     }
 
-    public String getNomecertificadonfse() {
-        return nomecertificadonfse;
+    public String getSenhadesconto() {
+        return senhadesconto;
     }
 
-    public void setNomecertificadonfse(String nomecertificadonfse) {
-        this.nomecertificadonfse = nomecertificadonfse;
+    public void setSenhadesconto(String senhadesconto) {
+        this.senhadesconto = senhadesconto;
     }
+
+    public String getSenhaparcela() {
+        return senhaparcela;
+    }
+
+    public void setSenhaparcela(String senhaparcela) {
+        this.senhaparcela = senhaparcela;
+    }
+
+    public String getSenhaproduto() {
+        return senhaproduto;
+    }
+
+    public void setSenhaproduto(String senhaproduto) {
+        this.senhaproduto = senhaproduto;
+    }
+
+    public Cursor retornaEmitenteFiltradoCursor(Context context, Long codigoemitente) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM emitente where codigoemitente = " + codigoemitente, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        db.close();
+        return cursor;
+    }
+
+    public Emitente retornaEmitenteObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        Emitente emitente = new Emitente();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM emitente where codigoemitente = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(Emitente.class.getDeclaredFields()));
+
+        for (int f = 0; fieldList.size() != f; f++) {
+            if (fieldList.get(f).getName().toLowerCase().equals("alteradoandroid")){
+                fieldList.remove(f);
+            }
+            if (fieldList.get(f).getName().toLowerCase().equals("cadastroandroid")){
+                fieldList.remove(f);
+            }
+            if (fieldList.get(f).getName().toLowerCase().equals("deletadooandroid")){
+                fieldList.remove(f);
+            }
+        }
+
+        for (int j = 0; cursor.getCount() != j; j++) {
+           emitente = new Emitente();
+            for (int f = 0; fieldList.size() != f; f++) {
+                String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                String nomeCampo = fieldList.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldList.get(f), emitente, retorno);
+                    emitente = (Emitente) retCliente;
+                }
+            }
+        }
+        db.close();
+        return emitente;
+
+    }
+
+    public Boolean cadastraEmitente(Context context, Emitente emitente) {
+        Banco myDb = new Banco(context);
+        DadosBanco dadosBanco = new DadosBanco();
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(emitente.getClass().getDeclaredFields()));
+
+        for (int i = 0; fieldList.size() != i; i++) {
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), emitente, valores);
+        }
+
+        if (valores.get("codigoemitente") == null) {
+            db.insert("emitente", null, valores);
+            db.close();
+            valores.clear();
+            return true;
+        } else {
+            Cursor cursor = emitente.retornaEmitenteFiltradoCursor(context, Long.parseLong(valores.get("codigoemitente").toString()));
+
+            if (cursor.getCount() > 0) {
+                long retorno = db.update("emitente", valores, "codigoemitente = " + valores.get("codigoemitente").toString(), null);
+                db.close();
+                valores.clear();
+                return retorno != -1;
+            } else {
+                db.insert("emitente", null, valores);
+                db.close();
+                valores.clear();
+                return true;
+            }
+
+        }
+    }
+
 }

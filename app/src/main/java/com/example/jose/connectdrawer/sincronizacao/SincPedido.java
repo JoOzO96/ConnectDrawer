@@ -199,7 +199,7 @@ public class SincPedido {
                     pedido.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.alteraParcelas(context,controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    pedido.removePedidoAlteradaAndroid(context, "cadastroandroid");
+                    pedido.removePedidoAlteradaAndroid(context, "cadastroAndroid");
                     SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
                     sincPedidoProduto.iniciaenvio(context, ip);
                 }

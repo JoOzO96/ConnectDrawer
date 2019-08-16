@@ -24,6 +24,7 @@ public class Sincroniza {
         SincParcelas sincParcelas = new SincParcelas();
         SincIcms sincIcms = new SincIcms();
         final SincMac sincMac = new SincMac();
+        SincEmitente sincEmitente = new SincEmitente();
         String ip = null;
 //        Handler handler = Sessao.getHandler();
 //        handler.post(new Runnable() {
@@ -42,7 +43,9 @@ public class Sincroniza {
 //            Boolean retorno = sincCliente.iniciaAsinc(context, ip);
 
 //            sincPedido.iniciaSinc(context, ip);
-            sincCliente.iniciaAsinc(context,ip);
+
+            sincEmitente.iniciaAsinc(context, ip);
+            sincCliente.iniciaAsinc(context, ip);
             sincIcms.iniciaAsinc(context, ip);
             sincFormaPagamento.iniciaASinc(context, ip);
             sincVendedor.iniciaASinc(context, ip);

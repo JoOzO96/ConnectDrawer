@@ -171,15 +171,27 @@ public class GetSetDinamicoTelas extends Fragment {
 
     public String retornaValorEditText(View view, String nomeCampo) {
         String primeiro = nomeCampo.substring(0, 1);
-        primeiro = "tx" + primeiro.toUpperCase();
-        String nomeCampo1 = nomeCampo.substring(1, nomeCampo.length());
-        primeiro += nomeCampo1;
+        if (nomeCampo.substring(0,2).equals("au")){
+            primeiro = nomeCampo;
+        }else{
+            primeiro = "tx" + primeiro.toUpperCase();
+            String nomeCampo1 = nomeCampo.substring(1, nomeCampo.length());
+            primeiro += nomeCampo1;
+        }
+
+
         EditText valorId = (EditText) retornaIDCampo(view, primeiro);
         if (valorId != null) {
             if (valorId.getText() != null) {
-                return valorId.getText().toString();
+                if (nomeCampo.substring(0,2).equals("au")){
+                    return valorId.getText().toString().substring(0, valorId.getText().toString().indexOf("-") - 1);
+                }else{
+                    return valorId.getText().toString();
+                }
             }
         }
+
+
         return "";
     }
 

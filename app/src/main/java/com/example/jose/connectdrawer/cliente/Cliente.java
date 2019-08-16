@@ -694,10 +694,18 @@ public class Cliente {
         SQLiteDatabase db = myDb.getWritableDatabase();
         List<Field> fieldList = new ArrayList<>(Arrays.asList(cliente.getClass().getDeclaredFields()));
 
+        if (cliente.getCpf() == null){
+            cliente.setFisju("2");
+        }else{
+            cliente.setFisju("1");
+        }
+
         for (int i = 0 ; fieldList.size() != i ; i++){
 
             valores = dadosBanco.insereValoresContent(fieldList.get(i), cliente, valores);
         }
+
+
 
         if (valores.get("codigo") == null){
             long retorno = retornaMaiorCod(context);
@@ -874,7 +882,8 @@ public class Cliente {
         SQLiteDatabase db = myDb.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put("codigo", codigoServidor);
-        int retorno = db.update("cliente", values, "codigo = " + codigoAndroid, null);
+//        db.execSQL("UPDATE Cliente SET codigo = " + codigoAndroid + " where codigo = " + codigoAndroid);
+                int retorno = db.update("cliente", values, "codigo = " + codigoAndroid, null);
 
     }
 

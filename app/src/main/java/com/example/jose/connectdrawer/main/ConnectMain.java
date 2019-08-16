@@ -55,6 +55,20 @@ public class ConnectMain extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Sessao.setaContext(this);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Sessao.retornaListaCidade();
+            }
+        });
+
+        try {
+            thread.join(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread.start();
 
         toolbar.setTitle("");
         setSupportActionBar(toolbar);

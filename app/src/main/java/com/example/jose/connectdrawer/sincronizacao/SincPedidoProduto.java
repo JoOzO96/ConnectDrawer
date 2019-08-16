@@ -84,7 +84,6 @@ public class SincPedidoProduto {
                     for (int i = 0; controleCodigoList.size() != i; i++) {
 
                     }
-
                     pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
                 }
             }

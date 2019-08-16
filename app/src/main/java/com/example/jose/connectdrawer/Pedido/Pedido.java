@@ -57,6 +57,16 @@ public class Pedido {
     private Long codcaixa;
     private String servicosolicitado;
     private Long codstatus;
+
+    public Boolean getNfe() {
+        return nfe;
+    }
+
+    public void setNfe(Boolean nfe) {
+        this.nfe = nfe;
+    }
+
+    private Boolean nfe;
     private List<PedidoProduto> itensPedido;
 
     public Long getPedido() {
