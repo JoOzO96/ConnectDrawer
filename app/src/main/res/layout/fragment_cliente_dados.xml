@@ -303,6 +303,14 @@
 
         </Spinner>
 
+        <!--<Spinner-->
+            <!--android:id="@+id/spCodvendedor"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/spPosicao">-->
+
+        <!--</Spinner>-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

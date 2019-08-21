@@ -24,8 +24,11 @@ import android.graphics.Typeface;
 import com.example.jose.connectdrawer.Emitente.Emitente;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
+import com.example.jose.connectdrawer.Pedido.Pedido;
+import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.Produto.Produto;
 import com.example.jose.connectdrawer.cidade.Cidade;
+import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 
@@ -48,19 +51,47 @@ public class Bluetooth {
     private static final UUID BLUETOOTH_SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
 
-    public boolean imprimeA7(Context context, String codNota) {
+    public boolean imprimeA7(Context context, String codigo, Boolean pedido) {
         boolean imprimirnaA7 = false;
         imprimirnaA7 = checkBth(context);
-        Bitmap mBitmap = imprimeNota(context, codNota);
-        if (imprimirnaA7) {
 
-            ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
 
-            closeBth();
+        if (pedido) {
+            Bitmap mBitmap = imprimePedido(context, codigo);
+            if (imprimirnaA7) {
+                ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
+
+                closeBth();
+            } else {
+                CriaImpressao criaImpressao = new CriaImpressao();
+                try {
+                    criaImpressao.conectaImpressora(context);
+                    criaImpressao.imprimeimagem(mBitmap);
+                    criaImpressao.desconectaImpressora();
+                }catch (Exception e){
+
+                }
+            }
         } else {
-            CriaImpressao criaImpressao = new CriaImpressao();
-            criaImpressao.imprimeimagem(mBitmap);
+            Bitmap mBitmap = imprimeNota(context, codigo);
+            if (imprimirnaA7) {
+
+                ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
+
+                closeBth();
+            } else {
+                CriaImpressao criaImpressao = new CriaImpressao();
+                try {
+                    criaImpressao.conectaImpressora(context);
+                    criaImpressao.imprimeimagem(mBitmap);
+                    criaImpressao.desconectaImpressora();
+                }catch (Exception e){
+
+                }
+            }
+
         }
+
 
         return false;
     }
@@ -129,8 +160,9 @@ public class Bluetooth {
     public Bitmap imprimeNota(Context context, String codNota) {
         NotaFiscal notaFiscal = new NotaFiscal();
         Emitente emitente = new Emitente();
-        emitente = emitente.retornaEmitenteObjeto(context,1L);
-        NotaProduto notaProduto = new NotaProduto();;
+        emitente = emitente.retornaEmitenteObjeto(context, 1L);
+        NotaProduto notaProduto = new NotaProduto();
+        ;
         Cidade cidade = new Cidade();
         notaFiscal = notaFiscal.retornaObjetoNota(context, notaFiscal.retornaIdnota(context, codNota));
         cidade = cidade.retornaCidadeObjeto(context, notaFiscal.getCodcidade());
@@ -285,10 +317,10 @@ public class Bluetooth {
 //        g.drawText("CPF/CNPJ:06.354.976/0001-49 IE:1470049241", x, y, texto);
 
         y += size_text;
-        g.drawText("Emitente: " +emitente.getEmitente(), x, y, texto);
+        g.drawText("Emitente: " + emitente.getEmitente(), x, y, texto);
 
         y += size_text;
-        g.drawText("END.:" +emitente.getEndereco() + " N:" + emitente.getNumero(), x, y, texto);
+        g.drawText("END.:" + emitente.getEndereco() + " N:" + emitente.getNumero(), x, y, texto);
 //
 //        y += size_text;
 //        g.drawText("SALA 206 ED ATUALITTA", x, y, texto);
@@ -377,7 +409,7 @@ public class Bluetooth {
 
         y += size_text;
         tituloBold.setTextSize(15);
-        g.drawText(retornaFormatado("Desenvolvido por ConnectSys Informatica - (54) 3344 3036", (int) tituloBold.getTextSize(),CENTRALIZADO), x, y, tituloBold);
+        g.drawText(retornaFormatado("Desenvolvido por ConnectSys Informatica - (54) 3344 3036", (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
 
         y += size_text;
         g.drawText("               ", x, y, texto);
@@ -390,6 +422,176 @@ public class Bluetooth {
         y += size_text;
         g.drawText("               ", x, y, texto);
 
+
+        h = (int) (y / 64);
+        h = ((h + 1) * 64);
+        Bitmap BitmapReturn = Bitmap.createBitmap(BitmapDanfe.getWidth(), h, Bitmap.Config.RGB_565);
+        Canvas g3 = new Canvas(BitmapReturn);
+
+        g3.drawBitmap(BitmapDanfe, 0, 0, p);
+
+        return BitmapReturn;
+    }
+
+    public Bitmap imprimePedido(Context context, String codigo) {
+        Pedido pedido = new Pedido();
+        PedidoProduto pedidoProduto = new PedidoProduto();
+        Emitente emitente = new Emitente();
+        emitente = emitente.retornaEmitenteObjeto(context, 1L);
+        Cidade cidade = new Cidade();
+        Cliente cliente = new Cliente();
+        pedido = pedido.retornaPedidoObjeto(context, Long.parseLong(codigo));
+        cliente = cliente.retornaClienteObjeto(context, pedido.getCodcliente());
+        cidade = cidade.retornaCidadeObjeto(context, cliente.getCodcidade());
+
+
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        String dest_nome = Objects.toString(cliente.getNomecliente(), "");
+        String dest_endereco = Objects.toString(cliente.getEndereco(), "");
+        String dest_numero = Objects.toString(cliente.getNume(), "");
+        String dest_cep = Objects.toString(cliente.getCep(), "");
+        String dest_cidade = Objects.toString(cidade.getNomecidade() + " - " + cidade.getUf(), "");
+        String dest_cpfcnpj = "";
+        if (cliente.getCgc() == null) {
+            dest_cpfcnpj = Objects.toString(cliente.getCpf(), "");
+        } else {
+            dest_cpfcnpj = Objects.toString(cliente.getCgc(), "");
+        }
+        String dest_ie = Objects.toString(cliente.getIncest(), "");
+        List<PedidoProduto> pedidoProdutoList = pedidoProduto.retornaObjetoItensPedido(context, Long.parseLong(codigo));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        int i = 0;
+        int yinicial = 0;
+        int x = 0, y = 0, w = 576, h = w * 5;
+        int size_text = 20, size_legend = 16;
+        String chave = "";
+        Paint tituloBold = new Paint(Color.BLACK); //25 caracteres
+        tituloBold.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+        tituloBold.setTextSize((int) (size_text * 1.2));
+
+        Paint texto = new Paint(Color.BLACK); //47 caracteres
+        texto.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+        texto.setTextSize((int) (size_text));
+
+        Paint textoBold = new Paint(Color.BLACK); //31 caracteres
+        textoBold.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+        textoBold.setTextSize((int) (size_text));
+
+        Paint legenda = new Paint(Color.BLACK); //47 caracteres
+        legenda.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+        legenda.setTextSize(size_legend);
+
+        Paint legendaBold = new Paint(Color.BLACK); //43 caracteres
+        legendaBold.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+        legendaBold.setTextSize(size_legend);
+
+        Paint p = new Paint(Color.RED);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(2);
+
+
+        //------------------------------------------------
+        //Bitmap não rotacionado usado para DANFE
+        //------------------------------------------------
+        Bitmap BitmapDanfe = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+        Canvas g = new Canvas(BitmapDanfe);
+        g.drawColor(Color.WHITE);
+
+
+//		if (mBitmapLogo!=null)
+//		{
+//			x+=10;
+//			y+=10;
+//			g.drawBitmap(mBitmapLogo, x, y, p);
+//		}
+//
+//		x += mBitmapLogo.getWidth()+10;
+
+        y += size_text;
+        g.drawText(retornaFormatado(emitente.getEmitente(), (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
+
+        y += size_text;
+        g.drawText(retornaFormatado(emitente.getEndereco() + " " + emitente.getNumero(), (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
+//
+//        y += size_text;
+//        g.drawText("SALA 206 ED ATUALITTA", x, y, texto);
+
+        y += size_text;
+        g.drawText(retornaFormatado(emitente.getCep() + " " + emitente.getMunicipio() + " " + emitente.getUf(), (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
+
+        y += size_text;
+        g.drawText(retornaFormatado(emitente.getCnpjemi() + " " + emitente.getIeemi(), (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
+
+        g.drawRect(x, yinicial, w, y, p);
+
+        yinicial = y;
+
+        y += size_text;
+        g.drawText(retornaFormatado("DESTINATÁRIO", (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
+
+        g.drawLine(x, y, w, y, p);
+
+        y += size_text;
+        g.drawText("Destinatário: " + dest_nome, x, y, texto);
+
+        y += size_text;
+        g.drawText("Endereço: " + dest_endereco + " N°: " + dest_numero, x, y, texto);
+
+//        y += size_text;
+//        g.drawText(notaFiscal.getComplemento(), x, y, texto);
+
+        y += size_text;
+        g.drawText("Endereco: " + dest_cep + " " + dest_cidade, x, y, texto);
+
+        y += size_text;
+        g.drawText("CPF/CNPJ:" + dest_cpfcnpj + " IE:" + dest_ie, x, y, texto);
+
+        g.drawRect(x, yinicial, w, y, p);
+
+        yinicial = y;
+
+        y += size_text;
+        g.drawText(retornaFormatado("CÓD PROD" + (char) 254 + " DESCRIÇÃO", (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+
+        y += size_text;
+        g.drawText(retornaFormatado("UNID" + (char) 254 + "QUANT" + (char) 254 + "VALOR UNIT" + (char) 254 + "VALOR TOTAL", (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+        g.drawRect(x, yinicial, w, y, p);
+        yinicial = y;
+        for (int j = 0; j < pedidoProdutoList.size(); j++) {
+            Produto produto = new Produto();
+            produto = produto.retornaProdutoObjetoAtualizar(context, pedidoProdutoList.get(j).getCodproduto());
+            y += size_text;
+            g.drawText(retornaFormatado(pedidoProdutoList.get(j).getCodproduto() + (char) 254 + pedidoProdutoList.get(j).getDescri(), (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+
+            y += size_text;
+            g.drawText(retornaFormatado(produto.getUnid() + (char) 254 + decimalFormat.format(pedidoProdutoList.get(j).getQuantidade()) + (char) 254 + " R$ " + decimalFormat.format(pedidoProdutoList.get(j).getValorunitario()) + (char) 254 + " R$ " + decimalFormat.format(pedidoProdutoList.get(j).getValortotal()), (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+
+        }
+
+        y += size_text;
+        g.drawRect(x, yinicial, w, y, p);
+
+        yinicial = y;
+
+        y += size_text;
+        g.drawText("Total: " + decimalFormat.format(pedido.getValortotal()), x, y, tituloBold);
+
+        g.drawRect(x, yinicial, w, y, p);
+
+        y += size_text;
+        tituloBold.setTextSize(15);
+        g.drawText(retornaFormatado("Desenvolvido por ConnectSys Informatica - (54) 3344 3036", (int) tituloBold.getTextSize(), CENTRALIZADO), x, y, tituloBold);
+
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
+        y += size_text;
+        g.drawText("               ", x, y, texto);
 
 
         h = (int) (y / 64);

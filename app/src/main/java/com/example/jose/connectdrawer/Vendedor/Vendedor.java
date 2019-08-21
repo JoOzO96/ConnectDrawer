@@ -117,6 +117,38 @@ public class Vendedor {
         return vendedor;
     }
 
+    public List<Vendedor> retornaListaVendedor(Context context) {
+        Banco myDb = new Banco(context);
+        Vendedor vendedor = new Vendedor();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        List<Vendedor> vendedorList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM vendedor", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+
+        List<Field> fieldListVendedor = new ArrayList<>(Arrays.asList(Vendedor.class.getDeclaredFields()));
+
+        for (int j = 0; cursor.getCount() != j; j++) {
+            Vendedor vendedor1 = new Vendedor();
+
+            for (int f = 0; fieldListVendedor.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListVendedor.get(f));
+                String nomeCampo = fieldListVendedor.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retVendedor = getSetDinamico.insereField(fieldListVendedor.get(f), vendedor1, retorno);
+                    vendedor1 = (Vendedor) retVendedor;
+                }
+            }
+            vendedorList.add(vendedor1);
+        }
+        db.close();
+        return vendedorList;
+    }
+
     public Cursor retornaVendedorAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();

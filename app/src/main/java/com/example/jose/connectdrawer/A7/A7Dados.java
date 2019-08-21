@@ -26,7 +26,7 @@ public class A7Dados extends Fragment {
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                impressaoA7.imprimeA7(getContext(), "000000070");
+                impressaoA7.imprimeA7(getContext(), "000000070", false);
             }
         });
         return  view;

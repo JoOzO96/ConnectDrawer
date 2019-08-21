@@ -331,16 +331,56 @@ public class PedidoProduto {
         return cursor;
     }
 
+    public List<PedidoProduto> retornaObjetoItensPedido(Context context, Long codPedido){
+        Banco myDb = new Banco(context);
+        PedidoProduto pedidoProduto = new PedidoProduto();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where pedido = " + codPedido, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            List<Field> fieldList = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
+
+            for (int f = 0; fieldList.size() != f; f++) {
+                if (fieldList.get(f).getName().toLowerCase().equals("alteradoandroid")){
+                    fieldList.remove(f);
+                }
+                if (fieldList.get(f).getName().toLowerCase().equals("cadastroandroid")){
+                    fieldList.remove(f);
+                }
+                if (fieldList.get(f).getName().toLowerCase().equals("deletadooandroid")){
+                    fieldList.remove(f);
+                }
+            }
+
+            for (int j = 0; cursor.getCount() != j; j++) {
+                pedidoProduto = new PedidoProduto();
+                for (int f = 0; fieldList.size() != f; f++) {
+                    String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                    String nomeCampo = fieldList.get(f).getName().toLowerCase();
+                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                    if (retorno != null) {
+                        Object retornoFuncao = getSetDinamico.insereField(fieldList.get(f), pedidoProduto, retorno);
+                        pedidoProduto = (PedidoProduto) retornoFuncao;
+                    }
+                }
+                cursor.moveToNext();
+                pedidoProdutoList.add(pedidoProduto);
+            }
+        }
+        db.close();
+        return pedidoProdutoList;
+    }
+
     public Double retornaTotalPedido(Context context, Long codPedido){
         Banco myDb = new Banco(context);
         Double valorTotal = 0D;
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id, * FROM pedidoproduto where pedido = " + codPedido, null);
+        Cursor cursor = db.rawQuery("SELECT sum(valortotal) FROM pedidoproduto where pedido = " + codPedido, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            for(int i = 0 ; i < cursor.getCount() ; i++){
-                valorTotal += cursor.getDouble(cursor.getColumnIndex("valortotal"));
-            }
+            valorTotal = cursor.getDouble(0);
         }
 
         db.close();

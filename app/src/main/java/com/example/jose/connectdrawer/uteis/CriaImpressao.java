@@ -227,7 +227,7 @@ public class CriaImpressao {
 
         }
         // If the adapter is null, then Bluetooth is not supported
-        Thread.sleep(1500);
+        Thread.sleep(2500);
     }
 
     public void desconectaImpressora() throws InterruptedException {

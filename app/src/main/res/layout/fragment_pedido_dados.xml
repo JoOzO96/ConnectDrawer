@@ -13,8 +13,8 @@
             android:id="@+id/textInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true">
 
             <EditText
@@ -104,6 +104,13 @@
                 android:id="@+id/listItenspedido"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/valorTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="" />
         </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -112,8 +119,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/relList"
             android:layout_alignParentStart="true"
-            android:hint="Observação"
-            android:layout_alignParentLeft="true">
+            android:layout_alignParentLeft="true"
+            android:hint="Observação">
 
             <EditText
                 android:id="@+id/txObs"
@@ -122,12 +129,12 @@
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
-        <CheckBox android:id="@+id/ckNfe"
-            android:layout_below="@+id/textInputLayout1"
+        <CheckBox
+            android:id="@+id/ckNfe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Emitir NF-e"
-            />
+            android:layout_below="@+id/textInputLayout1"
+            android:text="Emitir NF-e" />
 
         <LinearLayout
             android:id="@+id/botoes"
@@ -139,9 +146,9 @@
                 android:id="@+id/btSalvar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/inputCodNacionalPais"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_weight="0.5"
                 android:text="Salvar" />
 
@@ -149,38 +156,41 @@
                 android:id="@+id/btCancelar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/inputCodNacionalPais"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_weight="0.5"
                 android:text="Cancelar" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_below="@+id/botoes"
             android:id="@+id/linear1"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/botoes">
+
             <TextView
                 android:id="@+id/porc_lucro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0%"
                 android:gravity="center"
-                />
+                android:text="0%" />
         </LinearLayout>
+
         <Button
-            android:layout_below="@+id/linear1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/btgerarparcelas"
-            android:text="Gerar Parcelas"/>
-        <Button
-            android:layout_below="@+id/btgerarparcelas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/linear1"
+            android:text="Gerar Parcelas" />
+
+        <Button
             android:id="@+id/btgerarnfe"
-            android:text="Gerar NF-e"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btgerarparcelas"
+            android:text="Gerar NF-e" />
     </RelativeLayout>
 
 

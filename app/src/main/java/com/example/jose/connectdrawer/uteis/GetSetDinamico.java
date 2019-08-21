@@ -370,6 +370,7 @@ public class GetSetDinamico {
                 notaProduto = notaProduto.cadastraNotaProduto(context, notaProduto);
 
                 listNotaProduto.add(notaProduto);
+                cursorPedidoProduto.moveToNext();
             }
 
 

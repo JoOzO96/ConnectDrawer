@@ -164,7 +164,7 @@ public class Cidade {
         Cidade cidade = new Cidade();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         SQLiteDatabase db = myDb.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cidade where codCidade = " + codigo, null);
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cidade where codcidade = " + codigo, null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }

@@ -96,6 +96,7 @@ public class PedidoDados extends Fragment {
     private Button btAdicionarItens;
     private ListView listItenspedido;
     private TextView porc_lucro;
+    private TextView valorTotal;
     private Long codClienteTela;
     private Double comissaoVendedor;
     private CheckBox ckNfe;
@@ -152,6 +153,7 @@ public class PedidoDados extends Fragment {
         btGerarParcelas = (Button) view.findViewById(R.id.btgerarparcelas);
         listItenspedido = (ListView) view.findViewById(R.id.listItenspedido);
         porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
+        valorTotal = (TextView) view.findViewById(R.id.valorTotal);
         ckNfe = (CheckBox) view.findViewById(R.id.ckNfe);
         spFormadepagamento = (Spinner) view.findViewById(R.id.spFormadepagamento);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
@@ -167,6 +169,7 @@ public class PedidoDados extends Fragment {
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
         final Context context = getContext();
         final Intent abreTelaImpressao = new Intent(getContext(), ImprimirTexto.class);
+        valorTotal.setText("Total do pedido: R$ 0,00");
 
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
         final Bundle bundle = this.getArguments();
@@ -181,6 +184,10 @@ public class PedidoDados extends Fragment {
             Cursor cursor = pedido.retornaPedidoFiltradaCursor(getContext(), codigoPedido);
             //TESTA SE O CURSOR RETORNOU ALGUM DADO
             if (cursor.getCount() > 0) {
+                PedidoProduto pedidoProduto1 = new PedidoProduto();
+                Double valorTotalPedido = pedidoProduto1.retornaTotalPedido(getContext(), codigoPedido);
+                valorTotal.setText("Total do pedido: R$ " + valorTotalPedido.toString().replace(".",","));
+
                 //CURSOR CONTEM UMA OU MAIS LINHA DE INFORMAÇÕES
                 for (int i = 0; fieldListPassar.size() != i; i++) {
 
@@ -543,6 +550,7 @@ public class PedidoDados extends Fragment {
             }
         });
 
+
         btCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -576,7 +584,7 @@ public class PedidoDados extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    SalvaPedido(view, 2L, false);
+                    SalvaPedido(view, 1L, false);
                     NotaFiscal notaFiscal = new NotaFiscal();
                     RetRetrofit retRetrofit = new RetRetrofit();
                     SincMac sincMac = new SincMac();
@@ -640,7 +648,7 @@ public class PedidoDados extends Fragment {
                                 List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
                                 listaNotaFiscal.add(notaFiscal);
                                 EnviaJson enviaJson = new EnviaJson();
-                                String url = "http://192.168.0.199:45455/api/notafiscal";
+                                String url = "http://"+ ip +"/api/notafiscal";
                                 List<ControleCodigo> retorno = null;
                                 String retornoEnvio = "";
                                 GsonBuilder gsonBuilder = new GsonBuilder()
@@ -671,7 +679,7 @@ public class PedidoDados extends Fragment {
                                         NotaProduto notaProduto = new NotaProduto();
                                         List<NotaProduto> notaProdutoList = notaProduto.retornaListaProdutosNota(context, notaFiscal.getCodnota());
                                         enviaJson = new EnviaJson();
-                                        url = "http://192.168.0.199:45455/api/notaproduto";
+                                        url = "http://" + ip + "/api/notaproduto";
                                         retorno = null;
                                         retornoEnvio = "";
                                         gsonRetorno = gson.toJson(notaProdutoList);
@@ -699,7 +707,7 @@ public class PedidoDados extends Fragment {
                                         }
                                         List<ParcelaNFE> parcelasNFEList = getSetDinamico.colocaDadosParcelasNFE(getContext(), notaFiscal, txPedido.getText().toString());
                                         enviaJson = new EnviaJson();
-                                        url = "http://192.168.0.199:45455/api/parcelasnfe";
+                                        url = "http://" + ip + "/api/parcelasnfe";
                                         retorno = null;
                                         retornoEnvio = "";
                                         gsonRetorno = gson.toJson(parcelasNFEList);
@@ -719,7 +727,7 @@ public class PedidoDados extends Fragment {
                                         }
 
                                         enviaJson = new EnviaJson();
-                                        url = "http://192.168.0.199:45455/api/envianfe";
+                                        url = "http://" + ip + "/api/envianfe";
                                         retorno = null;
                                         retornoEnvio = "";
                                         gsonRetorno = gson.toJson(notaFiscal);
@@ -750,7 +758,7 @@ public class PedidoDados extends Fragment {
                                             notaFiscalFinal.setIdnota(notaFiscal.getIdnota());
                                             notaFiscalFinal = notaFiscal.cadastraNota(context, notaFiscalFinal);
                                             Bluetooth impressaoA7 = new Bluetooth();
-                                            impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
+                                            impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(),false);
                                         } catch (Exception ex) {
                                             ex.printStackTrace();
                                             mostraToast.mostraToastLong(context, controle.getMensagem());
@@ -763,7 +771,7 @@ public class PedidoDados extends Fragment {
 
                             } else {
                                 Bluetooth impressaoA7 = new Bluetooth();
-                                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota());
+                                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(),false);
                             }
                         }
                     } else {
@@ -978,7 +986,7 @@ public class PedidoDados extends Fragment {
             pedido.setData(new Date());
 
             Double valorTotalPedido = pedidoProduto.retornaTotalPedido(getContext(), pedido.getPedido());
-
+            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
             pedido.setValortotal(valorTotalPedido);
 
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
@@ -1103,7 +1111,7 @@ public class PedidoDados extends Fragment {
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date());
             Double valorTotalPedido = pedidoProduto.retornaTotalPedido(getContext(), pedido.getPedido());
-
+            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
             pedido.setValortotal(valorTotalPedido);
 
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
@@ -1166,78 +1174,82 @@ public class PedidoDados extends Fragment {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
-                CriaImpressao impressao = new CriaImpressao();
 
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                Date d = new Date();
-                Cliente cliente = new Cliente();
-                Cidade cidade = new Cidade();
-                Vendedor vendedor = new Vendedor();
-                PedidoProduto pedidoProduto = new PedidoProduto();
-                List<PedidoProduto> pedidoProdutoLista = new ArrayList<>();
-                cliente = cliente.retornaClienteObjeto(getContext(), pedido.getCodcliente());
-                cidade = cidade.retornaCidadeObjeto(getContext(), cliente.getCodcidade());
-                vendedor = vendedor.retornaVendedorObjeto(getContext(), pedido.getCodvendedor());
-                pedidoProdutoLista = pedidoProduto.retornaPedidoProdutoObjeto(getContext(), pedido.getPedido());
-                try {
-                    impressao.conectaImpressora(getContext());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    CriaEmail criaEmail = new CriaEmail();
-                    Mac mac = new Mac();
-                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                }
-                impressao.imprime("KADINI E KADINI LTDA", 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("RUA MANOEL TEIXEIRA, 108", 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("TAPEJARA - RS - CEP:99950-000", 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
 
-                impressao.imprime("DATA:" + format.format(pedido.getData()) + "@ FECH:" + format.format(pedido.getData()), 0, 0, 0, 0, BORDAS);
-
-                if (pedido.getCodcliente() != 1L) {
-                    impressao.imprime("CLI.:" + pedido.getCodcliente() + " - " + pedido.getNome(), 0, 0, 0, 0, ESQUERDA);
-                    if (cliente.getCpf().length() > 0) {
-                        impressao.imprime("CNPJ: " + "@ CPF:" + cliente.getCpf(), 0, 0, 0, 0, BORDAS);
-                    } else {
-                        impressao.imprime("CNPJ:" + cliente.getCgc() + "@ CPF: ", 0, 0, 0, 0, BORDAS);
-                    }
-                    impressao.imprime("IE..:" + cliente.getIncest() + "@RG: " + cliente.getIdentidade(), 0, 0, 0, 0, BORDAS);
-                    impressao.imprime("CID.:" + cidade.getNomecidade() + " - " + cidade.getUf(), 0, 0, 0, 0, ESQUERDA);
-                    impressao.imprime("BAIR:" + cliente.getBairro() + "@CEP: " + cliente.getCep(), 0, 0, 0, 0, BORDAS);
-                    impressao.imprime("END.:" + cliente.getEndereco(), 0, 0, 0, 0, ESQUERDA);
-                    impressao.imprime("FONE:" + cliente.getTelefone(), 0, 0, 0, 0, ESQUERDA);
-                }
-                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("PEDIDO " + pedido.getPedido(), 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("NAO E DOCUMENTO FISCAL", 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("VEND:" + vendedor.getCodvendedor() + "-" + vendedor.getNomevendedor() + "@ NR. ITENS:" + pedidoProdutoLista.size(), 0, 0, 0, 0, BORDAS);
-                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("       ITEM           DESCRICAO           UN", 0, 0, 0, 0, ESQUERDA);
-                impressao.imprime("    QNT.     V. UNIT.       DESC.        TOTAL", 0, 0, 0, 0, ESQUERDA);
-                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
-
-                Double somaitem = 0D;
-                for (int i = 0; pedidoProdutoLista.size() > i; i++) {
-                    impressao.imprime(1 + i + "@" + pedidoProdutoLista.get(i).getCodproduto() + "-" + pedidoProdutoLista.get(i).getDescri() + "@UN", 0, 0, 0, 0, BORDAS);
-                    impressao.imprime("      " + pedidoProdutoLista.get(i).getQuantidade() + "     " + pedidoProdutoLista.get(i).getValorunitario() + "   " + pedidoProdutoLista.get(i).getDesvalor() + "    " + +pedidoProdutoLista.get(i).getValortotal(), 0, 0, 0, 0, ESQUERDA);
-
-                    somaitem += pedidoProdutoLista.get(i).getValortotal();
-                }
-                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
-                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO);
-                Bluetooth bluetooth = new Bluetooth();
-                impressao.imprimeimagem(bluetooth.imprimeNota(getContext(), "000000070"));
-
-                impressao.avanco(2);
-
-                try {
-                    impressao.desconectaImpressora();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    CriaEmail criaEmail = new CriaEmail();
-                    Mac mac = new Mac();
-                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
-                }
+                Bluetooth impressaoA7 = new Bluetooth();
+                impressaoA7.imprimeA7(getContext(), pedido.getPedido().toString(),true);
+//                CriaImpressao impressao = new CriaImpressao();
+//
+//                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//                Date d = new Date();
+//                Cliente cliente = new Cliente();
+//                Cidade cidade = new Cidade();
+//                Vendedor vendedor = new Vendedor();
+//                PedidoProduto pedidoProduto = new PedidoProduto();
+//                List<PedidoProduto> pedidoProdutoLista = new ArrayList<>();
+//                cliente = cliente.retornaClienteObjeto(getContext(), pedido.getCodcliente());
+//                cidade = cidade.retornaCidadeObjeto(getContext(), cliente.getCodcidade());
+//                vendedor = vendedor.retornaVendedorObjeto(getContext(), pedido.getCodvendedor());
+//                pedidoProdutoLista = pedidoProduto.retornaPedidoProdutoObjeto(getContext(), pedido.getPedido());
+//                try {
+//                    impressao.conectaImpressora(getContext());
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                    CriaEmail criaEmail = new CriaEmail();
+//                    Mac mac = new Mac();
+//                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+//                }
+//                impressao.imprime("KADINI E KADINI LTDA", 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("RUA MANOEL TEIXEIRA, 108", 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("TAPEJARA - RS - CEP:99950-000", 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+//
+//                impressao.imprime("DATA:" + format.format(pedido.getData()) + "@ FECH:" + format.format(pedido.getData()), 0, 0, 0, 0, BORDAS);
+//
+//                if (pedido.getCodcliente() != 1L) {
+//                    impressao.imprime("CLI.:" + pedido.getCodcliente() + " - " + pedido.getNome(), 0, 0, 0, 0, ESQUERDA);
+//                    if (cliente.getCpf().length() > 0) {
+//                        impressao.imprime("CNPJ: " + "@ CPF:" + cliente.getCpf(), 0, 0, 0, 0, BORDAS);
+//                    } else {
+//                        impressao.imprime("CNPJ:" + cliente.getCgc() + "@ CPF: ", 0, 0, 0, 0, BORDAS);
+//                    }
+//                    impressao.imprime("IE..:" + cliente.getIncest() + "@RG: " + cliente.getIdentidade(), 0, 0, 0, 0, BORDAS);
+//                    impressao.imprime("CID.:" + cidade.getNomecidade() + " - " + cidade.getUf(), 0, 0, 0, 0, ESQUERDA);
+//                    impressao.imprime("BAIR:" + cliente.getBairro() + "@CEP: " + cliente.getCep(), 0, 0, 0, 0, BORDAS);
+//                    impressao.imprime("END.:" + cliente.getEndereco(), 0, 0, 0, 0, ESQUERDA);
+//                    impressao.imprime("FONE:" + cliente.getTelefone(), 0, 0, 0, 0, ESQUERDA);
+//                }
+//                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("PEDIDO " + pedido.getPedido(), 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("NAO E DOCUMENTO FISCAL", 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("VEND:" + vendedor.getCodvendedor() + "-" + vendedor.getNomevendedor() + "@ NR. ITENS:" + pedidoProdutoLista.size(), 0, 0, 0, 0, BORDAS);
+//                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("       ITEM           DESCRICAO           UN", 0, 0, 0, 0, ESQUERDA);
+//                impressao.imprime("    QNT.     V. UNIT.       DESC.        TOTAL", 0, 0, 0, 0, ESQUERDA);
+//                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+//
+//                Double somaitem = 0D;
+//                for (int i = 0; pedidoProdutoLista.size() > i; i++) {
+//                    impressao.imprime(1 + i + "@" + pedidoProdutoLista.get(i).getCodproduto() + "-" + pedidoProdutoLista.get(i).getDescri() + "@UN", 0, 0, 0, 0, BORDAS);
+//                    impressao.imprime("      " + pedidoProdutoLista.get(i).getQuantidade() + "     " + pedidoProdutoLista.get(i).getValorunitario() + "   " + pedidoProdutoLista.get(i).getDesvalor() + "    " + +pedidoProdutoLista.get(i).getValortotal(), 0, 0, 0, 0, ESQUERDA);
+//
+//                    somaitem += pedidoProdutoLista.get(i).getValortotal();
+//                }
+//                impressao.imprime(impressao.adicionaCaracter("", "-", 48L), 0, 0, 0, 0, CENTRALIZADO);
+//                impressao.imprime("VALOR TOTAL: " + somaitem, 0, 0, 0, 0, CENTRALIZADO);
+//                Bluetooth bluetooth = new Bluetooth();
+//                impressao.imprimeimagem(bluetooth.imprimeNota(getContext(), "000000070"));
+//
+//                impressao.avanco(2);
+//
+//                try {
+//                    impressao.desconectaImpressora();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                    CriaEmail criaEmail = new CriaEmail();
+//                    Mac mac = new Mac();
+//                    criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), e.getMessage());
+//                }
 
 
 //                            texto += linhaImpressao.adicionaCaracter("KADINI E KADINI LTDA", " ", 48L);
