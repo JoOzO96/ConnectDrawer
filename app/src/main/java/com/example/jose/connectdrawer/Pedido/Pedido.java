@@ -22,41 +22,501 @@ import java.util.List;
  */
 
 public class Pedido {
-    private Long pedido;
-    private Long codemitente;
-    private Long codcliente;
-    private Date data;
-    private String codvendedor;
-    private String formadepagamento;
-    private Double frete;
-    private Double valortotal;
-    private Double entrada;
-    private String orpedi;
-    private Long codbanco;
-    private String obs;
-    private Long desconto;
-    private String nome;
-    private Double total;
-    private Date venci1;
-    private Double valor1;
-    private Long dias;
-    private Long juro;
-    private Boolean simnao;
-    private Long pgto;
-    private String cheque;
-    private Date data1;
-    private String notafisca;
-    private Long via;
-    private Boolean baixa;
-    private String veiculo;
-    private String placa;
-    private String ano;
-    private Long nparce;
-    private Long codinstituicao;
-    private String nfc;
-    private Long codcaixa;
-    private String servicosolicitado;
-    private Long codstatus;
+
+    Long pedido;
+    Long codpedido;
+    Long codcliente;
+    Date data;
+    String codvendedor;
+    String formadepagamento;
+    Double frete;
+    Double valortotal;
+    Double entrada;
+    String orpedi;
+    Long codbanco;
+    String obs;
+    Long desconto;
+    String nome;
+    Double total;
+    Date venci1;
+    Double valor1;
+    Long dias;
+    Long juro;
+    Boolean simnao;
+    Long pgto;
+    String cheque;
+    Date data1;
+    String notafisca;
+    Long via;
+    Boolean baixa;
+    String veiculo;
+    String placa;
+    String ano;
+    Long nparce;
+    Long codinstituiCao;
+    String nfc;
+    Long dife;
+    Double comis;
+    Boolean nfe;
+    Double vpago;
+    Double troco;
+    String codhistorico;
+    Long descvalor;
+    Long codemitente;
+    String codmecanico;
+    Double valorservico;
+    Long descoservico;
+    Boolean juntapedido;
+    String km;
+    Long nparc;
+    String ncf;
+    Double comi;
+    Long desvalor;
+    String cpf;
+    Long parce;
+    String impressora;
+    Long inicialp;
+    Long finalp;
+    Long totalp;
+    Boolean gerabloqueto;
+    Boolean gerabloqueto1;
+    Long codplanocontas;
+    String codcentrocustos;
+    Boolean documento;
+    String codproduto;
+    Boolean mensagem;
+    Boolean estornop;
+    Long codstatus;
+    Boolean baixaf;
+    Long acreboleto;
+    String aparelho;
+    String defeito;
+    Long pedidoreferencia;
+    String enderecopedido;
+    Boolean nfce;
+    Boolean nfcee;
+    Long codcaixa;
+    Boolean juridica;
+    String ajuste;
+    Long dataentrega;
+    String servicosolicitado;
+    String nnotaservico;
+    Long codbandeira;
+    Boolean orcamentofinalizado;
+    String coddigitador;
+    Long horasdemotor;
+    Long horasdetrilha;
+    Boolean especial;
+    String rota;
+    Boolean geradoautomatico;
+
+    public Long getCodpedido() {
+        return codpedido;
+    }
+
+    public void setCodpedido(Long codpedido) {
+        this.codpedido = codpedido;
+    }
+
+    public Long getCodinstituiCao() {
+        return codinstituiCao;
+    }
+
+    public void setCodinstituiCao(Long codinstituiCao) {
+        this.codinstituiCao = codinstituiCao;
+    }
+
+    public Long getDife() {
+        return dife;
+    }
+
+    public void setDife(Long dife) {
+        this.dife = dife;
+    }
+
+    public Double getComis() {
+        return comis;
+    }
+
+    public void setComis(Double comis) {
+        this.comis = comis;
+    }
+
+    public Double getVpago() {
+        return vpago;
+    }
+
+    public void setVpago(Double vpago) {
+        this.vpago = vpago;
+    }
+
+    public Double getTroco() {
+        return troco;
+    }
+
+    public void setTroco(Double troco) {
+        this.troco = troco;
+    }
+
+    public String getCodhistorico() {
+        return codhistorico;
+    }
+
+    public void setCodhistorico(String codhistorico) {
+        this.codhistorico = codhistorico;
+    }
+
+    public Long getDescvalor() {
+        return descvalor;
+    }
+
+    public void setDescvalor(Long descvalor) {
+        this.descvalor = descvalor;
+    }
+
+    public String getCodmecanico() {
+        return codmecanico;
+    }
+
+    public void setCodmecanico(String codmecanico) {
+        this.codmecanico = codmecanico;
+    }
+
+    public Double getValorservico() {
+        return valorservico;
+    }
+
+    public void setValorservico(Double valorservico) {
+        this.valorservico = valorservico;
+    }
+
+    public Long getDescoservico() {
+        return descoservico;
+    }
+
+    public void setDescoservico(Long descoservico) {
+        this.descoservico = descoservico;
+    }
+
+    public Boolean getJuntapedido() {
+        return juntapedido;
+    }
+
+    public void setJuntapedido(Boolean juntapedido) {
+        this.juntapedido = juntapedido;
+    }
+
+    public String getKm() {
+        return km;
+    }
+
+    public void setKm(String km) {
+        this.km = km;
+    }
+
+    public Long getNparc() {
+        return nparc;
+    }
+
+    public void setNparc(Long nparc) {
+        this.nparc = nparc;
+    }
+
+    public String getNcf() {
+        return ncf;
+    }
+
+    public void setNcf(String ncf) {
+        this.ncf = ncf;
+    }
+
+    public Double getComi() {
+        return comi;
+    }
+
+    public void setComi(Double comi) {
+        this.comi = comi;
+    }
+
+    public Long getDesvalor() {
+        return desvalor;
+    }
+
+    public void setDesvalor(Long desvalor) {
+        this.desvalor = desvalor;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public Long getParce() {
+        return parce;
+    }
+
+    public void setParce(Long parce) {
+        this.parce = parce;
+    }
+
+    public String getImpressora() {
+        return impressora;
+    }
+
+    public void setImpressora(String impressora) {
+        this.impressora = impressora;
+    }
+
+    public Long getInicialp() {
+        return inicialp;
+    }
+
+    public void setInicialp(Long inicialp) {
+        this.inicialp = inicialp;
+    }
+
+    public Long getFinalp() {
+        return finalp;
+    }
+
+    public void setFinalp(Long finalp) {
+        this.finalp = finalp;
+    }
+
+    public Long getTotalp() {
+        return totalp;
+    }
+
+    public void setTotalp(Long totalp) {
+        this.totalp = totalp;
+    }
+
+    public Boolean getGerabloqueto() {
+        return gerabloqueto;
+    }
+
+    public void setGerabloqueto(Boolean gerabloqueto) {
+        this.gerabloqueto = gerabloqueto;
+    }
+
+    public Boolean getGerabloqueto1() {
+        return gerabloqueto1;
+    }
+
+    public void setGerabloqueto1(Boolean gerabloqueto1) {
+        this.gerabloqueto1 = gerabloqueto1;
+    }
+
+    public Long getCodplanocontas() {
+        return codplanocontas;
+    }
+
+    public void setCodplanocontas(Long codplanocontas) {
+        this.codplanocontas = codplanocontas;
+    }
+
+    public String getCodcentrocustos() {
+        return codcentrocustos;
+    }
+
+    public void setCodcentrocustos(String codcentrocustos) {
+        this.codcentrocustos = codcentrocustos;
+    }
+
+    public Boolean getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Boolean documento) {
+        this.documento = documento;
+    }
+
+    public String getCodproduto() {
+        return codproduto;
+    }
+
+    public void setCodproduto(String codproduto) {
+        this.codproduto = codproduto;
+    }
+
+    public Boolean getMensagem() {
+        return mensagem;
+    }
+
+    public void setMensagem(Boolean mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    public Boolean getEstornop() {
+        return estornop;
+    }
+
+    public void setEstornop(Boolean estornop) {
+        this.estornop = estornop;
+    }
+
+    public Boolean getBaixaf() {
+        return baixaf;
+    }
+
+    public void setBaixaf(Boolean baixaf) {
+        this.baixaf = baixaf;
+    }
+
+    public Long getAcreboleto() {
+        return acreboleto;
+    }
+
+    public void setAcreboleto(Long acreboleto) {
+        this.acreboleto = acreboleto;
+    }
+
+    public String getAparelho() {
+        return aparelho;
+    }
+
+    public void setAparelho(String aparelho) {
+        this.aparelho = aparelho;
+    }
+
+    public String getDefeito() {
+        return defeito;
+    }
+
+    public void setDefeito(String defeito) {
+        this.defeito = defeito;
+    }
+
+    public Long getPedidoreferencia() {
+        return pedidoreferencia;
+    }
+
+    public void setPedidoreferencia(Long pedidoreferencia) {
+        this.pedidoreferencia = pedidoreferencia;
+    }
+
+    public String getEnderecopedido() {
+        return enderecopedido;
+    }
+
+    public void setEnderecopedido(String enderecopedido) {
+        this.enderecopedido = enderecopedido;
+    }
+
+    public Boolean getNfce() {
+        return nfce;
+    }
+
+    public void setNfce(Boolean nfce) {
+        this.nfce = nfce;
+    }
+
+    public Boolean getNfcee() {
+        return nfcee;
+    }
+
+    public void setNfcee(Boolean nfcee) {
+        this.nfcee = nfcee;
+    }
+
+    public Boolean getJuridica() {
+        return juridica;
+    }
+
+    public void setJuridica(Boolean juridica) {
+        this.juridica = juridica;
+    }
+
+    public String getAjuste() {
+        return ajuste;
+    }
+
+    public void setAjuste(String ajuste) {
+        this.ajuste = ajuste;
+    }
+
+    public Long getDataentrega() {
+        return dataentrega;
+    }
+
+    public void setDataentrega(Long dataentrega) {
+        this.dataentrega = dataentrega;
+    }
+
+    public String getNnotaservico() {
+        return nnotaservico;
+    }
+
+    public void setNnotaservico(String nnotaservico) {
+        this.nnotaservico = nnotaservico;
+    }
+
+    public Long getCodbandeira() {
+        return codbandeira;
+    }
+
+    public void setCodbandeira(Long codbandeira) {
+        this.codbandeira = codbandeira;
+    }
+
+    public Boolean getOrcamentofinalizado() {
+        return orcamentofinalizado;
+    }
+
+    public void setOrcamentofinalizado(Boolean orcamentofinalizado) {
+        this.orcamentofinalizado = orcamentofinalizado;
+    }
+
+    public String getCoddigitador() {
+        return coddigitador;
+    }
+
+    public void setCoddigitador(String coddigitador) {
+        this.coddigitador = coddigitador;
+    }
+
+    public Long getHorasdemotor() {
+        return horasdemotor;
+    }
+
+    public void setHorasdemotor(Long horasdemotor) {
+        this.horasdemotor = horasdemotor;
+    }
+
+    public Long getHorasdetrilha() {
+        return horasdetrilha;
+    }
+
+    public void setHorasdetrilha(Long horasdetrilha) {
+        this.horasdetrilha = horasdetrilha;
+    }
+
+    public Boolean getEspecial() {
+        return especial;
+    }
+
+    public void setEspecial(Boolean especial) {
+        this.especial = especial;
+    }
+
+    public String getRota() {
+        return rota;
+    }
+
+    public void setRota(String rota) {
+        this.rota = rota;
+    }
+
+    public Boolean getGeradoautomatico() {
+        return geradoautomatico;
+    }
+
+    public void setGeradoautomatico(Boolean geradoautomatico) {
+        this.geradoautomatico = geradoautomatico;
+    }
 
     public Boolean getNfe() {
         return nfe;
@@ -66,7 +526,6 @@ public class Pedido {
         this.nfe = nfe;
     }
 
-    private Boolean nfe;
     private List<PedidoProduto> itensPedido;
 
     public Long getPedido() {
@@ -291,14 +750,6 @@ public class Pedido {
 
     public void setNparce(Long nparce) {
         this.nparce = nparce;
-    }
-
-    public Long getCodinstituicao() {
-        return codinstituicao;
-    }
-
-    public void setCodinstituicao(Long codinstituicao) {
-        this.codinstituicao = codinstituicao;
     }
 
     public String getNfc() {

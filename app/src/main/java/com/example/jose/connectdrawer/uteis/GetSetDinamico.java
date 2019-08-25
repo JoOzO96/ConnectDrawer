@@ -197,15 +197,23 @@ public class GetSetDinamico {
                         notaFiscal.setCodnota(notaFiscal.formataCodNota(codigoBanco.toString()));
                     }
                 } else {
-                    notaFiscal = notaFiscal.retornaObjetoNota(context, notaFiscal.retornaIdnota(context, pedido.getNotafisca()));
+                    if (pedido.getNotafisca().equals("")) {
+                        if (codigoBanco > 0) {
+                            String codNota = notaFiscal.retornaCodNota(context);
+                            notaFiscal.setCodnota(notaFiscal.formataCodNota(codigoBanco.toString()));
+                        }
+                    } else {
+                        notaFiscal = notaFiscal.retornaObjetoNota(context, notaFiscal.retornaIdnota(context, pedido.getNotafisca()));
 
-                    notaFiscal.setCodnota(pedido.getNotafisca());
-                    if (notaFiscal.getProtocolo() != null){
-                        notaFiscal.setNomecliente("NOTA JA ENVIADA");
-                        return notaFiscal;
-                    }else{
+                        notaFiscal.setCodnota(pedido.getNotafisca());
+                        if (notaFiscal.getProtocolo() != null) {
+                            notaFiscal.setNomecliente("NOTA JA ENVIADA");
+                            return notaFiscal;
+                        } else {
 
+                        }
                     }
+
                 }
 
                 notaFiscal.setCodtipo(1L);

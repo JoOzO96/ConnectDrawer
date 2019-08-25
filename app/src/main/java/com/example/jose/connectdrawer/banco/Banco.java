@@ -137,6 +137,95 @@ public class Banco extends SQLiteOpenHelper {
                 "deletadoandroid boolean," +
                 "alteradoandroid boolean);";
         db.execSQL(sql);
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN pedido LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codpedido LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codcliente LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN data LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codvendedor TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN formadepagamento TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN frete DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN valortotal DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN entrada DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN orpedi TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codbanco LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN obs TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN desconto LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nome TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN total DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN venci1 LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN valor1 DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN dias LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN juro LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN simnao BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN pgto LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN cheque TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN data1 LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN notafisca TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN via LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN baixa BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN veiculo TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN placa TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN ano TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nparce LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codinstituiCao LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfc TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN dife LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN comis DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfe BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN vpago DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN troco DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codhistorico TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN descvalor LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codemitente LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codmecanico TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN valorservico DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN descoservico LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN juntapedido BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN km TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nparc LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN ncf TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN comi DOUBLE");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN desvalor LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN cpf TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN parce LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN impressora TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN inicialp LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN finalp LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN totalp LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN gerabloqueto BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN gerabloqueto1 BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codplanocontas LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codcentrocustos TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN documento BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codproduto TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN mensagem BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN estornop BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codstatus LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN baixaf BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN acreboleto LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN aparelho TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN defeito TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN pedidoreferencia LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN enderecopedido TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfce BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfcee BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codcaixa LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN juridica BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN ajuste TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN dataentrega LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN servicosolicitado TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN nnotaservico TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN codbandeira LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN orcamentofinalizado BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN coddigitador TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN horasdemotor LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN horasdetrilha LONG");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN especial BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN carga BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN enviadoemailnfse BOOLEAN");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN rota TEXT");
+        executaSQL(db, "ALTER TABLE pedido ADD COLUMN geradoautomatico BOOLEAN");
+
 
         sql = "CREATE TABLE vendedor (" +
                 "codvendedor text primary key," +
@@ -1482,5 +1571,108 @@ public class Banco extends SQLiteOpenHelper {
             db.execSQL(sql);
 
         }
+        if (oldVersion < 6) {
+
+
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN pedido LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codpedido LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codcliente LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN data LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codvendedor TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN formadepagamento TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN frete DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN valortotal DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN entrada DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN orpedi TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codbanco LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN obs TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN desconto LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nome TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN total DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN venci1 LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN valor1 DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN dias LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN juro LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN sim/nao BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN pgto LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN cheque TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN data1 LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN notafisca TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN via LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN baixa BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN veiculo TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN placa TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN ano TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nparce LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codinstituiCao LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfc TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN dife LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN comis DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfe BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN vpago DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN troco DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codhistorico TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN descvalor LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codemitente LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codmecanico TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN valorservico DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN descoservico LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN juntapedido BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN km TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nparc LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN ncf TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN comi DOUBLE");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN desvalor LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN cpf TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN parce LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN impressora TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN inicialp LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN finalp LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN totalp LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN gerabloqueto BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN gerabloqueto1 BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codplanocontas LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codcentrocustos TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN documento BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codproduto TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN mensagem BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN estornop BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codstatus LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN baixaf BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN acreboleto LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN aparelho TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN defeito TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN pedidoreferencia LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN enderecopedido TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfce BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nfcee BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codcaixa LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN juridica BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN ajuste TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN dataentrega LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN servicosolicitado TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN nnotaservico TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN codbandeira LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN orcamentofinalizado BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN coddigitador TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN horasdemotor LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN horasdetrilha LONG");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN especial BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN carga BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN enviadoemailnfse BOOLEAN");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN rota TEXT");
+            executaSQL(db, "ALTER TABLE pedido ADD COLUMN geradoautomatico BOOLEAN");
+        }
     }
+
+
+    public boolean executaSQL(SQLiteDatabase db, String sql) {
+        try {
+            db.execSQL(sql);
+        } catch (Exception e) {
+
+        }
+        return true;
+    }
+
 }

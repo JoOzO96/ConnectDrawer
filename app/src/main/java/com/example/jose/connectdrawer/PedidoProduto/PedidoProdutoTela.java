@@ -208,8 +208,11 @@ public class PedidoProdutoTela extends DialogFragment {
                         String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
                         String nomecampo = "";
                         nomecampo = fieldListPassar.get(i).getName().replace("tx", "").toLowerCase();
-
-                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "0", null);
+                        if (fieldListPassar.get(i).getName().equals("txquantidade")){
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", null);
+                        }else{
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "0", null);
+                        }
                     }
                 }
 
@@ -407,7 +410,11 @@ public class PedidoProdutoTela extends DialogFragment {
                     Double total;
                     txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                     txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
-                    quantidade = Double.parseDouble(txquantidade.getText().toString());
+                    if (txquantidade.getText().toString().equals("")){
+                        quantidade = 0D;
+                    }else {
+                        quantidade = Double.parseDouble(txquantidade.getText().toString());
+                    }
                     total = Double.parseDouble(txvalortotal.getText().toString().replace(",", "."));
                     valorunitario = total / quantidade;
                     if (after != 0 || count != 0) {
@@ -437,7 +444,11 @@ public class PedidoProdutoTela extends DialogFragment {
                             Double quantidade;
                             Double valorunitario;
                             Double total;
-                            quantidade = Double.parseDouble(txquantidade.getText().toString());
+                            if (txquantidade.getText().toString().equals("")){
+                                quantidade = 0D;
+                            }else {
+                                quantidade = Double.parseDouble(txquantidade.getText().toString());
+                            }
                             valorunitario = Double.parseDouble(txvalorunitario.getText().toString());
                             total = quantidade * valorunitario;
                             evitaLoop = true;
@@ -472,7 +483,11 @@ public class PedidoProdutoTela extends DialogFragment {
                         Double total;
                         txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                         txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
-                        quantidade = Double.parseDouble(txquantidade.getText().toString());
+                        if (txquantidade.getText().toString().equals("")){
+                            quantidade = 0D;
+                        }else {
+                            quantidade = Double.parseDouble(txquantidade.getText().toString());
+                        }
                         valorunitario = Double.parseDouble(txvalorunitario.getText().toString());
                         total = quantidade * valorunitario;
                         evitaLoop = true;
@@ -492,7 +507,11 @@ public class PedidoProdutoTela extends DialogFragment {
                 Double total;
                 txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
                 txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
-                quantidade = Double.parseDouble(txquantidade.getText().toString());
+                if (txquantidade.getText().toString().equals("")){
+                    quantidade = 0D;
+                }else {
+                    quantidade = Double.parseDouble(txquantidade.getText().toString());
+                }
                 valorunitario = Double.parseDouble(txvalorunitario.getText().toString().replace(",", "."));
                 total = quantidade * valorunitario;
                 if (Double.parseDouble(s.toString().replace(",", ".")) == Double.parseDouble(total.toString().replace(",", "."))) {
@@ -523,7 +542,11 @@ public class PedidoProdutoTela extends DialogFragment {
                             Double valorunitario;
                             Double total;
 
-                            quantidade = Double.parseDouble(txquantidade.getText().toString());
+                            if (txquantidade.getText().toString().equals("")){
+                                quantidade = 0D;
+                            }else {
+                                quantidade = Double.parseDouble(txquantidade.getText().toString());
+                            }
                             total = Double.parseDouble(txvalortotal.getText().toString().replace(",", "."));
                             valorunitario = total / quantidade;
                             if (valorunitario > 0) {

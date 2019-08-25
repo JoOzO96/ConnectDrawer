@@ -56,6 +56,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,6 +134,7 @@ public class PedidoDados extends Fragment {
     private Button btSalvar;
     private Button btCancelar;
     private Button btGerarNfe;
+//    private Button btApagarDadosNfe;
     private Button btGerarParcelas;
 
     public PedidoDados() {
@@ -166,11 +168,12 @@ public class PedidoDados extends Fragment {
         txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
+//        btApagarDadosNfe = (Button) view.findViewById(R.id.btapagardadosnfe);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
         final Context context = getContext();
         final Intent abreTelaImpressao = new Intent(getContext(), ImprimirTexto.class);
         valorTotal.setText("Total do pedido: R$ 0,00");
-
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
         final Bundle bundle = this.getArguments();
         Long codigoPedido = bundle.getLong("codigo");
@@ -186,7 +189,8 @@ public class PedidoDados extends Fragment {
             if (cursor.getCount() > 0) {
                 PedidoProduto pedidoProduto1 = new PedidoProduto();
                 Double valorTotalPedido = pedidoProduto1.retornaTotalPedido(getContext(), codigoPedido);
-                valorTotal.setText("Total do pedido: R$ " + valorTotalPedido.toString().replace(".",","));
+                valorTotal.setText("Total do pedido: R$ " + decimalFormat.format(valorTotalPedido));
+//                valorTotal.setText("Total do pedido: R$ " + valorTotalPedido.toString().replace(".",","));
 
                 //CURSOR CONTEM UMA OU MAIS LINHA DE INFORMAÇÕES
                 for (int i = 0; fieldListPassar.size() != i; i++) {
@@ -364,6 +368,7 @@ public class PedidoDados extends Fragment {
                         pedidoProdutoListar.setDescri(cursorPedidoProduto.getString(cursorPedidoProduto.getColumnIndex("descri")));
                         pedidoProdutoListar.setIdpedidoproduto(cursorPedidoProduto.getLong(cursorPedidoProduto.getColumnIndex("idpedidoproduto")));
                         pedidoProdutoListar.setCusto(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo")));
+                        pedidoProdutoListar.setValortotal(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("valortotal")));
                         custo += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo"));
                         valorVenda += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("valorunitario"));
                         pedidoProdutoList.add(pedidoProdutoListar);
@@ -888,7 +893,14 @@ public class PedidoDados extends Fragment {
                 }
             }
         });
-
+//        btApagarDadosNfe.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Pedido pedidoRemover = pedido.retornaPedidoObjeto(getContext(), Long.parseLong(txPedido.getText().toString()));
+//                pedidoRemover.setNotafisca("");
+//                pedidoRemover.cadastraPedido(getContext(), pedidoRemover);
+//            }
+//        });
         return view;
     }
 
@@ -984,9 +996,10 @@ public class PedidoDados extends Fragment {
             }
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date());
-
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
             Double valorTotalPedido = pedidoProduto.retornaTotalPedido(getContext(), pedido.getPedido());
-            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
+            valorTotal.setText("Total do pedido: R$ " + decimalFormat.format(valorTotalPedido));
+//            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
             pedido.setValortotal(valorTotalPedido);
 
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
@@ -1108,10 +1121,12 @@ public class PedidoDados extends Fragment {
             } else {
                 return -1;
             }
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
             pedido.setNome(cliente.getNomecliente());
             pedido.setData(new Date());
             Double valorTotalPedido = pedidoProduto.retornaTotalPedido(getContext(), pedido.getPedido());
-            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
+            valorTotal.setText("Total do pedido: R$ " + decimalFormat.format(valorTotalPedido));
+//            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
             pedido.setValortotal(valorTotalPedido);
 
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);

@@ -191,6 +191,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/btgerarparcelas"
             android:text="Gerar NF-e" />
+
+<!--        <Button-->
+<!--            android:id="@+id/btapagardadosnfe"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/btgerarnfe"-->
+<!--            android:text="Deletar Numero Nota" />-->
     </RelativeLayout>
 
 

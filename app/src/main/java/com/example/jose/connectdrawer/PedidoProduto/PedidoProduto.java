@@ -306,7 +306,7 @@ public class PedidoProduto {
 
     @Override
     public String toString() {
-        return codproduto + " - " + descri;
+        return codproduto + " - " + descri + " R$:" + valortotal;
     }
 
     public Cursor retornaPedidoProduto(Context context) {
