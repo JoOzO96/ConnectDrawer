@@ -50,7 +50,7 @@ public class Sincroniza {
             sincFormaPagamento.iniciaASinc(context, ip);
             sincVendedor.iniciaASinc(context, ip);
             sincProduto.iniciaASinc(context, ip);
-//            sincCidade.iniciaAsinc(context, ip);
+            sincCidade.iniciaAsinc(context, ip);
             sincCliente.iniciaenvio(context, ip);
             sincPedido.iniciaenvio(context, ip);
             sincPedidoProduto.iniciaenvio(context, ip);

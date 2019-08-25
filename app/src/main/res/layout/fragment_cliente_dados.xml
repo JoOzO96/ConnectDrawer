@@ -47,9 +47,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:hint="Nome Fantasia"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textInputLayout1">
+
+            <EditText
+                android:id="@+id/txFantasia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:hint="Endereço"
-            android:layout_below="@+id/textInputLayout1">
+            android:layout_below="@+id/textInputLayout2">
 
             <EditText
                 android:id="@+id/txEndereco"
@@ -61,13 +77,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout3"
+            android:id="@+id/textInputLayout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:hint="Numero"
-            android:layout_below="@+id/textInputLayout2">
+            android:layout_below="@+id/textInputLayout3">
 
             <EditText
                 android:id="@+id/txNume"
@@ -79,13 +95,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout4"
+            android:id="@+id/textInputLayout5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:hint="Bairro"
-            android:layout_below="@+id/textInputLayout3">
+            android:layout_below="@+id/textInputLayout4">
 
             <EditText
                 android:id="@+id/txBairro"
@@ -97,13 +113,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout5"
+            android:id="@+id/textInputLayout6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:hint="CEP"
-            android:layout_below="@+id/textInputLayout4">
+            android:layout_below="@+id/textInputLayout5">
 
             <EditText
                 android:id="@+id/txCep"
@@ -115,13 +131,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout6"
+            android:id="@+id/textInputLayout7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:hint="CPF / CNPJ"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textInputLayout5">
+            android:layout_below="@+id/textInputLayout6">
 
             <EditText
                 android:id="@+id/txCpfCnpj"
@@ -137,11 +153,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/consultarSefaz"
-            android:layout_below="@+id/textInputLayout6"
+            android:layout_below="@+id/textInputLayout7"
             android:text="Consultar no SEFAZ"/>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout7"
+            android:id="@+id/textInputLayout8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -155,7 +171,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:inputType="number" />
+                android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
 
         <!--<TextView-->
@@ -174,14 +190,14 @@
         <!--</Spinner>-->
 
         <AutoCompleteTextView
-            android:layout_below="@+id/textInputLayout7"
+            android:layout_below="@+id/textInputLayout8"
             android:id="@+id/auCidade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cidade"/>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout8"
+            android:id="@+id/textInputLayout9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -199,34 +215,16 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:hint="Celular"
-            android:layout_below="@+id/textInputLayout8">
-
-            <EditText
-                android:id="@+id/txCelular"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayout10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:hint="Telefone Trabalho"
+            android:hint="Celular"
             android:layout_below="@+id/textInputLayout9">
 
             <EditText
-                android:id="@+id/txFonetrab"
+                android:id="@+id/txCelular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -239,9 +237,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Telefone Trabalho"
+            android:layout_below="@+id/textInputLayout10">
+
+            <EditText
+                android:id="@+id/txFonetrab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:hint="Contato"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textInputLayout10">
+            android:layout_below="@+id/textInputLayout11">
 
             <EditText
                 android:id="@+id/txContatocobranca"
@@ -253,13 +269,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout12"
+            android:id="@+id/textInputLayout13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:hint="Email"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textInputLayout11">
+            android:layout_below="@+id/textInputLayout12">
 
             <EditText
                 android:id="@+id/txEmail"
@@ -271,13 +287,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout13"
+            android:id="@+id/textInputLayout14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:hint="Observações"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textInputLayout12">
+            android:layout_below="@+id/textInputLayout13">
 
             <EditText
                 android:id="@+id/txObs"
@@ -292,7 +308,7 @@
             android:id="@+id/txPosicao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textInputLayout13"
+            android:layout_below="@+id/textInputLayout14"
             android:text="Posicao"/>
 
         <Spinner

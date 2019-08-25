@@ -12,7 +12,7 @@ import android.util.Log;
 public class Banco extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "connect.db";
-    private static final int VERSAO = 5;
+    private static final int VERSAO = 6;
 
     public Banco(Context context) {
         super(context, NOME_BANCO, null, VERSAO);

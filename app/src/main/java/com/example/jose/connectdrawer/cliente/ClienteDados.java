@@ -54,6 +54,7 @@ public class ClienteDados extends Fragment {
     private EditText txFonetrab;
     private EditText txEmail;
     private EditText txObs;
+    private EditText txFantasia;
     private AutoCompleteTextView auCidade;
     //    private Spinner spCidade;
     private Spinner spPosicao;
@@ -334,7 +335,12 @@ public class ClienteDados extends Fragment {
                         auCidade = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(viewCliente, "auCidade");
                         ArrayAdapter<Cidade> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listaCidade);
                         auCidade.setAdapter(adapter);
-                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, listaCidade.get(0).toString(), null);
+                        if (listaCidade.isEmpty()){
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", null);
+                        }else{
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, listaCidade.get(0).toString(), null);
+                        }
+
                     } else if (fieldListPassar.get(i).getName().equals("spPosicao")) {
 
                         int posicao = 0;
