@@ -369,6 +369,7 @@ public class PedidoDados extends Fragment {
                         pedidoProdutoListar.setIdpedidoproduto(cursorPedidoProduto.getLong(cursorPedidoProduto.getColumnIndex("idpedidoproduto")));
                         pedidoProdutoListar.setCusto(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo")));
                         pedidoProdutoListar.setValortotal(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("valortotal")));
+                        pedidoProdutoListar.setQuantidade(cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("quantidade")));
                         custo += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("custo"));
                         valorVenda += cursorPedidoProduto.getDouble(cursorPedidoProduto.getColumnIndex("valorunitario"));
                         pedidoProdutoList.add(pedidoProdutoListar);
