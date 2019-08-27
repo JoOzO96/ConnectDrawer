@@ -200,9 +200,10 @@ public class SincPedido {
                     pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.alteraParcelas(context,controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
                     pedido.removePedidoAlteradaAndroid(context, "cadastroAndroid");
-                    SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
-                    sincPedidoProduto.iniciaenvio(context, ip);
+
                 }
+                SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
+                sincPedidoProduto.iniciaenvio(context, ip);
 
             }
         }

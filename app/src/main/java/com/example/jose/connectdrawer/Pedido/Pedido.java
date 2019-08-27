@@ -53,7 +53,7 @@ public class Pedido {
     String placa;
     String ano;
     Long nparce;
-    Long codinstituiCao;
+    Long codinstituicao;
     String nfc;
     Long dife;
     Double comis;
@@ -118,12 +118,12 @@ public class Pedido {
         this.codpedido = codpedido;
     }
 
-    public Long getCodinstituiCao() {
-        return codinstituiCao;
+    public Long getCodinstituicao() {
+        return codinstituicao;
     }
 
-    public void setCodinstituiCao(Long codinstituiCao) {
-        this.codinstituiCao = codinstituiCao;
+    public void setCodinstituicao(Long codinstituicao) {
+        this.codinstituicao = codinstituicao;
     }
 
     public Long getDife() {
