@@ -340,7 +340,7 @@ public class ClienteDados extends Fragment {
                         if (listaCidade.isEmpty()){
                             getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", null);
                         }else{
-                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, listaCidade.get(0).toString(), null);
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", null);
                         }
 
                     } else if (fieldListPassar.get(i).getName().equals("spPosicao")) {
