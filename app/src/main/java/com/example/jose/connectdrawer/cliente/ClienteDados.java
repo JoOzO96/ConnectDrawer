@@ -1,10 +1,12 @@
 package com.example.jose.connectdrawer.cliente;
 
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -362,7 +364,55 @@ public class ClienteDados extends Fragment {
         //CLIQUE PARA BUSCAR DADOS NO SEFAZ ATRAVÉZ DO SERVIDOR
         txCpfCnpj = (EditText) viewCliente.findViewById(R.id.txCpfCnpj);
 //        txCpfCnpj.setText("14412635000100");
+        txCpfCnpj.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b){
+                    if (txCpfCnpj.getText().length() == 14 || txCpfCnpj.getText().length() == 18){
+                        Cliente clienteTeste = new Cliente();
+                        clienteTeste = clienteTeste.retornaClienteObjetoCpfCnpj(getContext(), txCpfCnpj.getText().toString());
 
+                        if (clienteTeste != new Cliente()){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                            builder.setTitle("Cadastro duplicado");
+                            builder.setMessage("O cliente " + clienteTeste.getNomecliente() + ", já possui cadastro, deseja localizar?");
+
+                            final Cliente finalClienteTeste = clienteTeste;
+                            builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                   ClienteDados clienteDados1 = new ClienteDados();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong("codigo", finalClienteTeste.getCodigo());
+                                    clienteDados1.setArguments(bundle);
+                                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                    fragmentTransaction.replace(R.id.fragment_container, clienteDados1, clienteDados1.getTag()).commit();
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    }else{
+
+                    }
+
+                }
+            }
+        });
         //CLIQUE DO BOTAO SALVAR
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+import com.example.jose.connectdrawer.uteis.Mascara;
 import com.google.gson.annotations.JsonAdapter;
 
 import java.lang.reflect.Field;
@@ -767,6 +768,44 @@ public class Cliente {
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where codigo = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+        for (int j = 0; cursor.getCount() != j; j++) {
+            Cliente cliente1 = new Cliente();
+
+            for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
+                    cliente1 = (Cliente) retCliente;
+                }
+            }
+            cliente = cliente1;
+        }
+        db.close();
+        return cliente;
+
+    }
+
+    public Cliente retornaClienteObjetoCpfCnpj(Context context, String cpfcnpj) {
+        Banco myDb = new Banco(context);
+        Cliente cliente = new Cliente();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = null;
+        if (cpfcnpj.length() == 14) {
+            cpfcnpj = Mascara.unmask(cpfcnpj);
+            cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where cpf = '" + cpfcnpj + "'", null);
+        }else{
+            cpfcnpj = Mascara.unmask(cpfcnpj);
+            cursor = db.rawQuery("SELECT rowid _id,* FROM cliente where cgc = '" + cpfcnpj + "'", null);
+        }
+
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
