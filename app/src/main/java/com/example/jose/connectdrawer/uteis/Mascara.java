@@ -118,7 +118,7 @@ public class Mascara {
                 }
                 int i = 0;
                 for (char m : mask.toCharArray()) {
-                    if (m != '#'&& str.length() > old.length() ) {
+                    if (m != '#' && str.length() > old.length()) {
                         mascara += m;
                         continue;
                     }

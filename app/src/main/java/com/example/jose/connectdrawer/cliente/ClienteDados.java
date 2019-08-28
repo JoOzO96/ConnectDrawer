@@ -50,7 +50,6 @@ public class ClienteDados extends Fragment {
     private EditText txBairro;
     private EditText txNume;
     private EditText txCep;
-    private EditText txDataNasc;
     private EditText txTelefone;
     private EditText txCelular;
     private EditText txFonetrab;
@@ -60,7 +59,7 @@ public class ClienteDados extends Fragment {
     private AutoCompleteTextView auCidade;
     //    private Spinner spCidade;
     private Spinner spPosicao;
-    private Spinner spVendedor;
+    private Spinner spCodvendedor;
     private Button btSefaz;
     private Button btSalvar;
     private Button btCancelar;
@@ -130,12 +129,29 @@ public class ClienteDados extends Fragment {
                             String nomecampo = "";
                             nomecampo = fieldListPassar.get(i).getName().replace("tx", "").toLowerCase();
                             if (nomecampo.equals("cpfcnpj")) {
-                                if(cursor.getString(cursor.getColumnIndex("cpf")) != null){
-                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
-                                    getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", "###.###.###-##");
-                                }else{
+                                if (cursor.getString(cursor.getColumnIndex("cpf")) != null) {
+                                    if (cursor.getString(cursor.getColumnIndex("cpf")).equals("")) {
+                                        Object retorno = getSetDinamico.retornaValorCursor(tipo, "cgc", cursor);
+                                        if (retorno.equals("")) {
+                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", "###.###.###-##");
+                                        } else {
+                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "##.###.###/####-##");
+                                        }
+                                    } else {
+                                        Object retorno = cursor.getString(cursor.getColumnIndex("cpf")); //getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
+                                        if (retorno.equals("")) {
+                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", "###.###.###-##");
+                                        } else {
+                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "###.###.###-##");
+                                        }
+                                    }
+                                } else {
                                     Object retorno = getSetDinamico.retornaValorCursor(tipo, "cgc", cursor);
-                                    getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "##.###.###/####-##");
+                                    if (retorno.equals("")) {
+                                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", "###.###.###-##");
+                                    } else {
+                                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "##.###.###/####-##");
+                                    }
                                 }
 //                                if (cursor.getString(cursor.getColumnIndex("cpf")) != null) {
 //                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
@@ -240,7 +256,7 @@ public class ClienteDados extends Fragment {
                                 getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, listaCidade.get(posicao).toString(), null);
                             }
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
-                            if (fieldListPassar.get(i).getName().toLowerCase().equals("spposicao")){
+                            if (fieldListPassar.get(i).getName().toLowerCase().equals("spposicao")) {
 
                                 int posicao = 0;
 
@@ -260,23 +276,25 @@ public class ClienteDados extends Fragment {
                                     }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, fieldListPosicao, getContext(), posicao);
-                            }else if (fieldListPassar.get(i).getName().toLowerCase().equals("spvendedor")){
+                            } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spcodvendedor")) {
                                 Vendedor vendedor = new Vendedor();
                                 List<Vendedor> vendedorList = vendedor.retornaListaVendedor(getContext());
                                 List<String> stringList = new ArrayList<>();
                                 int posicao = 0;
-                                for (int k = 0; vendedorList.size() > k; k++) {
-                                    if (cursor.getString(cursor.getColumnIndex("codvendedor")).equals(vendedorList.get(k).getCodvendedor().toString())) {
-                                        posicao = k;
-                                        break;
+                                if (cursor.getString(cursor.getColumnIndex("codvendedor")) != null) {
+                                    for (int k = 0; vendedorList.size() > k; k++) {
+                                        if (cursor.getString(cursor.getColumnIndex("codvendedor")).equals(vendedorList.get(k).getCodvendedor().toString())) {
+                                            posicao = k;
+                                            break;
+                                        }
                                     }
-                                }
 
-                                for (int k = 0; vendedorList.size() > k; k++) {
-                                    stringList.add(vendedorList.get(k).toString());
-                                }
+                                    for (int k = 0; vendedorList.size() > k; k++) {
+                                        stringList.add(vendedorList.get(k).toString());
+                                    }
 
-                                getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, stringList, getContext(), posicao);
+                                    getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, stringList, getContext(), posicao);
+                                }
                             }
 
                         }
@@ -337,9 +355,9 @@ public class ClienteDados extends Fragment {
                         auCidade = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(viewCliente, "auCidade");
                         ArrayAdapter<Cidade> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listaCidade);
                         auCidade.setAdapter(adapter);
-                        if (listaCidade.isEmpty()){
+                        if (listaCidade.isEmpty()) {
                             getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", null);
-                        }else{
+                        } else {
                             getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", null);
                         }
 
@@ -354,6 +372,16 @@ public class ClienteDados extends Fragment {
                         fieldListPosicao.add("4 - Ruim");
                         posicao = 0;
                         getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, fieldListPosicao, getContext(), posicao);
+                    } else if (fieldListPassar.get(i).getName().toLowerCase().equals("spcodvendedor")) {
+                        Vendedor vendedor = new Vendedor();
+                        List<Vendedor> vendedorList = vendedor.retornaListaVendedor(getContext());
+                        List<String> stringList = new ArrayList<>();
+                        int posicao = 0;
+                        for (int k = 0; vendedorList.size() > k; k++) {
+                            stringList.add(vendedorList.get(k).toString());
+                        }
+                        getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, stringList, getContext(), posicao);
+
                     }
                 }
             }
@@ -367,12 +395,12 @@ public class ClienteDados extends Fragment {
         txCpfCnpj.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b){
-                    if (txCpfCnpj.getText().length() == 14 || txCpfCnpj.getText().length() == 18){
+                if (!b) {
+                    if (txCpfCnpj.getText().length() == 14 || txCpfCnpj.getText().length() == 18) {
                         Cliente clienteTeste = new Cliente();
                         clienteTeste = clienteTeste.retornaClienteObjetoCpfCnpj(getContext(), txCpfCnpj.getText().toString());
 
-                        if (clienteTeste != new Cliente()){
+                        if (clienteTeste.getNomecliente() != null) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                             builder.setTitle("Cadastro duplicado");
@@ -383,7 +411,7 @@ public class ClienteDados extends Fragment {
 
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                   ClienteDados clienteDados1 = new ClienteDados();
+                                    ClienteDados clienteDados1 = new ClienteDados();
                                     Bundle bundle = new Bundle();
                                     bundle.putLong("codigo", finalClienteTeste.getCodigo());
                                     clienteDados1.setArguments(bundle);
@@ -406,7 +434,7 @@ public class ClienteDados extends Fragment {
                             AlertDialog alert = builder.create();
                             alert.show();
                         }
-                    }else{
+                    } else {
 
                     }
 
@@ -456,6 +484,10 @@ public class ClienteDados extends Fragment {
                         if (nomecampo.equals("posicao")) {
                             nomecampo = "Posicao";
                             spPosicao = (Spinner) viewCliente.findViewById(R.id.spPosicao);
+                            valorCampo = getSetDinamicoTelas.retornaValorSpinner(viewCliente, nomecampo);
+                        } else if (nomecampo.equals("codvendedor")) {
+                            nomecampo = "Codvendedor";
+                            spPosicao = (Spinner) viewCliente.findViewById(R.id.spCodvendedor);
                             valorCampo = getSetDinamicoTelas.retornaValorSpinner(viewCliente, nomecampo);
                         } else {
                             valorCampo = getSetDinamicoTelas.retornaValorEditText(viewCliente, nomecampo);

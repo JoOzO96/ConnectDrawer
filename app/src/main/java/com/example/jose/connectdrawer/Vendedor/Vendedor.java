@@ -144,6 +144,7 @@ public class Vendedor {
                 }
             }
             vendedorList.add(vendedor1);
+            cursor.moveToNext();
         }
         db.close();
         return vendedorList;

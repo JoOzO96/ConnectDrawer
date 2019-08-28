@@ -305,7 +305,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <TextView
-            android:id="@+id/txPosicao"
+            android:id="@+id/Posicao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textInputLayout14"
@@ -315,22 +315,29 @@
             android:id="@+id/spPosicao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txPosicao">
+            android:layout_below="@id/Posicao">
 
         </Spinner>
 
-        <!--<Spinner-->
-            <!--android:id="@+id/spCodvendedor"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@id/spPosicao">-->
+        <TextView
+            android:id="@+id/Codvendedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spPosicao"
+            android:text="Vendedor"/>
 
-        <!--</Spinner>-->
+        <Spinner
+            android:id="@+id/spCodvendedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Codvendedor">
+
+        </Spinner>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/spPosicao">
+            android:layout_below="@id/spCodvendedor">
 
             <Button
                 android:id="@+id/btSalvar"
