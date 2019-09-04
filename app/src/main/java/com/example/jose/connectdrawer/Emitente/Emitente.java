@@ -50,7 +50,7 @@ public class Emitente {
     String senha;
     Long copiadanfe;
     String csosn;
-    Long perapro;
+    Double perapro;
     String user;
     Long modulo;
     Long cupomnfe;
@@ -529,11 +529,11 @@ public class Emitente {
         this.csosn = csosn;
     }
 
-    public Long getPerapro() {
+    public Double getPerapro() {
         return perapro;
     }
 
-    public void setPerapro(Long perapro) {
+    public void setPerapro(Double perapro) {
         this.perapro = perapro;
     }
 

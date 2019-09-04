@@ -252,7 +252,9 @@ public class ClienteDados extends Fragment {
                                         break;
                                     }
                                 }
-
+                                auCidade = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(viewCliente, "auCidade");
+                                ArrayAdapter<Cidade> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listaCidade);
+                                auCidade.setAdapter(adapter);
                                 getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, listaCidade.get(posicao).toString(), null);
                             }
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {

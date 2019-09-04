@@ -93,7 +93,7 @@ public class PedidoDados extends Fragment {
     private Spinner spCodcliente;
     //    private EditText txdata;
     private Spinner spCodvendedor;
-    private Spinner spFormadepagamento;
+    private Spinner spPgto;
     private Button btAdicionarItens;
     private ListView listItenspedido;
     private TextView porc_lucro;
@@ -157,7 +157,7 @@ public class PedidoDados extends Fragment {
         porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
         valorTotal = (TextView) view.findViewById(R.id.valorTotal);
         ckNfe = (CheckBox) view.findViewById(R.id.ckNfe);
-        spFormadepagamento = (Spinner) view.findViewById(R.id.spFormadepagamento);
+        spPgto = (Spinner) view.findViewById(R.id.spPgto);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
@@ -300,7 +300,7 @@ public class PedidoDados extends Fragment {
                                     }
                                 }
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
-                            } else if (fieldListPassar.get(i).getName().equals("spFormadepagamento")) {
+                            } else if (fieldListPassar.get(i).getName().equals("spPgto")) {
                                 //SPINNER DOS FORMAS DE PAGAMENTO
                                 FormaPagamento formaPagamento = new FormaPagamento();
                                 int posicao = 0;
@@ -334,7 +334,7 @@ public class PedidoDados extends Fragment {
                                 for (int k = 0; formaPagamentoList.size() != k; k++) {
                                     Integer codHifen = formaPagamentoList.get(k).indexOf("-");
                                     String codFormaPagamento = formaPagamentoList.get(k).substring(0, codHifen - 1);
-                                    if (codFormaPagamento.equals(cursor.getString(cursor.getColumnIndex("formadepagamento")))) {
+                                    if (codFormaPagamento.equals(cursor.getString(cursor.getColumnIndex("pgto")))) {
                                         posicao = k;
                                         break;
                                     }
@@ -474,7 +474,7 @@ public class PedidoDados extends Fragment {
                                 }
                             }
                             getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
-                        } else if (fieldListPassar.get(i).getName().equals("spFormadepagamento")) {
+                        } else if (fieldListPassar.get(i).getName().equals("spPgto")) {
                             //SPINNER DOS FORMAS DE PAGAMENTO
                             FormaPagamento formaPagamento = new FormaPagamento();
                             int posicao = 0;
@@ -565,7 +565,7 @@ public class PedidoDados extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_container, pedidoFragment, pedidoFragment.getTag()).commit();
             }
         });
-        spFormadepagamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spPgto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String pgto = formaPagamentoList.get(i);
@@ -930,8 +930,8 @@ public class PedidoDados extends Fragment {
                     nomeCampo = fieldListPedidoDados.get(f).getName();
                     if (nomeCampo.equals("spCodcliente")) {
                         nomeCampo = "codcliente";
-                    } else if (nomeCampo.equals("spFormadepagamento")) {
-                        nomeCampo = "formadepagamento";
+                    } else if (nomeCampo.equals("spPgto")) {
+                        nomeCampo = "pgto";
                     } else if (nomeCampo.equals("spCodvendedor")) {
                         nomeCampo = "codvendedor";
                     }
@@ -1002,7 +1002,7 @@ public class PedidoDados extends Fragment {
             valorTotal.setText("Total do pedido: R$ " + decimalFormat.format(valorTotalPedido));
 //            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
             pedido.setValortotal(valorTotalPedido);
-
+            pedido.setTotal(valorTotalPedido);
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
             Vendedor vendedor = new Vendedor();
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
@@ -1061,8 +1061,8 @@ public class PedidoDados extends Fragment {
                     nomeCampo = fieldListPedidoDados.get(f).getName();
                     if (nomeCampo.equals("spCodcliente")) {
                         nomeCampo = "codcliente";
-                    } else if (nomeCampo.equals("spFormadepagamento")) {
-                        nomeCampo = "formadepagamento";
+                    } else if (nomeCampo.equals("spPgto")) {
+                        nomeCampo = "pgto";
                     } else if (nomeCampo.equals("spCodvendedor")) {
                         nomeCampo = "codvendedor";
                     }

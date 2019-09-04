@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.support.annotation.RestrictTo;
 import android.util.Log;
 
+import com.example.jose.connectdrawer.Emitente.EmiteConfigura;
+import com.example.jose.connectdrawer.Emitente.Emitente;
 import com.example.jose.connectdrawer.Icms.Icms;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
@@ -20,6 +22,7 @@ import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -177,9 +180,14 @@ public class GetSetDinamico {
             NotaProduto notaProduto = new NotaProduto();
             PedidoProduto pedidoProduto = new PedidoProduto();
             Produto produto;
+            Emitente emitente = new Emitente();
+            EmiteConfigura emiteConfigura = new EmiteConfigura();
+            emitente = emitente.retornaEmitenteObjeto(context, 1L);
+            emiteConfigura = emiteConfigura.retornaEmiteConfiguraObjeto(context, 1L);
             List<Field> fieldsPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
             Cursor cursorPedido = pedido.retornaPedidoFiltradaCursor(context, Long.parseLong(numeroPedido));
             List<NotaProduto> notaProdutoList = new ArrayList<>();
+
             for (int i = 0; fieldsPedido.size() > i; i++) {
                 if (fieldsPedido.get(i).getName().toLowerCase().equals("$change") ||
                         fieldsPedido.get(i).getName().toLowerCase().equals("serialversionuid")) {
@@ -216,10 +224,9 @@ public class GetSetDinamico {
 
                 }
 
-                notaFiscal.setCodtipo(1L);
+                notaFiscal.setCodtipo(Long.parseLong(emiteConfigura.getCodnaturezavendadireta()));
                 notaFiscal.setCodtransportador(1L);
                 notaFiscal.setCodemitente(1L);
-                notaFiscal.setCodtipo(1L);
                 notaFiscal.setCodcliente(pedido.getCodcliente());
                 notaFiscal.setNomecliente(cliente.getNomecliente());
                 notaFiscal.setEmidesti("0");
@@ -297,6 +304,7 @@ public class GetSetDinamico {
         List<Field> fieldsPedidoProduto = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
         List<Field> fieldsProduto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
         Produto produto;
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
         NotaProduto notaProduto = new NotaProduto();
         notaProduto.limpaProdutos(context, notaFiscal.getCodnota());
         for (int i = 0; fieldsPedido.size() > i; i++) {
@@ -343,19 +351,17 @@ public class GetSetDinamico {
                 notaProduto.setValortotal(pedidoProduto.getValortotal());
                 notaProduto.setValornota(pedidoProduto.getValortotal() * icms.getPercen() / 100);
                 notaProduto.setValoripi(0D);
-                notaProduto.setAliqicms(Double.parseDouble(icms.getPercen().toString()));
                 notaProduto.setAliqipi(0D);
-
                 notaProduto.setCodicms(icms.getCodicms());
                 notaProduto.setPeso(0L);
                 notaProduto.setCfop(produto.getCfop());
-                notaProduto.setBicms(pedidoProduto.getValortotal());
-                notaProduto.setVicms(pedidoProduto.getValortotal() * icms.getPercen() / 100);
+                notaProduto.setBicms(Sessao.retornaFormatado(pedidoProduto.getValortotal()));
+                notaProduto.setVicms(Sessao.retornaFormatado(pedidoProduto.getValortotal() * 18 / 100));
                 notaProduto.setDescopro(0D);
                 if (produto.getMva() > 0) {
                     notaProduto.setMvap(produto.getMva().longValue());
-                    notaProduto.setVbcst((pedidoProduto.getValortotal() + (pedidoProduto.getValortotal() * produto.getMva() / 100)));
-                    notaProduto.setVsst((notaProduto.getVbcst() * 18 / 100) - notaProduto.getVicms());
+                    notaProduto.setVbcst(Sessao.retornaFormatado((pedidoProduto.getValortotal() + (pedidoProduto.getValortotal() * produto.getMva() / 100))));
+                    notaProduto.setVsst(Sessao.retornaFormatado((notaProduto.getVbcst() * 18 / 100) - notaProduto.getVicms()));
                 }
                 notaProduto.setVseguro(0D);
                 notaProduto.setDescri(produto.getMercadoria());

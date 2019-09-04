@@ -233,51 +233,63 @@ public class PedidoProdutoTela extends DialogFragment {
             public void onClick(View v) {
                 Produto produto1 = new Produto();
                 List<Field> fieldListObjeto = new ArrayList<>(Arrays.asList(Produto.class.getDeclaredFields()));
-                produto1.setCodproduto(auproduto.getText().toString().substring(0, auproduto.getText().toString().indexOf(" -")));
+                if (auproduto.getText().toString().contains("-")){
+                    produto1.setCodproduto(auproduto.getText().toString().substring(0, auproduto.getText().toString().indexOf(" -")));
 //                Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), getSetDinamicoTelas.retornaValorSpinner(view, "Produto"));
-                Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), produto1.getCodproduto());
-                if (cursor.getCount() > 0) {
-                    for (int f = 0; fieldListObjeto.size() != f; f++) {
-                        String tipo = getSetDinamico.retornaTipoCampo(fieldListObjeto.get(f));
-                        String nomeCampo = fieldListObjeto.get(f).getName().toLowerCase();
-                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
-                        if (retorno != null) {
-                            Object retProduto = getSetDinamico.insereField(fieldListObjeto.get(f), produto1, retorno);
-                            produto1 = (Produto) retProduto;
+                    Cursor cursor = produto1.retornaProdutoFiltradaCursor(getContext(), produto1.getCodproduto());
+                    if (cursor.getCount() > 0) {
+                        for (int f = 0; fieldListObjeto.size() != f; f++) {
+                            String tipo = getSetDinamico.retornaTipoCampo(fieldListObjeto.get(f));
+                            String nomeCampo = fieldListObjeto.get(f).getName().toLowerCase();
+                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                            if (retorno != null) {
+                                Object retProduto = getSetDinamico.insereField(fieldListObjeto.get(f), produto1, retorno);
+                                produto1 = (Produto) retProduto;
+                            }
                         }
                     }
-                }
 
-                PedidoProduto pedidoProduto = new PedidoProduto();
-                txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
-                txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
-                txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
+                    PedidoProduto pedidoProduto = new PedidoProduto();
+                    txvalorunitario = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalorunitario");
+                    txquantidade = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txquantidade");
+                    txvalortotal = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txvalortotal");
 
-                pedidoProduto.setValorunitario(Double.parseDouble(txvalorunitario.getText().toString()));
-                pedidoProduto.setQuantidade(Double.parseDouble(txquantidade.getText().toString()));
-                pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString().replace(",", ".")));
-                pedidoProduto.setCodproduto(produto1.getCodproduto());
-                pedidoProduto.setDescri(produto1.getMercadoria());
-                pedidoProduto.setPedido(Long.parseLong(codPedido));
-                pedidoProduto.setCusto(produto1.getCusto());
-                pedidoProduto.setComip(comissaoVendedor);
+                    pedidoProduto.setValorunitario(Double.parseDouble(txvalorunitario.getText().toString()));
+                    pedidoProduto.setQuantidade(Double.parseDouble(txquantidade.getText().toString()));
+                    pedidoProduto.setValortotal(Double.parseDouble(txvalortotal.getText().toString().replace(",", ".")));
+                    pedidoProduto.setCodproduto(produto1.getCodproduto());
+                    pedidoProduto.setDescri(produto1.getMercadoria());
+                    pedidoProduto.setPedido(Long.parseLong(codPedido));
+                    pedidoProduto.setCusto(produto1.getCusto());
+                    pedidoProduto.setComip(comissaoVendedor);
 
-                if (idPedidoProduto > 0) {
-                    pedidoProduto.setIdpedidoproduto(idPedidoProduto);
-                }
+                    if (idPedidoProduto > 0) {
+                        pedidoProduto.setIdpedidoproduto(idPedidoProduto);
+                    }
 
-                boolean retorno = pedidoProduto.cadastraPedidoProduto(myDb.getWritableDatabase(), pedidoProduto);
-                if (retorno == false) {
-                    MostraToast mostraToast = new MostraToast();
-                    mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar produto no pedido");
-                } else {
+                    boolean retorno = pedidoProduto.cadastraPedidoProduto(myDb.getWritableDatabase(), pedidoProduto);
+                    if (retorno == false) {
+                        MostraToast mostraToast = new MostraToast();
+                        mostraToast.mostraToastShort(getContext(), "Erro ao cadastrar produto no pedido");
+                    } else {
+                        dismiss();
+                        MostraToast mostraToast = new MostraToast();
+                        if (idPedidoProduto > 0) {
+                            mostraToast.mostraToastShort(getContext(), "Item atualizado com sucesso.");
+                        } else {
+                            mostraToast.mostraToastShort(getContext(), "Item adicionado com sucesso.");
+                        }
+                        PedidoDados pedidoDados = new PedidoDados();
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("codigo", Long.parseLong(codPedido));
+                        pedidoDados.setArguments(bundle);
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, pedidoDados, pedidoDados.getTag()).commit();
+                    }
+                }else{
                     dismiss();
                     MostraToast mostraToast = new MostraToast();
-                    if (idPedidoProduto > 0) {
-                        mostraToast.mostraToastShort(getContext(), "Item atualizado com sucesso.");
-                    } else {
-                        mostraToast.mostraToastShort(getContext(), "Item adicionado com sucesso.");
-                    }
+                    mostraToast.mostraToastShort(getContext(), "Erro ao encontrar produto.");
                     PedidoDados pedidoDados = new PedidoDados();
                     Bundle bundle = new Bundle();
                     bundle.putLong("codigo", Long.parseLong(codPedido));

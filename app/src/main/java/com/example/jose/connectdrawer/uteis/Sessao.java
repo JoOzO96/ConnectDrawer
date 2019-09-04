@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
+import android.text.StaticLayout;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.main.ConnectMain;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +33,12 @@ public class Sessao {
     // Construtor privado (suprime o construtor público padrão).
     private Sessao() {
     }
+
+    public static Double retornaFormatado(Double numero) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return Double.parseDouble(decimalFormat.format(numero).toString().replace(",","."));
+    }
+
 
     public static List<Cidade> retornaListaCidade() {
 

@@ -80,7 +80,7 @@
             android:text="Forma Pagamento" />
 
         <Spinner
-            android:id="@+id/spFormadepagamento"
+            android:id="@+id/spPgto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/txFormapagamento"></Spinner>
@@ -90,7 +90,7 @@
             android:id="@+id/btAdicionaritens"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/spFormadepagamento"
+            android:layout_below="@+id/spPgto"
             android:text="Adicionar Itens" />
 
         <LinearLayout

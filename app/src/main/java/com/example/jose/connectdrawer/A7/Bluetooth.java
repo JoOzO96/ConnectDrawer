@@ -53,45 +53,50 @@ public class Bluetooth {
 
     public boolean imprimeA7(Context context, String codigo, Boolean pedido) {
         boolean imprimirnaA7 = false;
-        imprimirnaA7 = checkBth(context);
+        try {
 
 
-        if (pedido) {
-            Bitmap mBitmap = imprimePedido(context, codigo);
-            if (imprimirnaA7) {
-                ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
+            imprimirnaA7 = checkBth(context);
 
-                closeBth();
-            } else {
-                CriaImpressao criaImpressao = new CriaImpressao();
-                try {
-                    criaImpressao.conectaImpressora(context);
-                    criaImpressao.imprimeimagem(mBitmap);
-                    criaImpressao.desconectaImpressora();
-                }catch (Exception e){
 
+            if (pedido) {
+                Bitmap mBitmap = imprimePedido(context, codigo);
+                if (imprimirnaA7) {
+                    ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
+
+                    closeBth();
+                } else {
+                    CriaImpressao criaImpressao = new CriaImpressao();
+                    try {
+                        criaImpressao.conectaImpressora(context);
+                        criaImpressao.imprimeimagem(mBitmap);
+                        criaImpressao.desconectaImpressora();
+                    } catch (Exception e) {
+
+                    }
                 }
-            }
-        } else {
-            Bitmap mBitmap = imprimeNota(context, codigo);
-            if (imprimirnaA7) {
-
-                ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
-
-                closeBth();
             } else {
-                CriaImpressao criaImpressao = new CriaImpressao();
-                try {
-                    criaImpressao.conectaImpressora(context);
-                    criaImpressao.imprimeimagem(mBitmap);
-                    criaImpressao.desconectaImpressora();
-                }catch (Exception e){
+                Bitmap mBitmap = imprimeNota(context, codigo);
+                if (imprimirnaA7) {
 
+                    ESCP.ImageToEsc(mBitmap, Ostream, 10, 8);
+
+                    closeBth();
+                } else {
+                    CriaImpressao criaImpressao = new CriaImpressao();
+                    try {
+                        criaImpressao.conectaImpressora(context);
+                        criaImpressao.imprimeimagem(mBitmap);
+                        criaImpressao.desconectaImpressora();
+                    } catch (Exception e) {
+
+                    }
                 }
+
             }
+        } catch (Exception e) {
 
         }
-
 
         return false;
     }
@@ -390,7 +395,7 @@ public class Bluetooth {
             Produto produto = new Produto();
             produto = produto.retornaProdutoObjetoAtualizar(context, notaProdutoList.get(j).getCodigo());
             y += size_text;
-            g.drawText(retornaFormatado(notaProdutoList.get(j).getCodigo() + (char) 254 + notaProdutoList.get(j).getDescri(), (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);
+            g.drawText(retornaFormatado(notaProdutoList.get(j).getCodigo() + "   " + notaProdutoList.get(j).getDescri(), (int) tituloBold.getTextSize(), ESQUERDA), x, y, tituloBold);
 
             y += size_text;
             g.drawText(retornaFormatado(notaProdutoList.get(j).getSst() + " " + (char) 254 + produto.getUnid() + (char) 254 + decimalFormat.format(notaProdutoList.get(j).getQuantidade()) + (char) 254 + " R$ " + decimalFormat.format(notaProdutoList.get(j).getValorunitario()) + (char) 254 + " R$ " + decimalFormat.format(notaProdutoList.get(j).getValortotal()), (int) tituloBold.getTextSize(), BORDAS), x, y, tituloBold);

@@ -23,6 +23,7 @@ public class Sincroniza {
         SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
         SincParcelas sincParcelas = new SincParcelas();
         SincIcms sincIcms = new SincIcms();
+        SincEmiteConfigura sincEmiteConfigura = new SincEmiteConfigura();
         final SincMac sincMac = new SincMac();
         SincEmitente sincEmitente = new SincEmitente();
         String ip = null;
@@ -45,6 +46,7 @@ public class Sincroniza {
 //            sincPedido.iniciaSinc(context, ip);
 
             sincEmitente.iniciaAsinc(context, ip);
+            sincEmiteConfigura.iniciaAsinc(context, ip);
             sincCliente.iniciaAsinc(context, ip);
             sincIcms.iniciaAsinc(context, ip);
             sincFormaPagamento.iniciaASinc(context, ip);

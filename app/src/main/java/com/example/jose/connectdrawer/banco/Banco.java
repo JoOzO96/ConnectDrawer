@@ -12,7 +12,7 @@ import android.util.Log;
 public class Banco extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "connect.db";
-    private static final int VERSAO = 6;
+    private static final int VERSAO = 7;
 
     public Banco(Context context) {
         super(context, NOME_BANCO, null, VERSAO);
@@ -618,7 +618,7 @@ public class Banco extends SQLiteOpenHelper {
                 "alteradoandroid boolean);";
         db.execSQL(sql);
 
-        sql = "CREATE TABLE EMITENTE(" +
+        sql = "CREATE TABLE emitente(" +
                 "codigoemitente long, " +
                 "serie text, " +
                 "cnpjemi text, " +
@@ -652,7 +652,7 @@ public class Banco extends SQLiteOpenHelper {
                 "senha text, " +
                 "copiadanfe long, " +
                 "csosn text, " +
-                "perapro long, " +
+                "perapro double, " +
                 "user text, " +
                 "modulo long, " +
                 "cupomnfe long, " +
@@ -868,6 +868,91 @@ public class Banco extends SQLiteOpenHelper {
                 "senhaproduto text); ";
         db.execSQL(sql);
 
+        executaSQL(db, "CREATE TABLE emiteconfigura(codemitente long);");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosced BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN filtratextoescrita BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosalternativa BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usaconversaoentrada BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoslaquentloja BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN diascarenciajuros LONG");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN valorboletospadrao DOUBLE");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosconversaoproduto BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN descontoapenasproduto BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN alterarobspedidofechado BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN imprimirnfsservicodireto BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosilha BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosrestaurante BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosconnect BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirmensagemeconomizou BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN obscte TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN bloquearquantidadenegativa BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN utilizarpontos BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usarepsonlx300 BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN produtopredominantecte TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN produtocomponentecte TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosoliveira BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN ocultavencibarrapedido BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN produtoaidf TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN emitenfse BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoshs BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibircustoletras BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirvendedorcupom BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseusuario TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfsesenha TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfsecancelamento TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultalote TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultafaixa TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultarps TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultaprestados TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultaenvioloterps TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultaenviorps TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultasequencialote TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN caixapadrao LONG");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosmiotto BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosvestbem TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN naoalteracustoentrada BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosestilo BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN ocultarcestnota BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN cadastroduplicadosclientes BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN contacaixaveiculosvenda TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadostrattore BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN contacaixachequelaca TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN contacaixachequebaixa TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN utilizaimportacaoautomatica BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoscanal BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezatranferencia LONG");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN downloaddllnfe BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN downloaddllcte BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN downloaddllmdfe BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN enviadadossped BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN ordempedido LONG");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoslimalimao BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN cstpadraocadastro TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN converteimpostoentrada BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezadevolucao TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoslimpar BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoskitintas BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN gerablocok BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosinnovar BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usarfatorconversao BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN fretenota TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN forcarcfopentrada BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosgellus BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN geranotalote BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosourobranco BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN certificadoandroid TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN alterarclientepedido BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN filtrarprodcompandroid BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseoptantesimplesnacional BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN regimeespecialtributacao LONG");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN gerarboletoautomatico BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaretorno TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codsetorgeral TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirnomefantasia BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN naoalteravalordevenda BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaremessa TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezavendadireta TEXT");
+
     }
 
     @Override
@@ -1064,7 +1149,7 @@ public class Banco extends SQLiteOpenHelper {
                     "alteradoandroid boolean);";
             db.execSQL(sql);
 
-            sql = "CREATE TABLE Emitente(" +
+            sql = "CREATE TABLE emitente(" +
                     "cnpjemi text, " +
                     "cpfemi text, " +
                     "emitente text, " +
@@ -1096,7 +1181,7 @@ public class Banco extends SQLiteOpenHelper {
                     "senha text, " +
                     "copiadanfe long, " +
                     "csosn text, " +
-                    "perapro long, " +
+                    "perapro double, " +
                     "user text, " +
                     "modulo long, " +
                     "cupomnfe long, " +
@@ -1662,6 +1747,93 @@ public class Banco extends SQLiteOpenHelper {
             executaSQL(db, "ALTER TABLE pedido ADD COLUMN enviadoemailnfse BOOLEAN");
             executaSQL(db, "ALTER TABLE pedido ADD COLUMN rota TEXT");
             executaSQL(db, "ALTER TABLE pedido ADD COLUMN geradoautomatico BOOLEAN");
+        }
+
+        if (oldVersion < 7 ){
+            executaSQL(db, "CREATE TABLE emiteconfigura(codemitente long);");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosced BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN filtratextoescrita BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosalternativa BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usaconversaoentrada BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoslaquentloja BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN diascarenciajuros LONG");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN valorboletospadrao DOUBLE");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosconversaoproduto BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN descontoapenasproduto BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN alterarobspedidofechado BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN imprimirnfsservicodireto BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosilha BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosrestaurante BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosconnect BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirmensagemeconomizou BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN obscte TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN bloquearquantidadenegativa BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN utilizarpontos BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usarepsonlx300 BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN produtopredominantecte TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN produtocomponentecte TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosoliveira BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN ocultavencibarrapedido BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN produtoaidf TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN emitenfse BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoshs BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibircustoletras BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirvendedorcupom BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseusuario TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfsesenha TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfsecancelamento TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultalote TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultafaixa TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultarps TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultaprestados TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultaenvioloterps TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultaenviorps TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseconsultasequencialote TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN caixapadrao LONG");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosmiotto BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosvestbem TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN naoalteracustoentrada BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosestilo BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN ocultarcestnota BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN cadastroduplicadosclientes BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN contacaixaveiculosvenda TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadostrattore BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN contacaixachequelaca TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN contacaixachequebaixa TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN utilizaimportacaoautomatica BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoscanal BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezatranferencia LONG");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN downloaddllnfe BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN downloaddllcte BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN downloaddllmdfe BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN enviadadossped BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN ordempedido LONG");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoslimalimao BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN cstpadraocadastro TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN converteimpostoentrada BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezadevolucao TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoslimpar BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadoskitintas BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN gerablocok BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosinnovar BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usarfatorconversao BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN fretenota TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN forcarcfopentrada BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosgellus BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN geranotalote BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirdadosourobranco BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN certificadoandroid TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN alterarclientepedido BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN filtrarprodcompandroid BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN nfseoptantesimplesnacional BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN regimeespecialtributacao LONG");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN gerarboletoautomatico BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaretorno TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codsetorgeral TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exibirnomefantasia BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN naoalteravalordevenda BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaremessa TEXT");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezavendadireta TEXT");
         }
     }
 

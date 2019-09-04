@@ -1,12 +1,27 @@
 package com.example.jose.connectdrawer.Emitente;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.DadosBanco;
+import com.example.jose.connectdrawer.uteis.GetSetDinamico;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class EmiteConfigura {
+
 
     Long codemitente;
     Boolean exibirdadosced;
-    Boolean filtratextoescrita;
     Boolean exibirdadoslaquentloja;
     Long diascarenciajuros;
+    Boolean filtratextoescrita;
     Boolean exibirdadosalternativa;
     Boolean usaconversaoentrada;
     Double valorboletospadrao;
@@ -22,14 +37,16 @@ public class EmiteConfigura {
     Boolean bloquearquantidadenegativa;
     Boolean utilizarpontos;
     Boolean usarepsonlx300;
-    String produtopredominantecte;
-    String produtocomponentecte;
-    String produtoaidf;
     Boolean exibirdadosoliveira;
+    String produtopredominantecte;
     Boolean ocultavencibarrapedido;
     Boolean emitenfse;
     Boolean exibirdadoshs;
+    Boolean naoalteracustoentrada;
+    Long caixapadrao;
+    Boolean exibirdadosmiotto;
     Boolean exibircustoletras;
+    Boolean exibirvendedorcupom;
     String nfseusuario;
     String nfsesenha;
     String nfsecancelamento;
@@ -40,19 +57,23 @@ public class EmiteConfigura {
     String nfseconsultaenvioloterps;
     String nfseconsultaenviorps;
     String nfseconsultasequencialote;
-    Boolean exibirvendedorcupom;
-    Long caixapadrao;
-    Boolean cadastroduplicadosclientes;
-    Boolean ocultarcestnota;
-    Boolean naoalteracustoentrada;
-    Boolean exibirdadosmiotto;
     Boolean exibirdadosvestbem;
+    Boolean ocultarcestnota;
+    Boolean cadastroduplicadosclientes;
     Boolean exibirdadosestilo;
-    String contacaixaveiculosvenda;
     Boolean exibirdadostrattore;
     String contacaixachequelaca;
     String contacaixachequebaixa;
+    String contacaixaveiculosvenda;
     Boolean utilizaimportacaoautomatica;
+    Long codnaturezatranferencia;
+    Boolean downloaddllnfe;
+    Boolean downloaddllcte;
+    Boolean downloaddllmdfe;
+    Boolean exibirdadoscanal;
+    Long ordempedido;
+    Boolean exibirdadoslimalimao;
+    Boolean exibirdadoslimpar;
     Boolean gerablocok;
     String cstpadraocadastro;
     Boolean converteimpostoentrada;
@@ -63,6 +84,23 @@ public class EmiteConfigura {
     Boolean usarfatorconversao;
     Boolean forcarcfopentrada;
     Boolean geranotalote;
+    Boolean exibirdadosgellus;
+    Boolean exibirdadosourobranco;
+    String produtocomponentecte;
+    String certificadoandroid;
+    Boolean gerarboletoautomatico;
+    Boolean alterarclientepedido;
+    Boolean filtrarprodcompandroid;
+    Boolean nfseoptantesimplesnacional;
+    Long regimeespecialtributacao;
+    String codnaturezaretorno;
+    Boolean naoalteravalordevenda;
+    String codsetorgeral;
+    Boolean exibirnomefantasia;
+    String codnaturezaremessa;
+    String codnaturezavendadireta;
+    String produtoaidf;
+    Boolean enviadadossped;
 
     public Long getCodemitente() {
         return codemitente;
@@ -550,5 +588,245 @@ public class EmiteConfigura {
 
     public void setGeranotalote(Boolean geranotalote) {
         this.geranotalote = geranotalote;
+    }
+
+    public Boolean getExibirdadoscanal() {
+        return exibirdadoscanal;
+    }
+
+    public void setExibirdadoscanal(Boolean exibirdadoscanal) {
+        this.exibirdadoscanal = exibirdadoscanal;
+    }
+
+    public Long getCodnaturezatranferencia() {
+        return codnaturezatranferencia;
+    }
+
+    public void setCodnaturezatranferencia(Long codnaturezatranferencia) {
+        this.codnaturezatranferencia = codnaturezatranferencia;
+    }
+
+    public Boolean getDownloaddllnfe() {
+        return downloaddllnfe;
+    }
+
+    public void setDownloaddllnfe(Boolean downloaddllnfe) {
+        this.downloaddllnfe = downloaddllnfe;
+    }
+
+    public Boolean getDownloaddllcte() {
+        return downloaddllcte;
+    }
+
+    public void setDownloaddllcte(Boolean downloaddllcte) {
+        this.downloaddllcte = downloaddllcte;
+    }
+
+    public Boolean getDownloaddllmdfe() {
+        return downloaddllmdfe;
+    }
+
+    public void setDownloaddllmdfe(Boolean downloaddllmdfe) {
+        this.downloaddllmdfe = downloaddllmdfe;
+    }
+
+    public Boolean getEnviadadossped() {
+        return enviadadossped;
+    }
+
+    public void setEnviadadossped(Boolean enviadadossped) {
+        this.enviadadossped = enviadadossped;
+    }
+
+    public Long getOrdempedido() {
+        return ordempedido;
+    }
+
+    public void setOrdempedido(Long ordempedido) {
+        this.ordempedido = ordempedido;
+    }
+
+    public Boolean getExibirdadoslimalimao() {
+        return exibirdadoslimalimao;
+    }
+
+    public void setExibirdadoslimalimao(Boolean exibirdadoslimalimao) {
+        this.exibirdadoslimalimao = exibirdadoslimalimao;
+    }
+
+    public Boolean getExibirdadoslimpar() {
+        return exibirdadoslimpar;
+    }
+
+    public void setExibirdadoslimpar(Boolean exibirdadoslimpar) {
+        this.exibirdadoslimpar = exibirdadoslimpar;
+    }
+
+    public Boolean getExibirdadosgellus() {
+        return exibirdadosgellus;
+    }
+
+    public void setExibirdadosgellus(Boolean exibirdadosgellus) {
+        this.exibirdadosgellus = exibirdadosgellus;
+    }
+
+    public Boolean getExibirdadosourobranco() {
+        return exibirdadosourobranco;
+    }
+
+    public void setExibirdadosourobranco(Boolean exibirdadosourobranco) {
+        this.exibirdadosourobranco = exibirdadosourobranco;
+    }
+
+    public String getCertificadoandroid() {
+        return certificadoandroid;
+    }
+
+    public void setCertificadoandroid(String certificadoandroid) {
+        this.certificadoandroid = certificadoandroid;
+    }
+
+    public Boolean getAlterarclientepedido() {
+        return alterarclientepedido;
+    }
+
+    public void setAlterarclientepedido(Boolean alterarclientepedido) {
+        this.alterarclientepedido = alterarclientepedido;
+    }
+
+    public Boolean getFiltrarprodcompandroid() {
+        return filtrarprodcompandroid;
+    }
+
+    public void setFiltrarprodcompandroid(Boolean filtrarprodcompandroid) {
+        this.filtrarprodcompandroid = filtrarprodcompandroid;
+    }
+
+    public Boolean getNfseoptantesimplesnacional() {
+        return nfseoptantesimplesnacional;
+    }
+
+    public void setNfseoptantesimplesnacional(Boolean nfseoptantesimplesnacional) {
+        this.nfseoptantesimplesnacional = nfseoptantesimplesnacional;
+    }
+
+    public Long getRegimeespecialtributacao() {
+        return regimeespecialtributacao;
+    }
+
+    public void setRegimeespecialtributacao(Long regimeespecialtributacao) {
+        this.regimeespecialtributacao = regimeespecialtributacao;
+    }
+
+    public Boolean getGerarboletoautomatico() {
+        return gerarboletoautomatico;
+    }
+
+    public void setGerarboletoautomatico(Boolean gerarboletoautomatico) {
+        this.gerarboletoautomatico = gerarboletoautomatico;
+    }
+
+    public String getCodnaturezaretorno() {
+        return codnaturezaretorno;
+    }
+
+    public void setCodnaturezaretorno(String codnaturezaretorno) {
+        this.codnaturezaretorno = codnaturezaretorno;
+    }
+
+    public String getCodsetorgeral() {
+        return codsetorgeral;
+    }
+
+    public void setCodsetorgeral(String codsetorgeral) {
+        this.codsetorgeral = codsetorgeral;
+    }
+
+    public Boolean getExibirnomefantasia() {
+        return exibirnomefantasia;
+    }
+
+    public void setExibirnomefantasia(Boolean exibirnomefantasia) {
+        this.exibirnomefantasia = exibirnomefantasia;
+    }
+
+    public Boolean getNaoalteravalordevenda() {
+        return naoalteravalordevenda;
+    }
+
+    public void setNaoalteravalordevenda(Boolean naoalteravalordevenda) {
+        this.naoalteravalordevenda = naoalteravalordevenda;
+    }
+
+    public String getCodnaturezaremessa() {
+        return codnaturezaremessa;
+    }
+
+    public void setCodnaturezaremessa(String codnaturezaremessa) {
+        this.codnaturezaremessa = codnaturezaremessa;
+    }
+
+    public String getCodnaturezavendadireta() {
+        return codnaturezavendadireta;
+    }
+
+    public void setCodnaturezavendadireta(String codnaturezavendadireta) {
+        this.codnaturezavendadireta = codnaturezavendadireta;
+    }
+
+    public Boolean cadastraEmiteConfigura(Context context, EmiteConfigura emiteConfigura) {
+        Banco myDb = new Banco(context);
+        DadosBanco dadosBanco = new DadosBanco();
+        ContentValues valores = new ContentValues();
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(emiteConfigura.getClass().getDeclaredFields()));
+
+        for (int i = 0; fieldList.size() != i; i++) {
+            valores = dadosBanco.insereValoresContent(fieldList.get(i), emiteConfigura, valores);
+        }
+
+        db.delete("emiteconfigura","", null);
+        db.insert("emiteconfigura", null, valores);
+        return true;
+    }
+
+    public EmiteConfigura retornaEmiteConfiguraObjeto(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        EmiteConfigura emiteConfigura = new EmiteConfigura();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id,* FROM emiteconfigura where codemitente = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldList = new ArrayList<>(Arrays.asList(EmiteConfigura.class.getDeclaredFields()));
+
+        for (int f = 0; fieldList.size() != f; f++) {
+            if (fieldList.get(f).getName().toLowerCase().equals("alteradoandroid")){
+                fieldList.remove(f);
+            }
+            if (fieldList.get(f).getName().toLowerCase().equals("cadastroandroid")){
+                fieldList.remove(f);
+            }
+            if (fieldList.get(f).getName().toLowerCase().equals("deletadooandroid")){
+                fieldList.remove(f);
+            }
+        }
+
+        for (int j = 0; cursor.getCount() != j; j++) {
+            emiteConfigura = new EmiteConfigura();
+            for (int f = 0; fieldList.size() != f; f++) {
+                String tipo = getSetDinamico.retornaTipoCampo(fieldList.get(f));
+                String nomeCampo = fieldList.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retorno1 = getSetDinamico.insereField(fieldList.get(f), emiteConfigura, retorno);
+                    emiteConfigura = (EmiteConfigura) retorno1;
+                }
+            }
+        }
+        db.close();
+        return emiteConfigura;
+
     }
 }
