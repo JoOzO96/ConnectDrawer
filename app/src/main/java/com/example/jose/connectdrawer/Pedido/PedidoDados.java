@@ -26,7 +26,9 @@ import android.widget.TextView;
 
 import com.example.jose.connectdrawer.A7.Bluetooth;
 import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
+import com.example.jose.connectdrawer.DadosEnvio.DadosEnvio;
 import com.example.jose.connectdrawer.Email.CriaEmail;
+import com.example.jose.connectdrawer.Emitente.Emitente;
 import com.example.jose.connectdrawer.FormaPagamento.FormaPagamento;
 import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
@@ -60,8 +62,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
@@ -134,7 +138,7 @@ public class PedidoDados extends Fragment {
     private Button btSalvar;
     private Button btCancelar;
     private Button btGerarNfe;
-//    private Button btApagarDadosNfe;
+    //    private Button btApagarDadosNfe;
     private Button btGerarParcelas;
 
     public PedidoDados() {
@@ -592,6 +596,8 @@ public class PedidoDados extends Fragment {
                 try {
                     SalvaPedido(view, 1L, false);
                     NotaFiscal notaFiscal = new NotaFiscal();
+                    Emitente emitente = new Emitente();
+                    emitente = emitente.retornaEmitenteObjeto(context, 1L);
                     RetRetrofit retRetrofit = new RetRetrofit();
                     SincMac sincMac = new SincMac();
                     String ip = sincMac.iniciasinc(getContext());
@@ -654,7 +660,7 @@ public class PedidoDados extends Fragment {
                                 List<NotaFiscal> listaNotaFiscal = new ArrayList<>();
                                 listaNotaFiscal.add(notaFiscal);
                                 EnviaJson enviaJson = new EnviaJson();
-                                String url = "http://"+ ip +"/api/notafiscal";
+                                String url = "http://" + ip + "/api/notafiscal";
                                 List<ControleCodigo> retorno = null;
                                 String retornoEnvio = "";
                                 GsonBuilder gsonBuilder = new GsonBuilder()
@@ -764,7 +770,9 @@ public class PedidoDados extends Fragment {
                                             notaFiscalFinal.setIdnota(notaFiscal.getIdnota());
                                             notaFiscalFinal = notaFiscal.cadastraNota(context, notaFiscalFinal);
                                             Bluetooth impressaoA7 = new Bluetooth();
-                                            impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(),false);
+
+                                            impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(), false);
+                                            EnviaEmailNfe(notaFiscal, emitente);
                                         } catch (Exception ex) {
                                             ex.printStackTrace();
                                             mostraToast.mostraToastLong(context, controle.getMensagem());
@@ -777,7 +785,8 @@ public class PedidoDados extends Fragment {
 
                             } else {
                                 Bluetooth impressaoA7 = new Bluetooth();
-                                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(),false);
+                                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(), false);
+                                EnviaEmailNfe(notaFiscal, emitente);
                             }
                         }
                     } else {
@@ -903,6 +912,78 @@ public class PedidoDados extends Fragment {
 //            }
 //        });
         return view;
+    }
+
+    public void EnviaEmailNfe(final NotaFiscal notaFiscal, final Emitente emitente){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setTitle("Confirma");
+        builder.setMessage("Enviar NFe por email?");
+
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                Calendar calendar = Calendar.getInstance();
+                String url="";
+                String retorno;
+                String retornoEnvio = "";
+                String gsonRetorno;
+                SincMac sincMac = new SincMac();
+                EnviaJson enviaJson = new EnviaJson();
+                Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+                String ip = sincMac.iniciasinc(getContext());
+                calendar.setTime(notaFiscal.getDataemissao());
+                DadosEnvio dadosEnvio = new DadosEnvio();
+                int intmes = calendar.get(Calendar.MONTH) + 1;
+                String mes;
+
+                if (intmes < 10) {
+                    mes = "0" + intmes;
+                }else{
+                    mes = String.valueOf( intmes);
+                }
+
+                dadosEnvio.setArquivo("C:\\CGeral\\xml\\Proc\\" + calendar.get(Calendar.YEAR) + "_" + mes  + "_" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("pt", "BR")) + "_" + emitente.getCnpjemi() + "\\NFE\\P" +
+                        notaFiscal.getCodemitente() + " " + notaFiscal.getCodnota() + ".xml;C:\\CGeral\\xml\\PDF\\" + notaFiscal.getCodnota() + ".pdf");
+                dadosEnvio.setAssunto("NFe N:" + notaFiscal.getCodnota() + " da empresa " + emitente.getFantasia());
+                dadosEnvio.setMensagem("Prezado(a),\n" +
+                        "segue em anexo arquivo(s) refer nte(s) ao Documento Eletrônico.\n"+
+                        "NFE: " + notaFiscal.getCodnota() +"\n"+
+                        "CHAVE: " + notaFiscal.getChave() + "\n"+
+                        "\n"+
+                        "ATENÇÃO : Não responda a esta mensagem, pois se trata de um processo automático.\n"+
+                        "\n"+
+                        "Atenciosamente,\n" +
+                        "Empresa: " + emitente.getFantasia() + "\n" +
+                        "CNPJ: " + emitente.getCnpjemi() + "\n"+
+                        "Telefone: " + emitente.getFone() + "\n" +
+                        "\n"+
+                        "Este e-mail foi GERADO por um Sistema Connectsys Inform tica - (54)3344-3036 - (54)3344-2901"
+                );
+                dadosEnvio.setEmaildestinatario(notaFiscal.getEmailnota());
+                dadosEnvio.setTipodocumento("NFE");
+                url = "http://" + ip + "/api/enviaemail";
+                retorno = null;
+                retornoEnvio = "";
+                gsonRetorno = gson.toJson(dadosEnvio);
+                enviaJson.execute(gsonRetorno, url);
+
+            }
+        });
+
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
 
@@ -1193,7 +1274,7 @@ public class PedidoDados extends Fragment {
 
 
                 Bluetooth impressaoA7 = new Bluetooth();
-                impressaoA7.imprimeA7(getContext(), pedido.getPedido().toString(),true);
+                impressaoA7.imprimeA7(getContext(), pedido.getPedido().toString(), true);
 //                CriaImpressao impressao = new CriaImpressao();
 //
 //                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

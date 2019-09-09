@@ -1835,6 +1835,8 @@ public class Banco extends SQLiteOpenHelper {
             executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaremessa TEXT");
             executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezavendadireta TEXT");
         }
+
+
     }
 
 

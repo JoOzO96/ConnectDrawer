@@ -260,7 +260,9 @@ public class GetSetDinamico {
                 notaFiscal.setValordoipi(0D);
                 notaFiscal.setValordosprodutos(0D);
                 notaFiscal.setValornota(0D);
-
+                if (cliente.getEmail() != null) {
+                    notaFiscal.setEmailnota(cliente.getEmail());
+                }
                 notaFiscal = notaFiscal.cadastraNota(context, notaFiscal);
 
 
