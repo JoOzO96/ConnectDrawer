@@ -3,6 +3,7 @@ package com.example.jose.connectdrawer.uteis;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.os.Handler;
 import android.text.StaticLayout;
@@ -168,6 +169,20 @@ public class Sessao {
 
     public static void setInstance(Sessao instance) {
         Sessao.instance = instance;
+    }
+
+    public static boolean colocaDebug() {
+         boolean isDebuggable = android.os.Debug.isDebuggerConnected();
+        return isDebuggable;
+    }
+
+    public static int retornaDebug() {
+        boolean isDebuggable = android.os.Debug.isDebuggerConnected();
+        if (isDebuggable){
+            return 0;
+        }else{
+            return 4;
+        }
     }
 
     public ProgressDialog getProgressDialog() {

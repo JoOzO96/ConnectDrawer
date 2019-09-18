@@ -137,7 +137,9 @@ public class SincPedido {
         List<Pedido> pedidoList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(Pedido.class.getDeclaredFields()));
-        Cursor cursor = pedido.retornaPedidoAlteradaAndroid(context, "cadastroAndroid");
+//        pedido.removePedidoAlteradaAndroid(context, "alteradoAndroid");
+//        pedido.colocaPedidoAlteradaAndroid(context, "cadastroandroid");
+        Cursor cursor = pedido.retornaPedidoAlteradaAndroid(context, "cadastroandroid");
         Sessao.colocaTexto("Verificando pedidos novos.");
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
@@ -159,52 +161,97 @@ public class SincPedido {
                     }
                 }
                 pedidoList.add(pedido);
-                Sessao.colocaTexto("Enviando os dados de pedidos." + (i+1) + " de " + cursor.getCount());
+
 //                Log.e("PGTO", "" + pedido.getPgto());
                 cursor.moveToNext();
             }
         }
+//        if (pedidoList.size() > 0) {
+//            GsonBuilder gsonBuilder = new GsonBuilder()
+//                    .setDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+//            gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+//            Gson gson = gsonBuilder.create();
+//            String gsonRetorno = gson.toJson(pedidoList);
+//            Log.i("JSONPEDIDO", gsonRetorno);
+//            EnviaJson enviaJson = new EnviaJson();
+//            RetRetrofit retRetrofit = new RetRetrofit();
+//            String url = retRetrofit.retornaSring("pedido", ip);
+//            List<ControleCodigo> retorno = null;
+//            String retornoEnvio = "";
+//            Date dataInicio = new Date();
+//            try {
+//                enviaJson.execute(gsonRetorno, url);
+//                while (retornoEnvio == "") {
+//                    retornoEnvio = enviaJson.get();
+//                    if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 || retornoEnvio != ""){
+//                        break;
+//                    }
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//            if (retornoEnvio != null && retornoEnvio != "") {
+//
+//                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+//                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+//                pedido = new Pedido();
+//                for (int i = 0; controleCodigoList.size() != i; i++) {
+//                    pedido.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+//                    pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+//                    pedido.alteraParcelas(context,controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+//                    pedido.removePedidoAlteradaAndroid(context, "cadastroandroid");
+//                }
+//                SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
+//                sincPedidoProduto.iniciaenvio(context, ip);
+//
+//            }
+//        }
         if (pedidoList.size() > 0) {
             GsonBuilder gsonBuilder = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'hh:mm:ss");
             gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
             Gson gson = gsonBuilder.create();
-            String gsonRetorno = gson.toJson(pedidoList);
-            Log.i("JSONPEDIDO", gsonRetorno);
-            EnviaJson enviaJson = new EnviaJson();
-            RetRetrofit retRetrofit = new RetRetrofit();
-            String url = retRetrofit.retornaSring("pedido", ip);
-            List<ControleCodigo> retorno = null;
-            String retornoEnvio = "";
-            Date dataInicio = new Date();
-            try {
-                enviaJson.execute(gsonRetorno, url);
-                while (retornoEnvio == "") {
-                    retornoEnvio = enviaJson.get();
-                    if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 || retornoEnvio != ""){
-                        break;
+
+            for (int i = 0; i < pedidoList.size(); i++) {
+                EnviaJson enviaJson = new EnviaJson();
+                RetRetrofit retRetrofit = new RetRetrofit();
+                String url = retRetrofit.retornaSring("pedido", ip);
+                List<ControleCodigo> retorno = null;
+                String retornoEnvio = "";
+                Date dataInicio = new Date();
+                String gsonRetorno = gson.toJson(pedidoList.get(i));
+                gsonRetorno = "[" + gsonRetorno + "]";
+                Log.i("JSONPEDIDO", gsonRetorno);
+                Sessao.colocaTexto("Enviando os dados de pedidos." + (i + 1) + " de " + pedidoList.size());
+                try {
+                    enviaJson.execute(gsonRetorno, url);
+                    while (retornoEnvio == "") {
+                        retornoEnvio = enviaJson.get();
+                        if ((dataInicio.getTime() - System.currentTimeMillis()) <= -30000 || retornoEnvio != "") {
+                            break;
+                        }
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            if (retornoEnvio != null && retornoEnvio != "") {
-
-                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-                pedido = new Pedido();
-                for (int i = 0; controleCodigoList.size() != i; i++) {
-                    pedido.alteraCodPedido(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    pedido.alteraCodPedidoProduto(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    pedido.alteraParcelas(context,controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                    pedido.removePedidoAlteradaAndroid(context, "cadastroAndroid");
+                if (retornoEnvio != null && retornoEnvio != "") {
+                    SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
+                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                    pedido = new Pedido();
+                    for (int j = 0; controleCodigoList.size() != j; j++) {
+                        pedido.alteraCodPedido(context, controleCodigoList.get(j).getCodigoAndroid(), controleCodigoList.get(j).getCodigoBanco());
+                        pedido.alteraCodPedidoProduto(context, controleCodigoList.get(j).getCodigoAndroid(), controleCodigoList.get(j).getCodigoBanco());
+                        pedido.alteraParcelas(context, controleCodigoList.get(j).getCodigoAndroid(), controleCodigoList.get(j).getCodigoBanco());
+                        pedido.removePedidoAlteradaAndroid(context, "cadastroandroid", controleCodigoList.get(j).getCodigoBanco());
+                        sincPedidoProduto.iniciaenvio(context, ip, controleCodigoList.get(j).getCodigoBanco());
+                    }
 
                 }
-                SincPedidoProduto sincPedidoProduto = new SincPedidoProduto();
-                sincPedidoProduto.iniciaenvio(context, ip);
-
             }
         }
     }

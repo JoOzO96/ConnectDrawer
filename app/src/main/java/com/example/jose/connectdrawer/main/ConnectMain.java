@@ -42,6 +42,7 @@ import com.example.jose.connectdrawer.login.LoginActivity;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
 import com.example.jose.connectdrawer.sincronizacao.SincFragment;
 import com.example.jose.connectdrawer.sincronizacao.Sincroniza;
+import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.example.jose.connectdrawer.uteis.Sessao;
 
 import java.util.ArrayList;
@@ -189,9 +190,9 @@ public class ConnectMain extends AppCompatActivity
 //                    Sessao.setaContext(ConnectMain.this);
 //                }
 //            });
-        } else if (id == R.id.nav_deleta) {
-            Context context = this;
-            context.deleteDatabase("connect.db");
+//        } else if (id == R.id.nav_deleta) {
+//            Context context = this;
+//            context.deleteDatabase("connect.db");
 //        } else if (id == R.id.nav_login) {
 //            Intent intent = new Intent(this, LoginActivity.class);
 //            startActivity(intent);

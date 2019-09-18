@@ -109,6 +109,8 @@ public class Pedido {
     Boolean especial;
     String rota;
     Boolean geradoautomatico;
+    Boolean cadastroandroid;
+    Boolean alteradoandroid;
 
     public Long getCodpedido() {
         return codpedido;
@@ -792,6 +794,22 @@ public class Pedido {
         this.itensPedido = itensPedido;
     }
 
+    public Boolean getCadastroandroid() {
+        return cadastroandroid;
+    }
+
+    public void setCadastroandroid(Boolean cadastroandroid) {
+        this.cadastroandroid = cadastroandroid;
+    }
+
+    public Boolean getAlteradoandroid() {
+        return alteradoandroid;
+    }
+
+    public void setAlteradoandroid(Boolean alteradoandroid) {
+        this.alteradoandroid = alteradoandroid;
+    }
+
     @Override
     public String toString() {
         return "" + pedido + " - " + nome;
@@ -937,12 +955,21 @@ public class Pedido {
 
     }
 
-    public void removePedidoAlteradaAndroid(Context context, String campo) {
+    public void removePedidoAlteradaAndroid(Context context, String campo, Long pedido) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(campo, "0");
-        int retorno = db.update("pedido", values, campo + " = 1", null);
+        int retorno = db.update("pedido", values, campo + " = 1 AND pedido = " + pedido, null);
+
+    }
+
+    public void colocaPedidoAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo, "1");
+        int retorno = db.update("pedido", values, campo + " = 0", null);
 
     }
 

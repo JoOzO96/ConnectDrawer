@@ -192,12 +192,27 @@
             android:layout_below="@+id/btgerarparcelas"
             android:text="Gerar NF-e" />
 
-<!--        <Button-->
-<!--            android:id="@+id/btapagardadosnfe"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/btgerarnfe"-->
-<!--            android:text="Deletar Numero Nota" />-->
+        <Button
+            android:id="@+id/btapagardadosnfe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btgerarnfe"
+            android:text="Deletar Numero Nota" />
+
+        <CheckBox
+            android:id="@+id/ckCadastroandroid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btapagardadosnfe"
+            android:text="Cadastro Android" />
+
+        <CheckBox
+            android:id="@+id/ckAlteradoandroid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ckCadastroandroid"
+            android:text="Android Android" />
+
     </RelativeLayout>
 
 

@@ -55,7 +55,7 @@ public class Sincroniza {
             sincCidade.iniciaAsinc(context, ip);
             sincCliente.iniciaenvio(context, ip);
             sincPedido.iniciaenvio(context, ip);
-            sincPedidoProduto.iniciaenvio(context, ip);
+//            sincPedidoProduto.iniciaenvio(context, ip);
             sincParcelas.iniciaenvio(context, ip);
             Sessao.terminaProgress();
 

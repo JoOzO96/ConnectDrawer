@@ -31,62 +31,50 @@ public class SincPedidoProduto {
     }
 
 
-    public void iniciaenvio(Context context, String ip) {
-        PedidoProduto pedidoProduto = new PedidoProduto();
-        List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
-        GetSetDinamico getSetDinamico = new GetSetDinamico();
-        List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
-        Cursor cursor = pedidoProduto.retornaPedidoProdutoAlteradaAndroid(context, "cadastroandroid");
+    public void iniciaenvio(Context context, String ip, Long pedido) {
+        try {
+            PedidoProduto pedidoProduto = new PedidoProduto();
+            List<PedidoProduto> pedidoProdutoList = new ArrayList<>();
+            GetSetDinamico getSetDinamico = new GetSetDinamico();
+            List<Field> fieldListPedido = new ArrayList<>(Arrays.asList(PedidoProduto.class.getDeclaredFields()));
+//            pedidoProduto.colocaPedidoProdutoAlteradaAndroid(context, "cadastroandroid");
+            pedidoProdutoList = pedidoProduto.retornaPedidoProdutoObjeto(context,pedido);
 
-        if (cursor.getCount() > 0) {
-            for (long i = 0L; cursor.getCount() != i; i++) {
-                pedidoProduto = new PedidoProduto();
-                for (int ped = 0; fieldListPedido.size() != ped; ped++) {
-                    if (fieldListPedido.get(ped).getName().toLowerCase().equals("$change") ||
-                            fieldListPedido.get(ped).getName().toLowerCase().equals("serialversionuid")) {
-                    } else {
-                        String tipo = getSetDinamico.retornaTipoCampo(fieldListPedido.get(ped));
-                        Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListPedido.get(ped).getName(), cursor);
-                        Object pedidoProdutoRetorno = getSetDinamico.insereField(fieldListPedido.get(ped), pedidoProduto, retornoCursor);
-                        pedidoProduto = (PedidoProduto) pedidoProdutoRetorno;
-                    }
-                }
-                pedidoProdutoList.add(pedidoProduto);
-
-                cursor.moveToNext();
-            }
-        }
-        if (pedidoProdutoList.size() > 0) {
-            Gson gson = new Gson();
-            String gsonRetorno = gson.toJson(pedidoProdutoList);
-            Log.i("JSONPEDIDOPRODUTO", gsonRetorno);
-            EnviaJson enviaJson = new EnviaJson();
+            if (pedidoProdutoList.size() > 0) {
+                Gson gson = new Gson();
+                String gsonRetorno = gson.toJson(pedidoProdutoList);
+                Log.i("JSONPEDIDOPRODUTO", gsonRetorno);
+                EnviaJson enviaJson = new EnviaJson();
 //            String url = "http://177.92.186.84:15101/ConnectServices/recebePedidoProduto";
-            RetRetrofit retRetrofit = new RetRetrofit();
-            String url = retRetrofit.retornaSring("pedidoproduto", ip);
-            List<ControleCodigo> retorno = null;
-            String retornoEnvio = "";
-            try {
-                enviaJson.execute(gsonRetorno, url);
-                retornoEnvio = enviaJson.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-            if (retornoEnvio != null && retornoEnvio != "") {
+                RetRetrofit retRetrofit = new RetRetrofit();
+                String url = retRetrofit.retornaSring("pedidoproduto", ip);
+                List<ControleCodigo> retorno = null;
+                String retornoEnvio = "";
+                try {
+                    enviaJson.execute(gsonRetorno, url);
+                    retornoEnvio = enviaJson.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if (retornoEnvio != null && retornoEnvio != "") {
 
-                ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
-                if (conversao != null) {
-                    List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
+                    ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
+                    if (conversao != null) {
+                        List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
 
-                    pedidoProduto = new PedidoProduto();
-                    for (int i = 0; controleCodigoList.size() != i; i++) {
+                        pedidoProduto = new PedidoProduto();
+                        for (int i = 0; controleCodigoList.size() != i; i++) {
 
+                        }
+                        pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroandroid");
                     }
-                    pedidoProduto.removePedidoProdutoAlteradaAndroid(context, "cadastroAndroid");
                 }
             }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
+
     }
 }

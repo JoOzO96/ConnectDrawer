@@ -138,7 +138,9 @@ public class PedidoDados extends Fragment {
     private Button btSalvar;
     private Button btCancelar;
     private Button btGerarNfe;
-    //    private Button btApagarDadosNfe;
+        private Button btApagarDadosNfe;
+    private CheckBox ckCadastroandroid;
+    private CheckBox ckAlteradoandroid;
     private Button btGerarParcelas;
 
     public PedidoDados() {
@@ -161,6 +163,12 @@ public class PedidoDados extends Fragment {
         porc_lucro = (TextView) view.findViewById(R.id.porc_lucro);
         valorTotal = (TextView) view.findViewById(R.id.valorTotal);
         ckNfe = (CheckBox) view.findViewById(R.id.ckNfe);
+        ckCadastroandroid = (CheckBox) view.findViewById(R.id.ckCadastroandroid);
+        ckAlteradoandroid = (CheckBox) view.findViewById(R.id.ckAlteradoandroid);
+        btApagarDadosNfe = (Button) view.findViewById(R.id.btapagardadosnfe);
+        ckCadastroandroid.setVisibility(Sessao.retornaDebug());
+        ckAlteradoandroid.setVisibility(Sessao.retornaDebug());
+        btApagarDadosNfe.setVisibility(Sessao.retornaDebug());
         spPgto = (Spinner) view.findViewById(R.id.spPgto);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -172,7 +180,6 @@ public class PedidoDados extends Fragment {
         txPedido = (EditText) getSetDinamicoTelas.retornaIDCampo(view, "txPedido");
         //PEGA AS IDS DOS CAMPOS NOS FORMULARIOS
         btSalvar = (Button) view.findViewById(R.id.btSalvar);
-//        btApagarDadosNfe = (Button) view.findViewById(R.id.btapagardadosnfe);
         btCancelar = (Button) view.findViewById(R.id.btCancelar);
         final Context context = getContext();
         final Intent abreTelaImpressao = new Intent(getContext(), ImprimirTexto.class);
@@ -346,11 +353,21 @@ public class PedidoDados extends Fragment {
                                 getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, formaPagamentoList, getContext(), posicao);
                             }
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("ck")) {
+                            if (fieldListPassar.get(i).getName().equals("ckNfe")) {
                             String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
                             String nomecampo = "nfe";
                             Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
-                            if (fieldListPassar.get(i).getName().equals("ckNfe")) {
                                 ckNfe.setChecked(Boolean.parseBoolean(retorno.toString()));
+                            }else if (fieldListPassar.get(i).getName().equals("ckCadastroandroid")) {
+                                String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
+                                String nomecampo = "cadastroandroid";
+                                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
+                                ckCadastroandroid.setChecked(Boolean.parseBoolean(retorno.toString()));
+                            }else if (fieldListPassar.get(i).getName().equals("ckCadastroandroid")) {
+                                String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
+                                String nomecampo = "alteradoandroid";
+                                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
+                                ckAlteradoandroid.setChecked(Boolean.parseBoolean(retorno.toString()));
                             }
                         }
                     }
@@ -769,9 +786,7 @@ public class PedidoDados extends Fragment {
                                             notaFiscalFinal = gson.fromJson(controle.getMensagem(), NotaFiscal.class);
                                             notaFiscalFinal.setIdnota(notaFiscal.getIdnota());
                                             notaFiscalFinal = notaFiscal.cadastraNota(context, notaFiscalFinal);
-                                            Bluetooth impressaoA7 = new Bluetooth();
-
-                                            impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(), false);
+                                            imprimeNfe(notaFiscal);
                                             EnviaEmailNfe(notaFiscal, emitente);
                                         } catch (Exception ex) {
                                             ex.printStackTrace();
@@ -784,8 +799,7 @@ public class PedidoDados extends Fragment {
                                 }
 
                             } else {
-                                Bluetooth impressaoA7 = new Bluetooth();
-                                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(), false);
+                                imprimeNfe(notaFiscal);
                                 EnviaEmailNfe(notaFiscal, emitente);
                             }
                         }
@@ -903,21 +917,52 @@ public class PedidoDados extends Fragment {
                 }
             }
         });
-//        btApagarDadosNfe.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Pedido pedidoRemover = pedido.retornaPedidoObjeto(getContext(), Long.parseLong(txPedido.getText().toString()));
-//                pedidoRemover.setNotafisca("");
-//                pedidoRemover.cadastraPedido(getContext(), pedidoRemover);
-//            }
-//        });
+        btApagarDadosNfe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Pedido pedidoRemover = pedido.retornaPedidoObjeto(getContext(), Long.parseLong(txPedido.getText().toString()));
+                pedidoRemover.setNotafisca("");
+                pedidoRemover.cadastraPedido(getContext(), pedidoRemover);
+            }
+        });
         return view;
     }
+
+    public void imprimeNfe(final NotaFiscal notaFiscal){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setTitle("");
+        builder.setMessage("Imprimir NFe?");
+
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                Bluetooth impressaoA7 = new Bluetooth();
+                impressaoA7.imprimeA7(getContext(), notaFiscal.getCodnota(), false);
+
+            }
+        });
+
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
     public void EnviaEmailNfe(final NotaFiscal notaFiscal, final Emitente emitente){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        builder.setTitle("Confirma");
+        builder.setTitle("");
         builder.setMessage("Enviar NFe por email?");
 
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
@@ -936,7 +981,8 @@ public class PedidoDados extends Fragment {
                 DadosEnvio dadosEnvio = new DadosEnvio();
                 int intmes = calendar.get(Calendar.MONTH) + 1;
                 String mes;
-
+                Cliente cliente = new Cliente();
+                cliente = cliente.retornaClienteObjeto(getContext(), notaFiscal.getCodcliente());
                 if (intmes < 10) {
                     mes = "0" + intmes;
                 }else{
@@ -960,7 +1006,8 @@ public class PedidoDados extends Fragment {
                         "\n"+
                         "Este e-mail foi GERADO por um Sistema Connectsys Inform tica - (54)3344-3036 - (54)3344-2901"
                 );
-                dadosEnvio.setEmaildestinatario(notaFiscal.getEmailnota());
+
+                dadosEnvio.setEmaildestinatario(cliente.getEmail());
                 dadosEnvio.setTipodocumento("NFE");
                 url = "http://" + ip + "/api/enviaemail";
                 retorno = null;
@@ -1004,6 +1051,8 @@ public class PedidoDados extends Fragment {
             pedido.setOrpedi("2");
             pedido.setCodstatus(1L);
             pedido.setNfe(ckNfe.isChecked());
+            pedido.setCadastroandroid(ckCadastroandroid.isChecked());
+            pedido.setAlteradoandroid(ckAlteradoandroid.isChecked());
             for (int f = 0; fieldListPedidoDados.size() != f; f++) {
 
                 if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {

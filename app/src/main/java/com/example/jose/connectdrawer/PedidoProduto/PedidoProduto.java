@@ -520,4 +520,13 @@ public class PedidoProduto {
 
     }
 
+    public void colocaPedidoProdutoAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo, "1");
+        int retorno = db.update("pedidoproduto", values, campo + " = 0", null);
+
+    }
+
 }
