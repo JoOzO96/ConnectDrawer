@@ -24,6 +24,7 @@ import java.util.List;
  */
 
 public class Produto {
+
     private String aliqcide;
     private String ano;
     private String anomodelo;

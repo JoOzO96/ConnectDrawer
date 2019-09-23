@@ -12,7 +12,7 @@ import android.util.Log;
 public class Banco extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "connect.db";
-    private static final int VERSAO = 7;
+    private static final int VERSAO = 8;
 
     public Banco(Context context) {
         super(context, NOME_BANCO, null, VERSAO);
@@ -953,6 +953,9 @@ public class Banco extends SQLiteOpenHelper {
         executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaremessa TEXT");
         executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezavendadireta TEXT");
 
+        executaSQL(db, "CREATE TABLE configuracoeslocais(id long);");
+        executaSQL(db, "ALTER TABLE configuracoeslocais ADD COLUMN codvendedor text");
+
     }
 
     @Override
@@ -1834,6 +1837,11 @@ public class Banco extends SQLiteOpenHelper {
             executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN naoalteravalordevenda BOOLEAN");
             executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaremessa TEXT");
             executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezavendadireta TEXT");
+        }
+
+        if (oldVersion < 8 ) {
+            executaSQL(db, "CREATE TABLE configuracoeslocais(id long);");
+            executaSQL(db, "ALTER TABLE configuracoeslocais ADD COLUMN codvendedor text");
         }
 
 

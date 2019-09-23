@@ -43,6 +43,7 @@ import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.cidade.Cidade;
 import com.example.jose.connectdrawer.cliente.Cliente;
+import com.example.jose.connectdrawer.configuracoeslocais.ConfiguracoesLocais;
 import com.example.jose.connectdrawer.sincronizacao.EnviaJson;
 import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
 import com.example.jose.connectdrawer.sincronizacao.SincMac;
@@ -494,6 +495,22 @@ public class PedidoDados extends Fragment {
                                     cursorVendedor.moveToNext();
                                 }
                             }
+                            ConfiguracoesLocais configuracoesLocais = new ConfiguracoesLocais();
+                            configuracoesLocais = configuracoesLocais.retornaconfiguracoeslocais(getContext());
+                            if (configuracoesLocais.getCodvendedor() != null){
+                                if (!configuracoesLocais.getCodvendedor().isEmpty()){
+                                    for (int k = 0; vendedorList.size() != k; k++) {
+                                        Integer codHifen = vendedorList.get(k).indexOf("-");
+                                        String codVendedor = vendedorList.get(k).substring(0, codHifen - 1);
+                                        if (codVendedor.equals(configuracoesLocais.getCodvendedor())) {
+                                            posicao = k;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+
                             getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), view, vendedorList, getContext(), posicao);
                         } else if (fieldListPassar.get(i).getName().equals("spPgto")) {
                             //SPINNER DOS FORMAS DE PAGAMENTO

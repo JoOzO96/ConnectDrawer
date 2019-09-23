@@ -38,6 +38,7 @@ import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.VendedorFragment;
 import com.example.jose.connectdrawer.cidade.CidadeFragment;
 import com.example.jose.connectdrawer.cliente.ClienteFragment;
+import com.example.jose.connectdrawer.configuracoeslocais.ConfiguracaoLocalFragment;
 import com.example.jose.connectdrawer.login.LoginActivity;
 import com.example.jose.connectdrawer.sincronizacao.SincCliente;
 import com.example.jose.connectdrawer.sincronizacao.SincFragment;
@@ -155,15 +156,18 @@ public class ConnectMain extends AppCompatActivity
             VendedorFragment vendedorFragment = new VendedorFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, vendedorFragment, vendedorFragment.getTag()).commit();
-        }else if (id == R.id.nav_testeimpressao) {
-                A7Dados a7Dados = new A7Dados();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, a7Dados, a7Dados.getTag()).commit();
+        } else if (id == R.id.nav_testeimpressao) {
+            A7Dados a7Dados = new A7Dados();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, a7Dados, a7Dados.getTag()).commit();
         } else if (id == R.id.nav_formapagamento) {
             FormaPagamentoFragment formaPagamentoFragment = new FormaPagamentoFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, formaPagamentoFragment, formaPagamentoFragment.getTag()).commit();
-
+        } else if (id == R.id.nav_configuracoes) {
+            ConfiguracaoLocalFragment configuracaoLocalFragment = new ConfiguracaoLocalFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, configuracaoLocalFragment, configuracaoLocalFragment.getTag()).commit();
         } else if (id == R.id.nav_produto) {
             ProdutoFragment produtoFragment = new ProdutoFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
