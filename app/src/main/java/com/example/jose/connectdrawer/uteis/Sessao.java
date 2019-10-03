@@ -25,7 +25,7 @@ public class Sessao {
     private static Handler handler;
     private static ProgressBar progressBar;
     private static TextView textoSinc;
-    private static List<Cidade> listaCidade;
+    private static List<Cidade> listaCidade = new ArrayList<>();
     // Variável estática que conterá a instancia da classe
     private static Sessao instance;
     private static Context contextSalvo;
@@ -43,7 +43,7 @@ public class Sessao {
 
     public static List<Cidade> retornaListaCidade() {
 
-        if (listaCidade == null) {
+        if (listaCidade.size() == 0) {
             listaCidade = new ArrayList<>();
             GetSetDinamico getSetDinamico = new GetSetDinamico();
             Cidade cidade = new Cidade();

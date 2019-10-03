@@ -219,20 +219,7 @@ public class SincCidade {
         }
     }
 
-
-//        return true;
-//    }
-
     public void iniciaEnvio(Context context, String ip) throws IOException {
-
-        //
-        //
-        //
-        //           PARTE DAS CIDADES NOVAS QUE FORAM INSERIDAS NO ANDROID
-        //
-        //
-        //
-
         Cidade cidade = new Cidade();
         List<Cidade> cidadeList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
@@ -287,15 +274,6 @@ public class SincCidade {
             }
 
         }
-
-
-        //
-        //
-        //
-        //           PARTE DAS CIDADES QUE FORAM ATUALIZADAS NO ANDROID
-        //
-        //
-        //
 
 
         cidade = new Cidade();

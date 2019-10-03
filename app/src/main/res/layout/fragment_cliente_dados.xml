@@ -334,10 +334,32 @@
 
         </Spinner>
 
+        <Button
+            android:id="@+id/btCadastroanimais"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/spCodvendedor"
+            android:text="Adicionar Animais" />
+
+        <LinearLayout
+            android:id="@+id/linearCadatroanimais"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_below="@id/btCadastroanimais">
+            <com.example.jose.connectdrawer.uteis.NonScrollListView
+                android:id="@+id/listClienteanimais"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/spCodvendedor">
+            android:layout_below="@id/linearCadatroanimais">
 
             <Button
                 android:id="@+id/btSalvar"

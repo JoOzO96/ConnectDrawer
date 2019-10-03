@@ -170,6 +170,34 @@ public class GetSetDinamico {
         return field;
     }
 
+    public Object retornaValorCampoTela(String field, Object obj) {
+        try {
+//            String primeiro = field.getName().substring(0, 1);
+//            String nomeCampo = field.getName().substring(1, field.getName().length());
+////            Object obj1;
+////            obj1 = obj;
+            Method method = obj.getClass().getMethod("get" + field.substring(0, 1).toUpperCase() + field.substring(1), null);
+            Object object = method.invoke(obj, null);
+
+            return object;
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return field;
+    }
 
     public Object colocaDadosNotaFiscal(Context context, NotaFiscal notaFiscal, String numeroPedido, Long codigoBanco) {
         try {

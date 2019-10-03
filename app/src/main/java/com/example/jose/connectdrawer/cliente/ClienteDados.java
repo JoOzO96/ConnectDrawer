@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.ConsultaSefaz.InfCadastro;
@@ -63,6 +65,7 @@ public class ClienteDados extends Fragment {
     private Button btSefaz;
     private Button btSalvar;
     private Button btCancelar;
+    private ListView listClienteanimais;
     private List<String> camposRequeridos;
     private List<String> camposRequeridosMensagem;
     private List<String> camposRequeridosTamanho;
@@ -103,6 +106,7 @@ public class ClienteDados extends Fragment {
         btSalvar = (Button) viewCliente.findViewById(R.id.btSalvar);
         btCancelar = (Button) viewCliente.findViewById(R.id.btCancelar);
         btSefaz = viewCliente.findViewById(R.id.consultarSefaz);
+        listClienteanimais = viewCliente.findViewById(R.id.listClienteanimais);
         final Cliente cliente = new Cliente();
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         ClienteDados clienteDados = new ClienteDados();
@@ -113,7 +117,7 @@ public class ClienteDados extends Fragment {
 
         //RETORNA O CLIENTE FILTRADO PELO BUNDLE
         final Bundle bundle = this.getArguments();
-        Long codigoCliente = bundle.getLong("codigo");
+        final Long codigoCliente = bundle.getLong("codigo");
         if (codigoCliente > 0) {
             boolean cpfcnpj = false;
             Cursor cursor = cliente.retornaClienteFiltrado(getContext(), codigoCliente);
@@ -153,22 +157,7 @@ public class ClienteDados extends Fragment {
                                         getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "##.###.###/####-##");
                                     }
                                 }
-//                                if (cursor.getString(cursor.getColumnIndex("cpf")) != null) {
-//                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
-//                                    if (retorno != null) {
-//                                        retorno = getSetDinamico.retornaValorCursor(tipo, "cpf", cursor);
-//                                        if (retorno.equals("")) {
-//                                            retorno = getSetDinamico.retornaValorCursor(tipo, "cgc", cursor);
-//                                            if (!retorno.equals("")) {
-//                                                getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "##.###.###/####-##");
-//                                            }
-//                                        } else {
-//                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), "###.###.###-##");
-//                                        }
-//                                    } else {
-//                                        getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", "###.###.###-##");
-//                                    }
-//                                }
+
                             } else {
                                 if (fieldListPassar.get(i).getName().equals("txCep")) {
                                     mascara = "#####-###";
@@ -182,7 +171,6 @@ public class ClienteDados extends Fragment {
                                 if (fieldListPassar.get(i).getName().equals("txFonetrab")) {
                                     mascara = "(##)#####-####";
                                 }
-                                Log.e("CURSOR", nomecampo);
                                 Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
                                 if (retorno != null) {
                                     getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, retorno.toString(), mascara);
@@ -194,56 +182,6 @@ public class ClienteDados extends Fragment {
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("au")) {
 
                             if (fieldListPassar.get(i).getName().equals("auCidade")) {
-
-//                                Cursor cursorCidade = cidade.retornaCidade(getContext());
-//                                List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
-//                                int posicao = 0;
-//                                if (cursorCidade.getCount() > 0) {
-//                                    cursor.moveToFirst();
-//                                    for (int j = 0; cursorCidade.getCount() != j; j++) {
-//                                        Cidade cidade1 = new Cidade();
-//
-//
-//                                        for (int f = 0; fieldListCidade.size() != f; f++) {
-//
-//                                            String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(f));
-//                                            String nomeCampo = fieldListCidade.get(f).getName().toLowerCase();
-//                                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCidade);
-//                                            if (retorno != null) {
-//                                                Object teste = getSetDinamico.insereField(fieldListCidade.get(f), cidade1, retorno);
-//                                                cidade1 = (Cidade) teste;
-//                                            }
-//
-//
-//                                        }
-//                                        cursorCidade.moveToNext();
-//                                        cidadeList.add(cidade1.toString());
-//                                        if (cursor.getString(cursor.getColumnIndex("codcidade")).equals(cidade1.getCodcidade().toString())) {
-//                                            for (int k = 0; cidadeList.size() != k; k++) {
-//                                                if (cidadeList.get(k).equals(cidade1.toString())) {
-//                                                    posicao = k;
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                                int posicao = 0;
-//                                Sessao.setaContext(getContext());
-//                                List<Cidade> listaCidade = Sessao.retornaListaCidade();
-//                                cidadeList.clear();
-//                                for (int j = 0; j < listaCidade.size(); j++) {
-//                                    cidadeList.add(listaCidade.get(j).toString());
-//                                }
-//                                for (int k = 0; cidadeList.size() != k; k++) {
-//                                    if (cursor.getString(cursor.getColumnIndex("codcidade")).equals(listaCidade.get(k).getCodcidade().toString())) {
-//
-//                                        if (cidadeList.get(k).equals(listaCidade.get(k).toString())) {
-//                                            posicao = k;
-//                                        }
-//
-//                                    }
-//                                }
-//                                getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, cidadeList, getContext(), posicao);
                                 listaCidade = Sessao.retornaListaCidade();
                                 int posicao = 0;
                                 for (int k = 0; listaCidade.size() > k; k++) {
@@ -298,7 +236,10 @@ public class ClienteDados extends Fragment {
                                     getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, stringList, getContext(), posicao);
                                 }
                             }
-
+                        } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("li")) {
+                            List<ClienteAnimais> clienteAnimaisList = new ClienteAnimais().retornaListaClienteAnimais(getContext(), codigoCliente);
+                            ArrayAdapter<ClienteAnimais> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, clienteAnimaisList);
+                            listClienteanimais.setAdapter(adapter);
                         }
 
                     }
@@ -328,31 +269,6 @@ public class ClienteDados extends Fragment {
                         getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, "", mascara);
                     } else if (fieldListPassar.get(i).getName().equals("auCidade")) {
                         Cursor cursorCidade = cidade.retornaCidade(getContext());
-
-//                        int posicao = 0;
-//                        if (cursorCidade.getCount() > 0) {
-//                            cursorCidade.moveToFirst();
-//                            for (int j = 0; cursorCidade.getCount() != j; j++) {
-//                                Cidade cidade1 = new Cidade();
-//                                List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(cidade1.getClass().getDeclaredFields()));
-//
-//                                for (int f = 0; fieldListCidade.size() != f; f++) {
-//
-//                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(f));
-//                                    String nomeCampo = fieldListCidade.get(f).getName().toLowerCase();
-//                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCidade);
-//                                    if (retorno != null) {
-//                                        Object teste = getSetDinamico.insereField(fieldListCidade.get(f), cidade1, retorno);
-//                                        cidade1 = (Cidade) teste;
-//                                    }
-//
-//
-//                                }
-//                                cursorCidade.moveToNext();
-//                                cidadeList.add(cidade1.toString());
-//                            }
-//                        }
-//                        getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, cidadeList, getContext(), posicao);
                         int posicao = 0;
                         auCidade = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(viewCliente, "auCidade");
                         ArrayAdapter<Cidade> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listaCidade);
@@ -615,73 +531,6 @@ public class ClienteDados extends Fragment {
                                         }
 
                                         getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, listaCidadeNova.get(posicao).toString(), null);
-////                                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), viewCliente, fieldListPassar, infCadastros.get(0).getXlgr(), null);
-//                                        Cursor cursorCidade = cidade.retornaCidade(getContext());
-//                                        List<Field> fieldListCidade = new ArrayList<>(Arrays.asList(cidade.getClass().getDeclaredFields()));
-//                                        int posicao = 0;
-//                                        if (cursorCidade.getCount() > 0) {
-//                                            cursorCidade.moveToFirst();
-//                                            for (int j = 0; cursorCidade.getCount() != j; j++) {
-//                                                Cidade cidade1 = new Cidade();
-//                                                for (int f = 0; fieldListCidade.size() != f; f++) {
-//                                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(f));
-//                                                    String nomeCampo = fieldListCidade.get(f).getName().toLowerCase();
-//                                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCidade);
-//                                                    if (retorno != null) {
-//                                                        Object teste = getSetDinamico.insereField(fieldListCidade.get(f), cidade1, retorno);
-//                                                        cidade1 = (Cidade) teste;
-//                                                    }
-//                                                }
-//                                                cursorCidade.moveToNext();
-//                                                if (infCadastros.get(0).getCmun().equals(cidade1.getCodnacionalcidade())) {
-//                                                    for (int k = 0; cidadeList.size() != k; k++) {
-//                                                        if (cidadeList.get(k).equals(cidade1.toString())) {
-//                                                            posicao = k;
-//                                                            encontrouCidade = true;
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//
-//
-//                                        if (encontrouCidade == false) {
-//                                            Cidade cidadeNova = new Cidade();
-//                                            cidadeNova.setCodnacionalcidade(infCadastros.get(0).getCmun());
-//                                            cidadeNova.setCep(infCadastros.get(0).getCep());
-//                                            cidadeNova.setNomecidade(infCadastros.get(0).getXmun());
-//                                            cidadeNova.setPais("Brasil");
-//                                            cidadeNova.setCodnacionaluf(infCadastros.get(0).getCmun().substring(0, 2));
-//                                            cidadeNova.setCadastroandroid(true);
-//                                            cidadeNova.setUf(infCadastros.get(0).getUf());
-//                                            cidadeNova.setCodnacionalpais("1058");
-//                                            cidadeList.clear();
-//                                            cidade.cadastraCidade(getContext(), cidadeNova);
-//                                            cursorCidade.moveToFirst();
-//                                            for (int j = 0; cursorCidade.getCount() != j; j++) {
-//                                                Cidade cidade1 = new Cidade();
-//                                                for (int f = 0; fieldListCidade.size() != f; f++) {
-//                                                    String tipo = getSetDinamico.retornaTipoCampo(fieldListCidade.get(f));
-//                                                    String nomeCampo = fieldListCidade.get(f).getName().toLowerCase();
-//                                                    Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCidade);
-//                                                    if (retorno != null) {
-//                                                        Object teste = getSetDinamico.insereField(fieldListCidade.get(f), cidade1, retorno);
-//                                                        cidade1 = (Cidade) teste;
-//                                                    }
-//                                                }
-//                                                cursorCidade.moveToNext();
-//                                                cidadeList.add(cidade1.toString());
-//                                                if (infCadastros.get(0).getCmun().equals(cidade1.getCodnacionalcidade().toString())) {
-//                                                    for (int k = 0; cidadeList.size() != k; k++) {
-//                                                        if (cidadeList.get(k).equals(cidade1.toString())) {
-//                                                            posicao = k;
-//                                                            encontrouCidade = true;
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                        getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, cidadeList, getContext(), posicao);
                                     }
                                 }
                             }
@@ -692,6 +541,20 @@ public class ClienteDados extends Fragment {
                         criaEmail.enviarEmail(getContext(), mac.retornaMac(getContext()), ex.getMessage());
                     }
                 }
+            }
+        });
+
+        listClienteanimais.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ClienteAnimaisFragment clienteAnimaisFragment = new ClienteAnimaisFragment();
+                ClienteAnimais  clienteAnimais = (ClienteAnimais) listClienteanimais.getItemAtPosition(i);
+                Bundle bundle1 = new Bundle();
+                bundle1.putLong("codigo", codigoCliente);
+                bundle1.putLong("idclienteanimal", clienteAnimais.getIdclienteanimal());
+                clienteAnimaisFragment.setArguments(bundle1);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, clienteAnimaisFragment, clienteAnimaisFragment.getTag()).commit();
             }
         });
 

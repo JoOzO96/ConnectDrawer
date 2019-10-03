@@ -3,6 +3,7 @@ package com.example.jose.connectdrawer.sincronizacao;
 import android.content.Context;
 import android.os.Handler;
 
+import com.example.jose.connectdrawer.Emitente.EmiteConfigura;
 import com.example.jose.connectdrawer.uteis.MostraToast;
 import com.example.jose.connectdrawer.uteis.Sessao;
 
@@ -23,7 +24,9 @@ public class Sincroniza {
         SincFormaPagamento sincFormaPagamento = new SincFormaPagamento();
         SincParcelas sincParcelas = new SincParcelas();
         SincIcms sincIcms = new SincIcms();
+        SincClienteAnimais sincClienteAnimais = new SincClienteAnimais();
         SincEmiteConfigura sincEmiteConfigura = new SincEmiteConfigura();
+
         final SincMac sincMac = new SincMac();
         SincEmitente sincEmitente = new SincEmitente();
         String ip = null;
@@ -57,6 +60,10 @@ public class Sincroniza {
             sincPedido.iniciaenvio(context, ip);
 //            sincPedidoProduto.iniciaenvio(context, ip);
             sincParcelas.iniciaenvio(context, ip);
+            EmiteConfigura emiteConfigura = new EmiteConfigura().retornaEmiteConfiguraObjeto(context, 1L);
+            if (emiteConfigura.getEmpresapet()){
+                sincClienteAnimais.iniciaAsinc(context, ip);
+            }
             Sessao.terminaProgress();
 
         }

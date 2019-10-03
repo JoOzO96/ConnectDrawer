@@ -1161,7 +1161,10 @@ public class PedidoDados extends Fragment {
 
             if (retorno) {
                 if (clique == 1) {
-                    if (txPedido == null) {
+                    if (txPedido.getText().equals("")) {
+                        pedido.setPedido(pedido.retornaMaiorCod(getContext()));
+                    }
+                    if (pedido.getPedido() == null){
                         pedido.setPedido(pedido.retornaMaiorCod(getContext()));
                     }
                     if (pedido.getPedido() > 0) {

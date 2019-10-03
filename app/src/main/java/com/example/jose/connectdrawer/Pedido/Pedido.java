@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.jose.connectdrawer.ControleCodigo.ControleCodigo;
 import com.example.jose.connectdrawer.Parcelas.Parcelas;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
 import com.example.jose.connectdrawer.banco.Banco;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Jose on 21/06/2017.
@@ -815,6 +817,107 @@ public class Pedido {
         return "" + pedido + " - " + nome;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pedido)) return false;
+        Pedido pedido1 = (Pedido) o;
+        return Objects.equals(getPedido(), pedido1.getPedido()) &&
+                Objects.equals(getCodpedido(), pedido1.getCodpedido()) &&
+                Objects.equals(getCodcliente(), pedido1.getCodcliente()) &&
+                Objects.equals(getData(), pedido1.getData()) &&
+                Objects.equals(getCodvendedor(), pedido1.getCodvendedor()) &&
+                Objects.equals(getFormadepagamento(), pedido1.getFormadepagamento()) &&
+                Objects.equals(getFrete(), pedido1.getFrete()) &&
+                Objects.equals(getValortotal(), pedido1.getValortotal()) &&
+                Objects.equals(getEntrada(), pedido1.getEntrada()) &&
+                Objects.equals(getOrpedi(), pedido1.getOrpedi()) &&
+                Objects.equals(getCodbanco(), pedido1.getCodbanco()) &&
+                Objects.equals(getObs(), pedido1.getObs()) &&
+                Objects.equals(getDesconto(), pedido1.getDesconto()) &&
+                Objects.equals(getNome(), pedido1.getNome()) &&
+                Objects.equals(getTotal(), pedido1.getTotal()) &&
+                Objects.equals(getVenci1(), pedido1.getVenci1()) &&
+                Objects.equals(getValor1(), pedido1.getValor1()) &&
+                Objects.equals(getDias(), pedido1.getDias()) &&
+                Objects.equals(getJuro(), pedido1.getJuro()) &&
+                Objects.equals(getSimnao(), pedido1.getSimnao()) &&
+                Objects.equals(getPgto(), pedido1.getPgto()) &&
+                Objects.equals(getCheque(), pedido1.getCheque()) &&
+                Objects.equals(getData1(), pedido1.getData1()) &&
+                Objects.equals(getNotafisca(), pedido1.getNotafisca()) &&
+                Objects.equals(getVia(), pedido1.getVia()) &&
+                Objects.equals(getBaixa(), pedido1.getBaixa()) &&
+                Objects.equals(getVeiculo(), pedido1.getVeiculo()) &&
+                Objects.equals(getPlaca(), pedido1.getPlaca()) &&
+                Objects.equals(getAno(), pedido1.getAno()) &&
+                Objects.equals(getNparce(), pedido1.getNparce()) &&
+                Objects.equals(getCodinstituicao(), pedido1.getCodinstituicao()) &&
+                Objects.equals(getNfc(), pedido1.getNfc()) &&
+                Objects.equals(getDife(), pedido1.getDife()) &&
+                Objects.equals(getComis(), pedido1.getComis()) &&
+                Objects.equals(getNfe(), pedido1.getNfe()) &&
+                Objects.equals(getVpago(), pedido1.getVpago()) &&
+                Objects.equals(getTroco(), pedido1.getTroco()) &&
+                Objects.equals(getCodhistorico(), pedido1.getCodhistorico()) &&
+                Objects.equals(getDescvalor(), pedido1.getDescvalor()) &&
+                Objects.equals(getCodemitente(), pedido1.getCodemitente()) &&
+                Objects.equals(getCodmecanico(), pedido1.getCodmecanico()) &&
+                Objects.equals(getValorservico(), pedido1.getValorservico()) &&
+                Objects.equals(getDescoservico(), pedido1.getDescoservico()) &&
+                Objects.equals(getJuntapedido(), pedido1.getJuntapedido()) &&
+                Objects.equals(getKm(), pedido1.getKm()) &&
+                Objects.equals(getNparc(), pedido1.getNparc()) &&
+                Objects.equals(getNcf(), pedido1.getNcf()) &&
+                Objects.equals(getComi(), pedido1.getComi()) &&
+                Objects.equals(getDesvalor(), pedido1.getDesvalor()) &&
+                Objects.equals(getCpf(), pedido1.getCpf()) &&
+                Objects.equals(getParce(), pedido1.getParce()) &&
+                Objects.equals(getImpressora(), pedido1.getImpressora()) &&
+                Objects.equals(getInicialp(), pedido1.getInicialp()) &&
+                Objects.equals(getFinalp(), pedido1.getFinalp()) &&
+                Objects.equals(getTotalp(), pedido1.getTotalp()) &&
+                Objects.equals(getGerabloqueto(), pedido1.getGerabloqueto()) &&
+                Objects.equals(getGerabloqueto1(), pedido1.getGerabloqueto1()) &&
+                Objects.equals(getCodplanocontas(), pedido1.getCodplanocontas()) &&
+                Objects.equals(getCodcentrocustos(), pedido1.getCodcentrocustos()) &&
+                Objects.equals(getDocumento(), pedido1.getDocumento()) &&
+                Objects.equals(getCodproduto(), pedido1.getCodproduto()) &&
+                Objects.equals(getMensagem(), pedido1.getMensagem()) &&
+                Objects.equals(getEstornop(), pedido1.getEstornop()) &&
+                Objects.equals(getCodstatus(), pedido1.getCodstatus()) &&
+                Objects.equals(getBaixaf(), pedido1.getBaixaf()) &&
+                Objects.equals(getAcreboleto(), pedido1.getAcreboleto()) &&
+                Objects.equals(getAparelho(), pedido1.getAparelho()) &&
+                Objects.equals(getDefeito(), pedido1.getDefeito()) &&
+                Objects.equals(getPedidoreferencia(), pedido1.getPedidoreferencia()) &&
+                Objects.equals(getEnderecopedido(), pedido1.getEnderecopedido()) &&
+                Objects.equals(getNfce(), pedido1.getNfce()) &&
+                Objects.equals(getNfcee(), pedido1.getNfcee()) &&
+                Objects.equals(getCodcaixa(), pedido1.getCodcaixa()) &&
+                Objects.equals(getJuridica(), pedido1.getJuridica()) &&
+                Objects.equals(getAjuste(), pedido1.getAjuste()) &&
+                Objects.equals(getDataentrega(), pedido1.getDataentrega()) &&
+                Objects.equals(getServicosolicitado(), pedido1.getServicosolicitado()) &&
+                Objects.equals(getNnotaservico(), pedido1.getNnotaservico()) &&
+                Objects.equals(getCodbandeira(), pedido1.getCodbandeira()) &&
+                Objects.equals(getOrcamentofinalizado(), pedido1.getOrcamentofinalizado()) &&
+                Objects.equals(getCoddigitador(), pedido1.getCoddigitador()) &&
+                Objects.equals(getHorasdemotor(), pedido1.getHorasdemotor()) &&
+                Objects.equals(getHorasdetrilha(), pedido1.getHorasdetrilha()) &&
+                Objects.equals(getEspecial(), pedido1.getEspecial()) &&
+                Objects.equals(getRota(), pedido1.getRota()) &&
+                Objects.equals(getGeradoautomatico(), pedido1.getGeradoautomatico()) &&
+                Objects.equals(getCadastroandroid(), pedido1.getCadastroandroid()) &&
+                Objects.equals(getAlteradoandroid(), pedido1.getAlteradoandroid()) &&
+                Objects.equals(getItensPedido(), pedido1.getItensPedido());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPedido(), getCodpedido(), getCodcliente(), getData(), getCodvendedor(), getFormadepagamento(), getFrete(), getValortotal(), getEntrada(), getOrpedi(), getCodbanco(), getObs(), getDesconto(), getNome(), getTotal(), getVenci1(), getValor1(), getDias(), getJuro(), getSimnao(), getPgto(), getCheque(), getData1(), getNotafisca(), getVia(), getBaixa(), getVeiculo(), getPlaca(), getAno(), getNparce(), getCodinstituicao(), getNfc(), getDife(), getComis(), getNfe(), getVpago(), getTroco(), getCodhistorico(), getDescvalor(), getCodemitente(), getCodmecanico(), getValorservico(), getDescoservico(), getJuntapedido(), getKm(), getNparc(), getNcf(), getComi(), getDesvalor(), getCpf(), getParce(), getImpressora(), getInicialp(), getFinalp(), getTotalp(), getGerabloqueto(), getGerabloqueto1(), getCodplanocontas(), getCodcentrocustos(), getDocumento(), getCodproduto(), getMensagem(), getEstornop(), getCodstatus(), getBaixaf(), getAcreboleto(), getAparelho(), getDefeito(), getPedidoreferencia(), getEnderecopedido(), getNfce(), getNfcee(), getCodcaixa(), getJuridica(), getAjuste(), getDataentrega(), getServicosolicitado(), getNnotaservico(), getCodbandeira(), getOrcamentofinalizado(), getCoddigitador(), getHorasdemotor(), getHorasdetrilha(), getEspecial(), getRota(), getGeradoautomatico(), getCadastroandroid(), getAlteradoandroid(), getItensPedido());
+    }
+
     public Cursor retornaPedido(Context context) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
@@ -919,13 +1022,27 @@ public class Pedido {
         }
     }
 
-    public void alteraCodPedido(Context context, Long codigoAndroid, Long codigoServidor) {
+    public List<Pedido> alteraCodPedido(Context context, Long codigoAndroid, Long codigoServidor, List<Pedido> pedidoList) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         ContentValues values = new ContentValues();
+        Pedido pedido = new Pedido().retornaPedidoObjeto(context, codigoServidor);
+
+        if (!pedido.equals(new Pedido())){
+            for (int i = 0 ; pedidoList.size() > i ; i++){
+                if (pedidoList.get(i).getPedido().equals(pedido.getPedido())){
+                    pedidoList.get(i).setPedido(Long.parseLong(String.valueOf(9999 + pedido.getPedido())));
+                }
+            }
+            alteraCodPedido(context, pedido.getPedido(), Long.parseLong(String.valueOf(9999 + pedido.getPedido())), pedidoList);
+            alteraCodPedidoProduto(context, pedido.getPedido(), Long.parseLong(String.valueOf(9999 + pedido.getPedido())));
+            alteraParcelas(context, pedido.getPedido(), Long.parseLong(String.valueOf(9999 + pedido.getPedido())));
+        }
+
         values.put("pedido", codigoServidor);
         int retorno = db.update("pedido", values, "pedido = " + codigoAndroid, null);
         values.clear();
+        return pedidoList;
     }
 
     public void alteraCodPedidoProduto(Context context, Long codigoAndroid, Long codigoServidor) {

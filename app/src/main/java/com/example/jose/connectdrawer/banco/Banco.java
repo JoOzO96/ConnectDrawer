@@ -12,7 +12,7 @@ import android.util.Log;
 public class Banco extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "connect.db";
-    private static final int VERSAO = 8;
+    private static final int VERSAO = 9;
 
     public Banco(Context context) {
         super(context, NOME_BANCO, null, VERSAO);
@@ -952,9 +952,27 @@ public class Banco extends SQLiteOpenHelper {
         executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN naoalteravalordevenda BOOLEAN");
         executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezaremessa TEXT");
         executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN codnaturezavendadireta TEXT");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usarconversaocst BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exportarapenasquantidade BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN permitirdowloadnfecte BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN porcentagempadraoctefrete LONG");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN alterarcodigoentrada BOOLEAN");
+        executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN empresapet BOOLEAN");
 
         executaSQL(db, "CREATE TABLE configuracoeslocais(id long);");
         executaSQL(db, "ALTER TABLE configuracoeslocais ADD COLUMN codvendedor text");
+
+        executaSQL(db, "CREATE TABLE clienteanimais(idclienteanimal long, cadastroandroid boolean,alteradoandroid boolean,deletadoandroid boolean);");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN codcliente LONG");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN nomeanimal TEXT");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN datanascimentoanimal LONG");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN especieanimal TEXT");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN sexoanimal TEXT");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN racaanimal TEXT");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN pelagem TEXT");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN pesoanimal LONG");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN situacaoanimal TEXT");
+        executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN obsanimal TEXT");
 
     }
 
@@ -1842,6 +1860,29 @@ public class Banco extends SQLiteOpenHelper {
         if (oldVersion < 8 ) {
             executaSQL(db, "CREATE TABLE configuracoeslocais(id long);");
             executaSQL(db, "ALTER TABLE configuracoeslocais ADD COLUMN codvendedor text");
+        }
+
+        if (oldVersion < 9){
+
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN usarconversaocst BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN exportarapenasquantidade BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN permitirdowloadnfecte BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN porcentagempadraoctefrete LONG");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN alterarcodigoentrada BOOLEAN");
+            executaSQL(db,"ALTER TABLE emiteconfigura ADD COLUMN empresapet BOOLEAN");
+
+
+            executaSQL(db, "CREATE TABLE clienteanimais(idclienteanimal long, cadastroandroid boolean,alteradoandroid boolean,deletadoandroid boolean);");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN codcliente LONG");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN nomeanimal TEXT");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN datanascimentoanimal LONG");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN especieanimal TEXT");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN sexoanimal TEXT");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN racaanimal TEXT");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN pelagem TEXT");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN pesoanimal LONG");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN situacaoanimal TEXT");
+            executaSQL(db,"ALTER TABLE clienteanimais ADD COLUMN obsanimal TEXT");
         }
 
 

@@ -244,9 +244,9 @@ public class SincPedido {
                     List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
                     pedido = new Pedido();
                     for (int j = 0; controleCodigoList.size() != j; j++) {
-                        pedido.alteraCodPedido(context, controleCodigoList.get(j).getCodigoAndroid(), controleCodigoList.get(j).getCodigoBanco());
-                        pedido.alteraCodPedidoProduto(context, controleCodigoList.get(j).getCodigoAndroid(), controleCodigoList.get(j).getCodigoBanco());
-                        pedido.alteraParcelas(context, controleCodigoList.get(j).getCodigoAndroid(), controleCodigoList.get(j).getCodigoBanco());
+                        pedidoList = pedido.alteraCodPedido(context, pedidoList.get(i).getPedido(), controleCodigoList.get(j).getCodigoBanco(), pedidoList);
+                        pedido.alteraCodPedidoProduto(context, pedidoList.get(i).getPedido(), controleCodigoList.get(j).getCodigoBanco());
+                        pedido.alteraParcelas(context, pedidoList.get(i).getPedido(), controleCodigoList.get(j).getCodigoBanco());
                         pedido.removePedidoAlteradaAndroid(context, "cadastroandroid", controleCodigoList.get(j).getCodigoBanco());
                         sincPedidoProduto.iniciaenvio(context, ip, controleCodigoList.get(j).getCodigoBanco());
                     }

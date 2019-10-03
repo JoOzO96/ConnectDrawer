@@ -23,10 +23,6 @@
             android:icon="@drawable/ic_people_black"
             android:title="Vendedor" />
         <item
-            android:id="@+id/nav_testeimpressao"
-            android:icon="@drawable/ic_people_black"
-            android:title="Teste Impressão" />
-        <item
             android:id="@+id/nav_formapagamento"
             android:icon="@drawable/ic_payment_black"
             android:title="Forma Pagamento" />

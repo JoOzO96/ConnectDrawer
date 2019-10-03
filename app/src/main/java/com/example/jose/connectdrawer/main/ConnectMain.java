@@ -156,10 +156,6 @@ public class ConnectMain extends AppCompatActivity
             VendedorFragment vendedorFragment = new VendedorFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, vendedorFragment, vendedorFragment.getTag()).commit();
-        } else if (id == R.id.nav_testeimpressao) {
-            A7Dados a7Dados = new A7Dados();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, a7Dados, a7Dados.getTag()).commit();
         } else if (id == R.id.nav_formapagamento) {
             FormaPagamentoFragment formaPagamentoFragment = new FormaPagamentoFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

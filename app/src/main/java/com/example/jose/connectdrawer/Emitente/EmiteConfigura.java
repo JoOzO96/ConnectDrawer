@@ -101,6 +101,12 @@ public class EmiteConfigura {
     String codnaturezavendadireta;
     String produtoaidf;
     Boolean enviadadossped;
+    Boolean usarconversaocst;
+    Boolean exportarapenasquantidade;
+    Boolean permitirdowloadnfecte;
+    Double porcentagempadraoctefrete;
+    Boolean alterarcodigoentrada;
+    Boolean empresapet;
 
     public Long getCodemitente() {
         return codemitente;
@@ -772,6 +778,54 @@ public class EmiteConfigura {
 
     public void setCodnaturezavendadireta(String codnaturezavendadireta) {
         this.codnaturezavendadireta = codnaturezavendadireta;
+    }
+
+    public Boolean getUsarconversaocst() {
+        return usarconversaocst;
+    }
+
+    public void setUsarconversaocst(Boolean usarconversaocst) {
+        this.usarconversaocst = usarconversaocst;
+    }
+
+    public Boolean getExportarapenasquantidade() {
+        return exportarapenasquantidade;
+    }
+
+    public void setExportarapenasquantidade(Boolean exportarapenasquantidade) {
+        this.exportarapenasquantidade = exportarapenasquantidade;
+    }
+
+    public Boolean getPermitirdowloadnfecte() {
+        return permitirdowloadnfecte;
+    }
+
+    public void setPermitirdowloadnfecte(Boolean permitirdowloadnfecte) {
+        this.permitirdowloadnfecte = permitirdowloadnfecte;
+    }
+
+    public Double getPorcentagempadraoctefrete() {
+        return porcentagempadraoctefrete;
+    }
+
+    public void setPorcentagempadraoctefrete(Double porcentagempadraoctefrete) {
+        this.porcentagempadraoctefrete = porcentagempadraoctefrete;
+    }
+
+    public Boolean getAlterarcodigoentrada() {
+        return alterarcodigoentrada;
+    }
+
+    public void setAlterarcodigoentrada(Boolean alterarcodigoentrada) {
+        this.alterarcodigoentrada = alterarcodigoentrada;
+    }
+
+    public Boolean getEmpresapet() {
+        return empresapet;
+    }
+
+    public void setEmpresapet(Boolean empresapet) {
+        this.empresapet = empresapet;
     }
 
     public Boolean cadastraEmiteConfigura(Context context, EmiteConfigura emiteConfigura) {
