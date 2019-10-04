@@ -21,6 +21,7 @@ import android.widget.Spinner;
 
 import com.example.jose.connectdrawer.ConsultaSefaz.InfCadastro;
 import com.example.jose.connectdrawer.Email.CriaEmail;
+import com.example.jose.connectdrawer.Emitente.EmiteConfigura;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.Vendedor.Vendedor;
 import com.example.jose.connectdrawer.cidade.Cidade;
@@ -62,6 +63,7 @@ public class ClienteDados extends Fragment {
     //    private Spinner spCidade;
     private Spinner spPosicao;
     private Spinner spCodvendedor;
+    private Button btCadastroanimais;
     private Button btSefaz;
     private Button btSalvar;
     private Button btCancelar;
@@ -106,6 +108,7 @@ public class ClienteDados extends Fragment {
         btSalvar = (Button) viewCliente.findViewById(R.id.btSalvar);
         btCancelar = (Button) viewCliente.findViewById(R.id.btCancelar);
         btSefaz = viewCliente.findViewById(R.id.consultarSefaz);
+        btCadastroanimais = viewCliente.findViewById(R.id.btCadastroanimais);
         listClienteanimais = viewCliente.findViewById(R.id.listClienteanimais);
         final Cliente cliente = new Cliente();
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
@@ -221,6 +224,9 @@ public class ClienteDados extends Fragment {
                                 List<Vendedor> vendedorList = vendedor.retornaListaVendedor(getContext());
                                 List<String> stringList = new ArrayList<>();
                                 int posicao = 0;
+                                for (int k = 0; vendedorList.size() > k; k++) {
+                                    stringList.add(vendedorList.get(k).toString());
+                                }
                                 if (cursor.getString(cursor.getColumnIndex("codvendedor")) != null) {
                                     for (int k = 0; vendedorList.size() > k; k++) {
                                         if (cursor.getString(cursor.getColumnIndex("codvendedor")).equals(vendedorList.get(k).getCodvendedor().toString())) {
@@ -228,12 +234,9 @@ public class ClienteDados extends Fragment {
                                             break;
                                         }
                                     }
-
-                                    for (int k = 0; vendedorList.size() > k; k++) {
-                                        stringList.add(vendedorList.get(k).toString());
-                                    }
-
                                     getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, stringList, getContext(), posicao);
+                                }else   {
+                                    getSetDinamicoTelas.colocaValorSpinner(fieldListPassar.get(i), viewCliente, stringList, getContext(), 0);
                                 }
                             }
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("li")) {
@@ -558,6 +561,40 @@ public class ClienteDados extends Fragment {
             }
         });
 
+        listClienteanimais.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ClienteAnimaisFragment clienteAnimaisFragment = new ClienteAnimaisFragment();
+                ClienteAnimais  clienteAnimais = (ClienteAnimais) listClienteanimais.getItemAtPosition(i);
+                clienteAnimais.removeAnimal(getContext(), clienteAnimais.getIdclienteanimal());
+                ClienteDados clienteDados = new ClienteDados();
+                Bundle bundle = new Bundle();
+                bundle.putLong("codigo", codigoCliente);
+                clienteDados.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, clienteDados, clienteDados.getTag()).commit();
+                return true;
+            }
+        });
+
+        btCadastroanimais.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClienteAnimaisFragment clienteAnimaisFragment = new ClienteAnimaisFragment();
+                Bundle bundle1 = new Bundle();
+                bundle1.putLong("codigo", codigoCliente);
+                clienteAnimaisFragment.setArguments(bundle1);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, clienteAnimaisFragment, clienteAnimaisFragment.getTag()).commit();
+            }
+        });
+
+
+        EmiteConfigura emiteConfigura = new EmiteConfigura().retornaEmiteConfiguraObjeto(getContext(), 1L);
+        if (!emiteConfigura.getEmpresapet()){
+            listClienteanimais.setVisibility(View.INVISIBLE);
+            btCadastroanimais.setVisibility(View.INVISIBLE);
+        }
         return viewCliente;
 
 

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.jose.connectdrawer.banco.Banco;
 import com.example.jose.connectdrawer.uteis.DadosBanco;
@@ -28,6 +29,8 @@ public class ClienteAnimais {
     Double pesoanimal;
     String situacaoanimal;
     String obsanimal;
+    Boolean cadastroandroid;
+    Boolean alteradoandroid;
 
     public Long getIdclienteanimal() {
         return idclienteanimal;
@@ -117,6 +120,22 @@ public class ClienteAnimais {
         this.obsanimal = obsanimal;
     }
 
+    public Boolean getCadastroandroid() {
+        return cadastroandroid;
+    }
+
+    public void setCadastroandroid(Boolean cadastroandroid) {
+        this.cadastroandroid = cadastroandroid;
+    }
+
+    public Boolean getAlteradoandroid() {
+        return alteradoandroid;
+    }
+
+    public void setAlteradoandroid(Boolean alteradoandroid) {
+        this.alteradoandroid = alteradoandroid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -157,7 +176,7 @@ public class ClienteAnimais {
         }
     }
 
-    public Cursor retornaClienteAlteradaAndroid(Context context, String tipo) {
+    public Cursor retornaAnimalAlteradaAndroid(Context context, String tipo) {
         Banco myDb = new Banco(context);
         SQLiteDatabase db = myDb.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM clienteanimais where " + tipo + " = 1", null);
@@ -166,6 +185,32 @@ public class ClienteAnimais {
         }
         db.close();
         return cursor;
+    }
+
+    public void removeAnimalAlteradaAndroid(Context context, String campo) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(campo,"0");
+        int retorno = db.update("clienteanimais", values, campo + " = 1", null);
+        Log.i("ALTERADO", "" + retorno);
+    }
+
+    public void alteraIdclienteanimal(Context context, Long codigoAndroid, Long codigoServidor) {
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("idclienteanimal", codigoServidor);
+        int retorno = db.update("clienteanimais", values, "idclienteanimal = " + codigoAndroid, null);
+
+    }
+
+    public void removeAnimal(Context context, Long idclienteanimal){
+        Banco myDb;
+        myDb = new Banco(context);
+
+        SQLiteDatabase db = myDb.getWritableDatabase();
+        db.delete("clienteanimais",  "idclienteanimal = " + idclienteanimal ,null);
     }
 
     public Boolean cadastraClienteAnimais(Context context, ClienteAnimais clienteAnimais) {
@@ -194,7 +239,6 @@ public class ClienteAnimais {
             if (!clienteanimaisret.equals(clienteAnimais)) {
                 if (clienteanimaisret.equals(new ClienteAnimais())) {
                     valores.remove("cadastroandroid");
-                    valores.put("cadastroandroid", true);
                     retorno = db.insert("clienteanimais", null, valores);
                     db.close();
                     valores.clear();
@@ -257,4 +301,12 @@ public class ClienteAnimais {
         }
         return clienteAnimaisList;
     }
+
+    public void removeAnimais(Context context){
+        Banco myDb = new Banco(context);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        db.delete("clienteanimais", null,null);
+
+    }
+
 }

@@ -90,6 +90,9 @@ public class RetRetrofit {
             } else if (tipo.equals("pedidoproduto")) {
                 url = "http://" + ip + "/api/PedidoProduto";
 //                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
+            }else if (tipo.equals("clienteanimais")) {
+                url = "http://" + ip + "/api/clienteanimais";
+//                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             }
         } else {
             if (tipo.equals("cidade")) {
@@ -107,6 +110,9 @@ public class RetRetrofit {
             } else if (tipo.equals("pedidoproduto")) {
                 url = "http://" + ip + "/api/PedidoProduto";
 //                url = "http://" + ip + ":8080/ConnectServices/recebePedido";
+            }else if (tipo.equals("clienteanimais")) {
+                url = "http://" + ip + "/api/clienteanimais";
+//                url = "http://192.168.0.199:8080/ConnectServices/recebePedido";
             }
         }
 

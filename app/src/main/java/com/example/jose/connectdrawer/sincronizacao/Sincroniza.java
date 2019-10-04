@@ -63,6 +63,7 @@ public class Sincroniza {
             EmiteConfigura emiteConfigura = new EmiteConfigura().retornaEmiteConfiguraObjeto(context, 1L);
             if (emiteConfigura.getEmpresapet()){
                 sincClienteAnimais.iniciaAsinc(context, ip);
+                sincClienteAnimais.iniciaenvio(context, ip);
             }
             Sessao.terminaProgress();
 

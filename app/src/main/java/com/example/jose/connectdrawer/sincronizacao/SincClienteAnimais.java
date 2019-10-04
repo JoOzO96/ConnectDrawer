@@ -65,7 +65,7 @@ public class SincClienteAnimais {
         Retrofit retrofit = retRetrofit.retornaRetrofit(ip);
         ClienteAnimais clienteAnimais = new ClienteAnimais();
         final Mac mac = new Mac();
-
+//        clienteAnimais.removeAnimais(Sessao.retornaContext());
         ClienteAnimaisService clienteAnimaisService = retrofit.create(ClienteAnimaisService.class);
         final Call<List<ClienteAnimais>> requestCliente = clienteAnimaisService.listClienteAnimais();
         final Response<List<ClienteAnimais>>[] response = new Response[]{null};
@@ -129,8 +129,8 @@ public class SincClienteAnimais {
         List<ClienteAnimais> clienteAnimaisList = new ArrayList<>();
         GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(ClienteAnimais.class.getDeclaredFields()));
-        Cursor cursor = clienteAnimais.retornaClienteAlteradaAndroid(context, "cadastroandroid");
-        Sessao.colocaTexto("Verificando clientes novos.");
+        Cursor cursor = clienteAnimais.retornaAnimalAlteradaAndroid(context, "cadastroandroid");
+        Sessao.colocaTexto("Verificando animais novos.");
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
                 clienteAnimais = new ClienteAnimais();
@@ -152,10 +152,11 @@ public class SincClienteAnimais {
 
         RetRetrofit retRetrofit = new RetRetrofit();
         if (clienteAnimaisList.size() > 0) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'hh:mm:ss").create();
             String gsonRetorno = gson.toJson(clienteAnimaisList);
             EnviaJson enviaJson = new EnviaJson();
-            String url = retRetrofit.retornaSring("cliente", ip);
+            String url = retRetrofit.retornaSring("clienteanimais", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {
@@ -175,9 +176,8 @@ public class SincClienteAnimais {
                         MostraToast mostraToast = new MostraToast();
                         mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro: " + controleCodigoList.get(i).getMensagem());
                     } else {
-                        cliente.alteraPedidoCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                        cliente.alteraCodCliente(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
-                        cliente.removeClienteAlteradaAndroid(context, "cadastroandroid");
+                        clienteAnimais.alteraIdclienteanimal(context, controleCodigoList.get(i).getCodigoAndroid(), controleCodigoList.get(i).getCodigoBanco());
+                        clienteAnimais.removeAnimalAlteradaAndroid(context, "cadastroandroid");
                     }
 
                 }
@@ -191,35 +191,36 @@ public class SincClienteAnimais {
         //
 
 
-        cliente = new Cliente();
-        clienteList = new ArrayList<>();
+        clienteAnimais = new ClienteAnimais();
+        clienteAnimaisList = new ArrayList<>();
         getSetDinamico = new GetSetDinamico();
-        fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
-        cursor = cliente.retornaClienteAlteradaAndroid(context, "alteradoandroid");
+        fieldListCliente = new ArrayList<>(Arrays.asList(ClienteAnimais.class.getDeclaredFields()));
+        cursor = clienteAnimais.retornaAnimalAlteradaAndroid(context, "alteradoandroid");
 
         if (cursor.getCount() > 0) {
             for (long i = 0L; cursor.getCount() != i; i++) {
-                cliente = new Cliente();
+                clienteAnimais = new ClienteAnimais();
                 for (int cid = 0; fieldListCliente.size() != cid; cid++) {
                     if (fieldListCliente.get(cid).getName().toLowerCase().equals("$change") ||
                             fieldListCliente.get(cid).getName().toLowerCase().equals("serialversionuid")) {
                     } else {
                         String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(cid));
                         Object retornoCursor = getSetDinamico.retornaValorCursor(tipo, fieldListCliente.get(cid).getName(), cursor);
-                        Object clienteRetorno = getSetDinamico.insereField(fieldListCliente.get(cid), cliente, retornoCursor);
-                        cliente = (Cliente) clienteRetorno;
+                        Object clienteRetorno = getSetDinamico.insereField(fieldListCliente.get(cid), clienteAnimais, retornoCursor);
+                        clienteAnimais = (ClienteAnimais) clienteRetorno;
                     }
                 }
-                clienteList.add(cliente);
+                clienteAnimaisList.add(clienteAnimais);
 
                 cursor.moveToNext();
             }
         }
-        if (clienteList.size() > 0) {
-            Gson gson = new Gson();
-            String gsonRetorno = gson.toJson(clienteList);
+        if (clienteAnimaisList.size() > 0) {
+            Gson gson  = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'hh:mm:ss").create();
+            String gsonRetorno = gson.toJson(clienteAnimaisList);
             EnviaJson enviaJson = new EnviaJson();
-            String url = retRetrofit.retornaSring("cliente", ip);
+            String url = retRetrofit.retornaSring("clienteanimais", ip);
             List<ControleCodigo> retorno = null;
             String retornoEnvio = "";
             try {
@@ -232,13 +233,13 @@ public class SincClienteAnimais {
             }
             ControleCodigo conversao[] = gson.fromJson(retornoEnvio, ControleCodigo[].class);
             List<ControleCodigo> controleCodigoList = new ArrayList<>(Arrays.asList(conversao));
-            cliente = new Cliente();
+            clienteAnimais = new ClienteAnimais();
             for (int i = 0; controleCodigoList.size() != i; i++) {
                 if (controleCodigoList.get(i).getCodigoBanco() == 0) {
                     MostraToast mostraToast = new MostraToast();
                     mostraToast.mostraToastLong(Sessao.retornaContext(), "Erro: " + controleCodigoList.get(i).getMensagem());
                 } else {
-                    cliente.removeClienteAlteradaAndroid(context, "alteradoandroid");
+                    clienteAnimais.removeAnimalAlteradaAndroid(context, "alteradoandroid");
                 }
 
             }
