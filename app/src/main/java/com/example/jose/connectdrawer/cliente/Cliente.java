@@ -935,4 +935,89 @@ public class Cliente {
         int retorno = db.update("cliente", values, campo + " = 1", null);
 
     }
+
+    public List<Cliente> retornaListaCliente(Context context, Boolean simplificado) {
+        Banco myDb = new Banco(context);
+        List<Cliente> clientes = new ArrayList<>();
+        Cliente cliente = new Cliente();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM cliente", null);
+        if (simplificado) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cliente = new Cliente();
+                    cliente = retornaClienteSimplificado(context, cursor.getLong(cursor.getColumnIndex("codigo")));
+                    clientes.add(cliente);
+                    cursor.moveToNext();
+                }
+            }
+        } else {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cliente = new Cliente();
+                    cliente = retornaClienteObjeto(context, cursor.getLong(cursor.getColumnIndex("codigo")));
+                    clientes.add(cliente);
+                    cursor.moveToNext();
+                }
+            }
+        }
+
+
+        return clientes;
+    }
+
+    public Cliente retornaClienteSimplificado(Context context, Long codigo) {
+        Banco myDb = new Banco(context);
+        Cliente cliente = new Cliente();
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT rowid _id, codigo, nomecliente FROM cliente where codigo = " + codigo, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+        }
+        List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+
+        for (int j = fieldListCliente.size() - 1; 0 <= j; j--) {
+            if (fieldListCliente.get(j).getName().toLowerCase().equals("codigo") || fieldListCliente.get(j).getName().toLowerCase().equals("nomecliente")) {
+
+            } else {
+                fieldListCliente.remove(j);
+            }
+        }
+
+        for (int i = 0; cursor.getCount() != i; i++) {
+            Cliente cliente1 = new Cliente();
+
+            for (int f = 0; fieldListCliente.size() != f; f++) {
+
+                String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+                String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursor);
+                if (retorno != null) {
+                    Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
+                    cliente1 = (Cliente) retCliente;
+                }
+            }
+            cliente = cliente1;
+            cursor.moveToNext();
+
+        }
+        db.close();
+        return cliente;
+    }
+
+    public long totalClientes(Context contextSalvo) {
+        Banco myDb = new Banco(contextSalvo);
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT count(*) as total FROM cliente", null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return cursor.getLong(1);
+        }
+        db.close();
+        return 0;
+    }
 }

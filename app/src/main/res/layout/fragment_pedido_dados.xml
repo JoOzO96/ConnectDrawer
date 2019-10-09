@@ -26,44 +26,20 @@
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/txcliente"
+        <AutoCompleteTextView
+            android:id="@+id/auCodcliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textInputLayout"
-            android:text="Cliente" />
+            android:hint="Cliente"
+            android:layout_below="@id/textInputLayout">
 
-        <Spinner
-            android:id="@+id/spCodcliente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txcliente">
-
-        </Spinner>
-
-        <!--<android.support.design.widget.TextInputLayout-->
-        <!--android:id="@+id/textInputLayout1"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_below="@id/txCliente"-->
-        <!--&gt;-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/txData"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:hint="Data"-->
-        <!--android:inputType="number" />-->
-        <!--</android.support.design.widget.TextInputLayout>-->
+        </AutoCompleteTextView>
 
         <TextView
             android:id="@+id/txVendedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spCodcliente"
+            android:layout_below="@+id/auCodcliente"
             android:text="Vendedor" />
 
         <Spinner

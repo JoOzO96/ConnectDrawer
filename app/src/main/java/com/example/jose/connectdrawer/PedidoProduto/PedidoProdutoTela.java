@@ -23,6 +23,7 @@ import com.example.jose.connectdrawer.Pedido.PedidoDados;
 import com.example.jose.connectdrawer.Produto.Produto;
 import com.example.jose.connectdrawer.R;
 import com.example.jose.connectdrawer.banco.Banco;
+import com.example.jose.connectdrawer.uteis.AdapterModificado.SimpleFilterableAdapter;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
 import com.example.jose.connectdrawer.uteis.GetSetDinamicoTelas;
 import com.example.jose.connectdrawer.uteis.MostraToast;
@@ -364,7 +365,8 @@ public class PedidoProdutoTela extends DialogFragment {
 //        });
 
         auproduto = (AutoCompleteTextView) getSetDinamicoTelas.retornaIDCampo(view, "auproduto");
-        ArrayAdapter<Produto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, produtoList);
+//        ArrayAdapter<Produto> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, produtoList);
+        SimpleFilterableAdapter<Produto> adapter = new SimpleFilterableAdapter<>(getContext(), android.R.layout.simple_list_item_1, produtoList);
         auproduto.setAdapter(adapter);
 
 //        txproduto.setOnClickListener(

@@ -1131,4 +1131,17 @@ public class Pedido {
     public void setOrpedi(String orpedi) {
         this.orpedi = orpedi;
     }
+
+    public Long retornaNumeroParcelas(Context context, Long codpedido) {
+        Banco myDb = new Banco(context);
+        GetSetDinamico getSetDinamico = new GetSetDinamico();
+        SQLiteDatabase db = myDb.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM parcela where codpedido = " + codpedido, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return  cursor.getLong(0);
+        }else{
+            return 0L;
+        }
+    }
 }

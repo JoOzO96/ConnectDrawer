@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.jose.connectdrawer.cidade.Cidade;
+import com.example.jose.connectdrawer.cliente.Cliente;
 import com.example.jose.connectdrawer.main.ConnectMain;
 
 import java.lang.reflect.Field;
@@ -26,6 +27,7 @@ public class Sessao {
     private static ProgressBar progressBar;
     private static TextView textoSinc;
     private static List<Cidade> listaCidade = new ArrayList<>();
+    private static List<Cliente> listaCliente = new ArrayList<>();
     // Variável estática que conterá a instancia da classe
     private static Sessao instance;
     private static Context contextSalvo;
@@ -33,6 +35,14 @@ public class Sessao {
 
     // Construtor privado (suprime o construtor público padrão).
     private Sessao() {
+    }
+
+    public static List<Cliente> retornaClientes() {
+        if (listaCliente.size() == 0) {
+            Cliente cliente = new Cliente();
+            listaCliente = cliente.retornaListaCliente(contextSalvo, true);
+        }
+        return listaCliente;
     }
 
     public static Double retornaFormatado(Double numero) {

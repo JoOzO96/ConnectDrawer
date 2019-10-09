@@ -71,7 +71,7 @@ public class ConnectMain extends AppCompatActivity
             e.printStackTrace();
         }
         thread.start();
-
+        Sessao.retornaClientes();
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 

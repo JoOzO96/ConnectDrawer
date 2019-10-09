@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ import com.example.jose.connectdrawer.ImprimirTexto;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscal;
 import com.example.jose.connectdrawer.NotaFiscal.NotaFiscalService;
 import com.example.jose.connectdrawer.NotaProduto.NotaProduto;
+import com.example.jose.connectdrawer.Parcelas.Parcelas;
 import com.example.jose.connectdrawer.Parcelas.ParcelasDados;
 import com.example.jose.connectdrawer.ParcelasNFE.ParcelaNFE;
 import com.example.jose.connectdrawer.PedidoProduto.PedidoProduto;
@@ -47,6 +49,7 @@ import com.example.jose.connectdrawer.configuracoeslocais.ConfiguracoesLocais;
 import com.example.jose.connectdrawer.sincronizacao.EnviaJson;
 import com.example.jose.connectdrawer.sincronizacao.RetRetrofit;
 import com.example.jose.connectdrawer.sincronizacao.SincMac;
+import com.example.jose.connectdrawer.uteis.AdapterModificado.SimpleFilterableAdapter;
 import com.example.jose.connectdrawer.uteis.CriaImpressao;
 import com.example.jose.connectdrawer.uteis.DateDeserializer;
 import com.example.jose.connectdrawer.uteis.GetSetDinamico;
@@ -95,7 +98,7 @@ public class PedidoDados extends Fragment {
 //    private BluetoothAdapter mBluetoothAdapter = null;
     private EditText txPedido;
     private EditText txObs;
-    private Spinner spCodcliente;
+    private AutoCompleteTextView auCodcliente;
     //    private EditText txdata;
     private Spinner spCodvendedor;
     private Spinner spPgto;
@@ -139,7 +142,7 @@ public class PedidoDados extends Fragment {
     private Button btSalvar;
     private Button btCancelar;
     private Button btGerarNfe;
-        private Button btApagarDadosNfe;
+    private Button btApagarDadosNfe;
     private CheckBox ckCadastroandroid;
     private CheckBox ckAlteradoandroid;
     private Button btGerarParcelas;
@@ -171,6 +174,7 @@ public class PedidoDados extends Fragment {
         ckAlteradoandroid.setVisibility(Sessao.retornaDebug());
         btApagarDadosNfe.setVisibility(Sessao.retornaDebug());
         spPgto = (Spinner) view.findViewById(R.id.spPgto);
+        auCodcliente = view.findViewById(R.id.auCodcliente);
         final GetSetDinamicoTelas getSetDinamicoTelas = new GetSetDinamicoTelas();
         final GetSetDinamico getSetDinamico = new GetSetDinamico();
         List<String> clienteList = new ArrayList<>();
@@ -225,54 +229,62 @@ public class PedidoDados extends Fragment {
                                 getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, "", mascara);
                             }
 
+                        } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("au")) {
+                            Cliente cliente = new Cliente();
+                            List<Cliente> clientes = Sessao.retornaClientes();
+                            SimpleFilterableAdapter<Cliente> adapter = new SimpleFilterableAdapter<>(getContext(), android.R.layout.simple_list_item_1, clientes);
+                            auCodcliente.setAdapter(adapter);
+                            cliente = cliente.retornaClienteObjeto(getContext(), cursor.getLong(cursor.getColumnIndex("codcliente")));
+                            getSetDinamicoTelas.colocaValorEditText(fieldListPassar.get(i), view, fieldListPassar, cliente.toString(), null);
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                             //TESTA SE O CAMPO QUE ESTA PASSANDO É UM SPINNER
                             //TESTA QUAL SPINNER É, E COLOCA OS DADOS REFERENTES A ELE
-                            if (fieldListPassar.get(i).getName().equals("spCodcliente")) {
-                                //SPINNER DOS CLIENTES
-                                Cliente cliente = new Cliente();
-                                int posicao = 0;
-                                Cursor cursorCliente = cliente.retornaCliente(db);
-                                //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
-                                if (cursorCliente.getCount() > 0) {
-                                    //posição do spinner para sair selecionado
-                                    List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
-                                    for (int f = fieldListCliente.size() - 1; -1 != f; f--) {
-                                        if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")) {
-
-                                        } else {
-                                            fieldListCliente.remove(f);
-                                        }
-                                    }
-                                    cursor.moveToFirst();
-                                    for (int j = 0; cursorCliente.getCount() != j; j++) {
-                                        Cliente cliente1 = new Cliente();
-
-                                        for (int f = 0; fieldListCliente.size() != f; f++) {
-
-                                            String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
-                                            String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
-                                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
-                                            if (retorno != null) {
-                                                Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
-                                                cliente1 = (Cliente) retCliente;
-                                            }
-                                        }
-                                        clienteList.add(cliente1.toString());
-                                        cursorCliente.moveToNext();
-                                    }
-                                    db.close();
-                                }
-                                for (int k = 0; clienteList.size() != k; k++) {
-                                    Integer codHifen = clienteList.get(k).indexOf("-");
-                                    String codCliente = clienteList.get(k).substring(0, codHifen - 1);
-                                    if (codCliente.equals(cursor.getString(cursor.getColumnIndex("codcliente")))) {
-                                        posicao = k;
-                                        break;
-                                    }
-                                }
-                                getSetDinamicoTelas.colocaValorSpinnerColorido(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
-                            } else if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
+//                            if (fieldListPassar.get(i).getName().equals("spCodcliente")) {
+//                                //SPINNER DOS CLIENTES
+//                                Cliente cliente = new Cliente();
+//                                int posicao = 0;
+//                                Cursor cursorCliente = cliente.retornaCliente(db);
+//                                //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+//                                if (cursorCliente.getCount() > 0) {
+//                                    //posição do spinner para sair selecionado
+//                                    List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+//                                    for (int f = fieldListCliente.size() - 1; -1 != f; f--) {
+//                                        if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")) {
+//
+//                                        } else {
+//                                            fieldListCliente.remove(f);
+//                                        }
+//                                    }
+//                                    cursor.moveToFirst();
+//                                    for (int j = 0; cursorCliente.getCount() != j; j++) {
+//                                        Cliente cliente1 = new Cliente();
+//
+//                                        for (int f = 0; fieldListCliente.size() != f; f++) {
+//
+//                                            String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+//                                            String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+//                                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
+//                                            if (retorno != null) {
+//                                                Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
+//                                                cliente1 = (Cliente) retCliente;
+//                                            }
+//                                        }
+//                                        clienteList.add(cliente1.toString());
+//                                        cursorCliente.moveToNext();
+//                                    }
+//                                    db.close();
+//                                }
+//                                for (int k = 0; clienteList.size() != k; k++) {
+//                                    Integer codHifen = clienteList.get(k).indexOf("-");
+//                                    String codCliente = clienteList.get(k).substring(0, codHifen - 1);
+//                                    if (codCliente.equals(cursor.getString(cursor.getColumnIndex("codcliente")))) {
+//                                        posicao = k;
+//                                        break;
+//                                    }
+//                                }
+//                                getSetDinamicoTelas.colocaValorSpinnerColorido(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
+//                            } else
+                            if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
                                 //SPINNER DOS Vendedores
                                 Vendedor vendedor = new Vendedor();
                                 int posicao = 0;
@@ -355,16 +367,16 @@ public class PedidoDados extends Fragment {
                             }
                         } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("ck")) {
                             if (fieldListPassar.get(i).getName().equals("ckNfe")) {
-                            String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
-                            String nomecampo = "nfe";
-                            Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
+                                String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
+                                String nomecampo = "nfe";
+                                Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
                                 ckNfe.setChecked(Boolean.parseBoolean(retorno.toString()));
-                            }else if (fieldListPassar.get(i).getName().equals("ckCadastroandroid")) {
+                            } else if (fieldListPassar.get(i).getName().equals("ckCadastroandroid")) {
                                 String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
                                 String nomecampo = "cadastroandroid";
                                 Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
                                 ckCadastroandroid.setChecked(Boolean.parseBoolean(retorno.toString()));
-                            }else if (fieldListPassar.get(i).getName().equals("ckCadastroandroid")) {
+                            } else if (fieldListPassar.get(i).getName().equals("ckCadastroandroid")) {
                                 String tipo = getSetDinamico.retornaTipoCampo(fieldListPassar.get(i));
                                 String nomecampo = "alteradoandroid";
                                 Object retorno = getSetDinamico.retornaValorCursor(tipo, nomecampo, cursor);
@@ -426,46 +438,54 @@ public class PedidoDados extends Fragment {
                 } else {
                     //TESTA SE O CAMPO QUE ESTA PASSANDO É UM EDITTEXT
                     if (fieldListPassar.get(i).getName().substring(0, 2).equals("tx")) {
+                    } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("au")) {
+                        Cliente cliente = new Cliente();
+                        List<Cliente> clientes = Sessao.retornaClientes();
+                        SimpleFilterableAdapter<Cliente> adapter = new SimpleFilterableAdapter<>(getContext(), android.R.layout.simple_list_item_1, clientes);
+                        auCodcliente.setAdapter(adapter);
+
+
                     } else if (fieldListPassar.get(i).getName().substring(0, 2).equals("sp")) {
                         //TESTA SE O CAMPO QUE ESTA PASSANDO É UM SPINNER
                         //TESTA QUAL SPINNER É, E COLOCA OS DADOS REFERENTES A ELE
-                        if (fieldListPassar.get(i).getName().equals("spCodcliente")) {
-                            //SPINNER DOS CLIENTES
-                            Cliente cliente = new Cliente();
-                            int posicao = 0;
-                            Cursor cursorCliente = cliente.retornaCliente(db);
-                            //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
-                            if (cursorCliente.getCount() > 0) {
-                                //posição do spinner para sair selecionado
-                                List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
-                                for (int f = fieldListCliente.size() - 1; -1 != f; f--) {
-                                    if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")) {
-
-                                    } else {
-                                        fieldListCliente.remove(f);
-                                    }
-                                }
-                                for (int j = 0; cursorCliente.getCount() != j; j++) {
-                                    Cliente cliente1 = new Cliente();
-
-                                    for (int f = 0; fieldListCliente.size() != f; f++) {
-
-                                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
-                                        String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
-                                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
-                                        if (retorno != null) {
-                                            Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
-                                            cliente1 = (Cliente) retCliente;
-                                        }
-                                    }
-                                    clienteList.add(cliente1.toString());
-                                    cursorCliente.moveToNext();
-                                }
-                            }
-                            db.close();
-                            getSetDinamicoTelas.colocaValorSpinnerColorido(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
-
-                        } else if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
+//                        if (fieldListPassar.get(i).getName().equals("spCodcliente")) {
+//                            //SPINNER DOS CLIENTES
+//                            Cliente cliente = new Cliente();
+//                            int posicao = 0;
+//                            Cursor cursorCliente = cliente.retornaCliente(db);
+//                            //TESTA SE A CONSULTA RETORNA ALGUM RESULTADO
+//                            if (cursorCliente.getCount() > 0) {
+//                                //posição do spinner para sair selecionado
+//                                List<Field> fieldListCliente = new ArrayList<>(Arrays.asList(Cliente.class.getDeclaredFields()));
+//                                for (int f = fieldListCliente.size() - 1; -1 != f; f--) {
+//                                    if (fieldListCliente.get(f).getName().toLowerCase().equals("codigo") || fieldListCliente.get(f).getName().toLowerCase().equals("nomecliente")) {
+//
+//                                    } else {
+//                                        fieldListCliente.remove(f);
+//                                    }
+//                                }
+//                                for (int j = 0; cursorCliente.getCount() != j; j++) {
+//                                    Cliente cliente1 = new Cliente();
+//
+//                                    for (int f = 0; fieldListCliente.size() != f; f++) {
+//
+//                                        String tipo = getSetDinamico.retornaTipoCampo(fieldListCliente.get(f));
+//                                        String nomeCampo = fieldListCliente.get(f).getName().toLowerCase();
+//                                        Object retorno = getSetDinamico.retornaValorCursor(tipo, nomeCampo, cursorCliente);
+//                                        if (retorno != null) {
+//                                            Object retCliente = getSetDinamico.insereField(fieldListCliente.get(f), cliente1, retorno);
+//                                            cliente1 = (Cliente) retCliente;
+//                                        }
+//                                    }
+//                                    clienteList.add(cliente1.toString());
+//                                    cursorCliente.moveToNext();
+//                                }
+//                            }
+//                            db.close();
+//                            getSetDinamicoTelas.colocaValorSpinnerColorido(fieldListPassar.get(i), view, clienteList, getContext(), posicao);
+//
+//                        } else
+                        if (fieldListPassar.get(i).getName().equals("spCodvendedor")) {
                             //SPINNER DOS Vendedores
                             Vendedor vendedor = new Vendedor();
                             int posicao = 0;
@@ -497,8 +517,8 @@ public class PedidoDados extends Fragment {
                             }
                             ConfiguracoesLocais configuracoesLocais = new ConfiguracoesLocais();
                             configuracoesLocais = configuracoesLocais.retornaconfiguracoeslocais(getContext());
-                            if (configuracoesLocais.getCodvendedor() != null){
-                                if (!configuracoesLocais.getCodvendedor().isEmpty()){
+                            if (configuracoesLocais.getCodvendedor() != null) {
+                                if (!configuracoesLocais.getCodvendedor().isEmpty()) {
                                     for (int k = 0; vendedorList.size() != k; k++) {
                                         Integer codHifen = vendedorList.get(k).indexOf("-");
                                         String codVendedor = vendedorList.get(k).substring(0, codHifen - 1);
@@ -945,7 +965,7 @@ public class PedidoDados extends Fragment {
         return view;
     }
 
-    public void imprimeNfe(final NotaFiscal notaFiscal){
+    public void imprimeNfe(final NotaFiscal notaFiscal) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         builder.setTitle("");
@@ -976,7 +996,7 @@ public class PedidoDados extends Fragment {
     }
 
 
-    public void EnviaEmailNfe(final NotaFiscal notaFiscal, final Emitente emitente){
+    public void EnviaEmailNfe(final NotaFiscal notaFiscal, final Emitente emitente) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         builder.setTitle("");
@@ -986,7 +1006,7 @@ public class PedidoDados extends Fragment {
 
             public void onClick(DialogInterface dialog, int which) {
                 Calendar calendar = Calendar.getInstance();
-                String url="";
+                String url = "";
                 String retorno;
                 String retornoEnvio = "";
                 String gsonRetorno;
@@ -1002,25 +1022,25 @@ public class PedidoDados extends Fragment {
                 cliente = cliente.retornaClienteObjeto(getContext(), notaFiscal.getCodcliente());
                 if (intmes < 10) {
                     mes = "0" + intmes;
-                }else{
-                    mes = String.valueOf( intmes);
+                } else {
+                    mes = String.valueOf(intmes);
                 }
 
-                dadosEnvio.setArquivo("C:\\CGeral\\xml\\Proc\\" + calendar.get(Calendar.YEAR) + "_" + mes  + "_" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("pt", "BR")) + "_" + emitente.getCnpjemi() + "\\NFE\\P" +
+                dadosEnvio.setArquivo("C:\\CGeral\\xml\\Proc\\" + calendar.get(Calendar.YEAR) + "_" + mes + "_" + calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("pt", "BR")) + "_" + emitente.getCnpjemi() + "\\NFE\\P" +
                         notaFiscal.getCodemitente() + " " + notaFiscal.getCodnota() + ".xml;C:\\CGeral\\xml\\PDF\\" + notaFiscal.getCodnota() + ".pdf");
                 dadosEnvio.setAssunto("NFe N:" + notaFiscal.getCodnota() + " da empresa " + emitente.getFantasia());
                 dadosEnvio.setMensagem("Prezado(a),\n" +
-                        "segue em anexo arquivo(s) refer nte(s) ao Documento Eletrônico.\n"+
-                        "NFE: " + notaFiscal.getCodnota() +"\n"+
-                        "CHAVE: " + notaFiscal.getChave() + "\n"+
-                        "\n"+
-                        "ATENÇÃO : Não responda a esta mensagem, pois se trata de um processo automático.\n"+
-                        "\n"+
+                        "segue em anexo arquivo(s) refer nte(s) ao Documento Eletrônico.\n" +
+                        "NFE: " + notaFiscal.getCodnota() + "\n" +
+                        "CHAVE: " + notaFiscal.getChave() + "\n" +
+                        "\n" +
+                        "ATENÇÃO : Não responda a esta mensagem, pois se trata de um processo automático.\n" +
+                        "\n" +
                         "Atenciosamente,\n" +
                         "Empresa: " + emitente.getFantasia() + "\n" +
-                        "CNPJ: " + emitente.getCnpjemi() + "\n"+
+                        "CNPJ: " + emitente.getCnpjemi() + "\n" +
                         "Telefone: " + emitente.getFone() + "\n" +
-                        "\n"+
+                        "\n" +
                         "Este e-mail foi GERADO por um Sistema Connectsys Inform tica - (54)3344-3036 - (54)3344-2901"
                 );
 
@@ -1075,9 +1095,7 @@ public class PedidoDados extends Fragment {
                 if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
                     String nomeCampo = "";
                     nomeCampo = fieldListPedidoDados.get(f).getName();
-                    if (nomeCampo.equals("spCodcliente")) {
-                        nomeCampo = "codcliente";
-                    } else if (nomeCampo.equals("spPgto")) {
+                    if (nomeCampo.equals("spPgto")) {
                         nomeCampo = "pgto";
                     } else if (nomeCampo.equals("spCodvendedor")) {
                         nomeCampo = "codvendedor";
@@ -1119,6 +1137,23 @@ public class PedidoDados extends Fragment {
                         }
 
                     }
+                } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("au")) {
+
+                    String nomeCampo = "";
+                    nomeCampo = fieldListPedidoDados.get(f).getName();
+                    String valorCampo = "";
+                    if (!nomeCampo.equals("")) {
+
+                        for (int p = 0; fieldListPedido.size() != p; p++) {
+                            if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("au", "").toLowerCase())) {
+                                valorCampo = getSetDinamicoTelas.retornaValorEditText(view, nomeCampo);
+                                Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
+                                pedido = (Pedido) retorno;
+                                break;
+                            }
+                        }
+
+                    }
                 }
             }
             Cliente cliente = new Cliente();
@@ -1150,6 +1185,23 @@ public class PedidoDados extends Fragment {
 //            valorTotal.setText("Total do pedido: R$ " +  valorTotalPedido.toString().replace(".",","));
             pedido.setValortotal(valorTotalPedido);
             pedido.setTotal(valorTotalPedido);
+
+            FormaPagamento formaPagamento = new FormaPagamento().retornaFormaPagamentoObjeto(getContext(), pedido.getPgto());
+            if (formaPagamento.getPrazo()) {
+                pedido.setNparce(pedido.retornaNumeroParcelas(getContext(), pedido.getPedido()));
+                if (pedido.getNparce() == 1) {
+                    Parcelas parcelas = new Parcelas();
+                    List<Parcelas> parcelasList = new ArrayList<>();
+                    parcelasList = parcelas.retornaListaDeParcelas(getContext(), pedido.getPedido());
+                    parcelas = parcelas.retornaParcelasObjeto(getContext(), parcelasList.get(0).getIdParcela());
+                    pedido.setVenci1(parcelas.getDvenci());
+                    pedido.setValor1(parcelas.getVparce());
+                    Calendar diaVenci = Calendar.getInstance();
+                    diaVenci.setTime(parcelas.getDvenci());
+                    Calendar hoje = Calendar.getInstance();
+                    pedido.setDias((diaVenci.getTimeInMillis() - hoje.getTimeInMillis()) / (24 * 60 * 60 * 1000));
+                }
+            }
             boolean retorno = pedido.cadastraPedido(getContext(), pedido);
             Vendedor vendedor = new Vendedor();
             Cursor cursorVendedor = vendedor.retornaVendedorFiltradaCursor(getContext(), pedido.getCodvendedor());
@@ -1164,7 +1216,7 @@ public class PedidoDados extends Fragment {
                     if (txPedido.getText().equals("")) {
                         pedido.setPedido(pedido.retornaMaiorCod(getContext()));
                     }
-                    if (pedido.getPedido() == null){
+                    if (pedido.getPedido() == null) {
                         pedido.setPedido(pedido.retornaMaiorCod(getContext()));
                     }
                     if (pedido.getPedido() > 0) {
@@ -1209,9 +1261,7 @@ public class PedidoDados extends Fragment {
                 if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("sp")) {
                     String nomeCampo = "";
                     nomeCampo = fieldListPedidoDados.get(f).getName();
-                    if (nomeCampo.equals("spCodcliente")) {
-                        nomeCampo = "codcliente";
-                    } else if (nomeCampo.equals("spPgto")) {
+                    if (nomeCampo.equals("spPgto")) {
                         nomeCampo = "pgto";
                     } else if (nomeCampo.equals("spCodvendedor")) {
                         nomeCampo = "codvendedor";
@@ -1243,6 +1293,23 @@ public class PedidoDados extends Fragment {
                         for (int p = 0; fieldListPedido.size() != p; p++) {
                             if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("tx", "").toLowerCase())) {
                                 valorCampo = getSetDinamicoTelas.retornaValorEditText(view, fieldListPedido.get(p).getName());
+                                Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
+                                pedido = (Pedido) retorno;
+                                break;
+                            }
+                        }
+
+                    }
+                } else if (fieldListPedidoDados.get(f).getName().toLowerCase().substring(0, 2).equals("au")) {
+
+                    String nomeCampo = "";
+                    nomeCampo = fieldListPedidoDados.get(f).getName();
+                    String valorCampo = "";
+                    if (!nomeCampo.equals("")) {
+
+                        for (int p = 0; fieldListPedido.size() != p; p++) {
+                            if (fieldListPedido.get(p).getName().equals(nomeCampo.replace("au", "").toLowerCase())) {
+                                valorCampo = getSetDinamicoTelas.retornaValorEditText(view, nomeCampo);
                                 Object retorno = getSetDinamico.insereField(fieldListPedido.get(p), pedido, valorCampo);
                                 pedido = (Pedido) retorno;
                                 break;
