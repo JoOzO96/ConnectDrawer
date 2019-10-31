@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Jose on 25/05/2017.
@@ -129,6 +130,30 @@ public class Cidade {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cidade)) return false;
+        Cidade cidade = (Cidade) o;
+        return Objects.equals(getCodcidade(), cidade.getCodcidade()) &&
+                Objects.equals(getNomecidade(), cidade.getNomecidade()) &&
+                Objects.equals(getUf(), cidade.getUf()) &&
+                Objects.equals(getCodnacionaluf(), cidade.getCodnacionaluf()) &&
+                Objects.equals(getCodnacionalcidade(), cidade.getCodnacionalcidade()) &&
+                Objects.equals(getPais(), cidade.getPais()) &&
+                Objects.equals(getCodnacionalpais(), cidade.getCodnacionalpais()) &&
+                Objects.equals(getCep(), cidade.getCep()) &&
+                Objects.equals(getCadastroandroid(), cidade.getCadastroandroid()) &&
+                Objects.equals(getDeletadoandroid(), cidade.getDeletadoandroid()) &&
+                Objects.equals(getAlteradoandroid(), cidade.getAlteradoandroid()) &&
+                Objects.equals(getContext(), cidade.getContext());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCodcidade(), getNomecidade(), getUf(), getCodnacionaluf(), getCodnacionalcidade(), getPais(), getCodnacionalpais(), getCep(), getCadastroandroid(), getDeletadoandroid(), getAlteradoandroid(), getContext());
     }
 
     @Override
@@ -290,7 +315,9 @@ public class Cidade {
                 valores.remove("alteradoandroid");
                 valores.put("alteradoandroid", true);
                 long retorno = db.update("cidade", valores, "codcidade= " + valores.get("codcidade").toString(), null);
+                cursor.close();
                 db.close();
+
                 valores.clear();
                 return retorno != -1;
             }else{
@@ -300,6 +327,7 @@ public class Cidade {
                 valores.remove("cadastroandroid");
                 valores.put("codcidade", retorno);
                 retorno = db.insert("cidade", null, valores);
+                cursor.close();
                 db.close();
                 valores.clear();
                 return retorno != -1;

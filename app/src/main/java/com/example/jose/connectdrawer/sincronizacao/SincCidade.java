@@ -73,12 +73,12 @@ public class SincCidade {
                 if (cidadeList.get(cid).getCodcidade() == null) {
 
                 } else {
-                    cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cid).getCodcidade());
+                    //cursor = cidade.retornaCidadeFiltradaCursor(context1, cidadeList.get(cid).getCodcidade());
                     Sessao.colocaTexto("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
 //            progressDialog.setMessage("Cadastro de Cidade   " + (cid + 1) + " de " + cidadeList.size());
-                    if (cursor.getCount() > 0) {
-                        cursor.close();
-                    } else {
+//                    if (cursor.getCount() > 0) {
+//                        cursor.close();
+//                    } else {
                         //PEGA OS CODIGOS QUE VIERAM DO SERVIDOR
 
                         cidade = new Cidade();
@@ -108,7 +108,7 @@ public class SincCidade {
 //                        cidade1.setPais(cidadeList.get(cid).getPais());
 //                        cidade1.setUf(cidadeList.get(cid).getUf());
 //                        cidade1.setCodcidade(cidadeList.get(cid).getCodcidade());
-                        cursor.moveToNext();
+//                        cursor.moveToNext();
                         ///
                         //TESTA SE OS DADOS CONTEM ALGO NULO E SETA PARA BRANCO OU FALSO
                         //
@@ -117,8 +117,8 @@ public class SincCidade {
                         //
                         boolean retorno = cidade.cadastraCidade(context, cidade);
 //                    cidade = null;
-                        cursor.close();
-                    }
+//                        cursor.close();
+//                    }
                 }
             }
         }
